@@ -7,7 +7,7 @@ public class Continuity {
 
     public Continuity () {
 
-        file = new File ("./res/data/data.json");
+        file = new File ("./res/data/data.xml");
 
     }
 
