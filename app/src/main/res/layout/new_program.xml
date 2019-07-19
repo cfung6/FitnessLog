@@ -13,9 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Choose your level! Level is based on experience and available time for exercise per week."
+        android:text="@string/choose_your_level_level_is_based_on_experience_and_available_time_for_exercise_per_week"
         android:textSize="24sp"
-        android:layout_marginBottom="15dp" />
+        android:layout_marginBottom="15dp"
+        />
 
     <Button
         android:id="@+id/new_program"
@@ -26,6 +27,7 @@
         android:text="@string/beginner_text"
         tools:layout_editor_absoluteX="142dp"
         tools:layout_editor_absoluteY="165dp"
+        android:onClick="levelClicked"
         />
 
     <Button
@@ -36,7 +38,8 @@
         android:padding="20dp"
         android:text="@string/intermediate_text"
         tools:layout_editor_absoluteX="123dp"
-        tools:layout_editor_absoluteY="256dp" />
+        tools:layout_editor_absoluteY="256dp"
+        android:onClick="levelClicked"/>
 
     <Button
         android:id="@+id/about"
@@ -46,6 +49,7 @@
         android:padding="20dp"
         android:text="@string/advanced_text"
         tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="355dp" />
+        tools:layout_editor_absoluteY="355dp"
+        android:onClick="levelClicked"/>
 
 </LinearLayout>

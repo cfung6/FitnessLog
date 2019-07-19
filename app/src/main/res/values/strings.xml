@@ -9,4 +9,16 @@
     <string name =  "advanced_text">
         <b>Advanced</b>\n\n4x per week\n(4+ years of experience)
     </string>
+    <string name="deadlift">Deadlift</string>
+    <string name="barbell_row">Barbell row</string>
+    <string name="squat">Squat</string>
+    <string name="bench_press">Bench press</string>
+    <string name="about">About</string>
+    <string name="continue_program">Continue Program</string>
+    <string name="new_program">New Program</string>
+    <string name="it_s_gainz_day">it\'s Gainz Day!</string>
+    <string name="leave_the_ones_you_never_did_blank">Leave the ones you never did blank</string>
+    <string name="what_exercises_have_you_done">What exercises have you done?</string>
+    <string name="choose_your_level_level_is_based_on_experience_and_available_time_for_exercise_per_week">Choose your level! Level is based on experience and available time for exercise per week.</string>
+    <string name="overhead_press">Overhead press</string>
 </resources>
