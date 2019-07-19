@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/choose_your_level_level_is_based_on_experience_and_available_time_for_exercise_per_week"
+        android:text="Choose your level"
         android:textSize="24sp"
         android:layout_marginBottom="15dp"
         />
@@ -21,35 +21,36 @@
     <Button
         android:id="@+id/beginner_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:padding="20dp"
-        android:text="@string/beginner_text"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="165dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="25sp"
+        android:layout_marginRight="25sp"
+        android:layout_marginBottom="40sp"
+        android:layout_weight="1"
         android:onClick="levelClicked"
-        />
+        android:text="@string/beginner_text" />
 
     <Button
         android:id="@+id/intermediate_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:padding="20dp"
-        android:text="@string/intermediate_text"
-        tools:layout_editor_absoluteX="123dp"
-        tools:layout_editor_absoluteY="256dp"
-        android:onClick="levelClicked"/>
+        android:layout_height="0dp"
+        android:layout_marginLeft="25sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginRight="25sp"
+        android:layout_marginBottom="10sp"
+        android:layout_weight="1"
+        android:onClick="levelClicked"
+        android:text="@string/intermediate_text" />
 
     <Button
         android:id="@+id/advanced_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:padding="20dp"
-        android:text="@string/advanced_text"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="355dp"
-        android:onClick="levelClicked"/>
+        android:layout_height="0dp"
+        android:layout_marginLeft="25sp"
+        android:layout_marginTop="40sp"
+        android:layout_marginRight="25sp"
+        android:layout_marginBottom="50sp"
+        android:layout_weight="1"
+        android:onClick="levelClicked"
+        android:text="@string/advanced_text" />
 
 </LinearLayout>
