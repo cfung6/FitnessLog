@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="25dp"
-    tools:context=".MainActivity">
+    tools:context=".NewProgramActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/choose_level"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -19,7 +19,7 @@
         />
 
     <Button
-        android:id="@+id/new_program"
+        android:id="@+id/beginner_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -31,7 +31,7 @@
         />
 
     <Button
-        android:id="@+id/continue_program"
+        android:id="@+id/intermediate_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -42,7 +42,7 @@
         android:onClick="levelClicked"/>
 
     <Button
-        android:id="@+id/about"
+        android:id="@+id/advanced_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"

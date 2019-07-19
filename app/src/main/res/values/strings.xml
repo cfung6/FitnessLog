@@ -3,10 +3,10 @@
     <string name="beginner_text">
         <b>Beginnner</b>\n\n3x per week\n(0-1 years of experience)
     </string>
-    <string name= "intermediate_text">
+    <string name="intermediate_text">
         <b>Intermediate</b>\n\n3x per week\n(1-3 years of experience)
     </string>
-    <string name =  "advanced_text">
+    <string name="advanced_text">
         <b>Advanced</b>\n\n4x per week\n(4+ years of experience)
     </string>
     <string name="deadlift">Deadlift</string>
@@ -21,4 +21,5 @@
     <string name="what_exercises_have_you_done">What exercises have you done?</string>
     <string name="choose_your_level_level_is_based_on_experience_and_available_time_for_exercise_per_week">Choose your level! Level is based on experience and available time for exercise per week.</string>
     <string name="overhead_press">Overhead press</string>
+    <string name="input_max_weight_for_5_reps">input max weight for 5 reps</string>
 </resources>
