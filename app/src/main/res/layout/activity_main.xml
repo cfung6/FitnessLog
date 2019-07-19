@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="25dp"
+    tools:context=".MainActivity">
 
 
     <TextView
@@ -15,34 +16,35 @@
         android:paddingBottom="40dp"
         android:text="it's Gainz Day!"
         android:textSize="30dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         tools:layout_editor_absoluteY="46dp" />
 
     <Button
         android:id="@+id/new_program"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
+        android:layout_margin="20dp"
+        android:padding="20dp"
         android:text="New Program"
         tools:layout_editor_absoluteX="142dp"
         tools:layout_editor_absoluteY="165dp"
         android:onClick="newProgramClicked"/>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/continue_program"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
+        android:layout_margin="20dp"
+        android:padding="20dp"
         android:text="Continue Program"
         tools:layout_editor_absoluteX="123dp"
         tools:layout_editor_absoluteY="256dp" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
+        android:layout_margin="20dp"
+        android:padding="20dp"
         android:text="About"
         tools:layout_editor_absoluteX="161dp"
         tools:layout_editor_absoluteY="355dp" />

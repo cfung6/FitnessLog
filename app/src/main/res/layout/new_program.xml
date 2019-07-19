@@ -1,32 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="25dp"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Choose your level! Level is influenced by experience and available time for exercise per week."
-        android:textSize="24sp" />
+        android:text="Choose your level! Level is based on experience and available time for exercise per week."
+        android:textSize="24sp"
+        android:layout_marginBottom="15dp" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/new_program"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_margin="20dp"
+        android:padding="20dp"
+        android:text="@string/beginner_text"
+        tools:layout_editor_absoluteX="142dp"
+        tools:layout_editor_absoluteY="165dp"
+        />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/continue_program"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_margin="20dp"
+        android:padding="20dp"
+        android:text="@string/intermediate_text"
+        tools:layout_editor_absoluteX="123dp"
+        tools:layout_editor_absoluteY="256dp" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_margin="20dp"
+        android:padding="20dp"
+        android:text="@string/advanced_text"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="355dp" />
+
 </LinearLayout>
