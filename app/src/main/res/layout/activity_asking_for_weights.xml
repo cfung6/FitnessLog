@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:text="@string/bench_press"
         android:layout_marginBottom="5dp"
-        android:onClick="onCheckboxClick"/>
+        android:onClick="onBenchPressClick"/>
 
     <EditText
         android:id="@+id/textbox_bench"
@@ -52,7 +52,19 @@
         android:layout_height="wrap_content"
         android:text="@string/overhead_press"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:onClick="onOverheadPressClick"/>
+
+    <EditText
+        android:id="@+id/textbox_overhead"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/input_max_weight_for_5_reps"
+        android:textSize="12sp"
+        android:visibility = "gone"
+        android:autofillHints="no" />
 
     <CheckBox
         android:id="@+id/checkBox_squat"
@@ -60,7 +72,19 @@
         android:layout_height="wrap_content"
         android:text="@string/squat"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:onClick="onSquatClick"/>
+
+    <EditText
+        android:id="@+id/textbox_squat"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/input_max_weight_for_5_reps"
+        android:textSize="12sp"
+        android:visibility = "gone"
+        android:autofillHints="no" />
 
     <CheckBox
         android:id="@+id/checkBox_deadlift"
@@ -68,7 +92,19 @@
         android:layout_height="wrap_content"
         android:text="@string/deadlift"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:onClick="onDeadliftClick"/>
+
+    <EditText
+        android:id="@+id/textbox_deadlift"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/input_max_weight_for_5_reps"
+        android:textSize="12sp"
+        android:visibility = "gone"
+        android:autofillHints="no" />
 
     <CheckBox
         android:id="@+id/checkBox_row"
@@ -76,6 +112,18 @@
         android:layout_height="wrap_content"
         android:text="@string/barbell_row"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:onClick="onBarbellRowClick"/>
+
+    <EditText
+        android:id="@+id/textbox_barbell_row"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/input_max_weight_for_5_reps"
+        android:textSize="12sp"
+        android:visibility = "gone"
+        android:autofillHints="no" />
 
 </LinearLayout>
