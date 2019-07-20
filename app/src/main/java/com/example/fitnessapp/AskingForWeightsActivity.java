@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.google.android.material.snackbar.Snackbar;
+
 public class AskingForWeightsActivity extends AppCompatActivity {
 
     private Button submitButton;
@@ -27,6 +29,11 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private String squatString;
     private String deadliftString;
     private String barbellRowString;
+    private boolean benchPressChecked;
+    private boolean overheadPressChecked;
+    private boolean squatChecked;
+    private boolean deadliftChecked;
+    private boolean barbellRowChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +63,27 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     private boolean checkIfEmpty (String str1, String str2, String str3, String str4, String str5) {
 
-        return (str1.isEmpty() || str2.isEmpty() || str3.isEmpty() || str4.isEmpty() || str1.isEmpty());
+        if (benchPressChecked) {
+            return str1.isEmpty();
+        }
 
+        if (overheadPressChecked) {
+            return str2.isEmpty();
+        }
+
+        if (squatChecked) {
+            return str3.isEmpty();
+        }
+
+        if (deadliftChecked) {
+            return str4.isEmpty();
+        }
+
+        if (barbellRowChecked) {
+            return str5.isEmpty();
+        }
+
+        return false;
     }
 
     private void onSubmitButtonClick () {
@@ -71,7 +97,8 @@ public class AskingForWeightsActivity extends AppCompatActivity {
                 if (!checkIfEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
                     convertStringsToDoubles();
                 } else {
-                    
+                    Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights are blank", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
                 }
             }
         });
@@ -95,9 +122,9 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
 
     public void onBenchPressClick (View view) {
-        boolean checked = ((CheckBox) view).isChecked();
+        benchPressChecked = ((CheckBox) view).isChecked();
 
-        if (checked) {
+        if (benchPressChecked) {
            benchEditText.setVisibility(View.VISIBLE);
         } else {
             benchEditText.setVisibility(View.GONE);
@@ -105,9 +132,9 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     public void onOverheadPressClick(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
+        overheadPressChecked = ((CheckBox) view).isChecked();
 
-        if (checked) {
+        if (overheadPressChecked) {
             overheadPressEditText.setVisibility(View.VISIBLE);
         } else {
             overheadPressEditText.setVisibility(View.GONE);
@@ -115,9 +142,9 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     public void onSquatClick(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
+        squatChecked = ((CheckBox) view).isChecked();
 
-        if (checked) {
+        if (squatChecked) {
             squatEditText.setVisibility(View.VISIBLE);
         } else {
             squatEditText.setVisibility(View.GONE);
@@ -125,9 +152,9 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     public void onDeadliftClick(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
+        deadliftChecked = ((CheckBox) view).isChecked();
 
-        if (checked) {
+        if (deadliftChecked) {
             deadliftEditText.setVisibility(View.VISIBLE);
         } else {
             deadliftEditText.setVisibility(View.GONE);
@@ -135,9 +162,9 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     public void onBarbellRowClick(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
+        barbellRowChecked = ((CheckBox) view).isChecked();
 
-        if (checked) {
+        if (barbellRowChecked) {
             barbellRowEditText.setVisibility(View.VISIBLE);
         } else {
             barbellRowEditText.setVisibility(View.GONE);
