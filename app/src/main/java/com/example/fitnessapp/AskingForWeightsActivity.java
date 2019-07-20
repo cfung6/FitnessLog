@@ -45,14 +45,16 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         limitEditTextsInput();
         intializeBooleans();
         onSubmitButtonClick();
+
+
     }
 
     private void intializeBooleans() {
-        boolean benchPressChecked = false;
-        boolean overheadPressChecked = false;
-        boolean squatChecked = false;
-        boolean deadliftChecked = false;
-        boolean barbellRowChecked = false;
+        benchPressChecked = false;
+        overheadPressChecked = false;
+        squatChecked = false;
+        deadliftChecked = false;
+        barbellRowChecked = false;
     }
 
     private void initializeEditTexts() {
@@ -71,39 +73,38 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         barbellRowEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
     }
 
-    private boolean checkIfEmpty (String str1, String str2, String str3, String str4, String str5) {
+    private boolean isEmpty(String str1, String str2, String str3, String str4, String str5) {
 
         if (benchPressChecked) {
-            return str1.isEmpty();
+            if (str1.isEmpty()) return true;
         }
 
         if (overheadPressChecked) {
-            return str2.isEmpty();
+            if (str2.isEmpty()) return true;
         }
 
         if (squatChecked) {
-            return str3.isEmpty();
+            if (str3.isEmpty()) return true;
         }
 
         if (deadliftChecked) {
-            return str4.isEmpty();
+            if (str4.isEmpty()) return true;
         }
 
         if (barbellRowChecked) {
-            return str5.isEmpty();
+            if (str5.isEmpty()) return true;
         }
 
         return false;
     }
 
     private void onSubmitButtonClick () {
-
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 intializeStringInputs();
 
-                if (!checkIfEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
+                if (!isEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
                     convertStringsToDoubles();
                     if (benchPressChecked && overheadPressChecked && squatChecked && deadliftChecked && barbellRowChecked) {
                         Intent intent = new Intent(AskingForWeightsActivity.this, WorkoutActivity.class);
