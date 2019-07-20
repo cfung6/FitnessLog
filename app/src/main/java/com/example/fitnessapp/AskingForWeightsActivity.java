@@ -43,7 +43,16 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.submit_weight_button);
         initializeEditTexts();
         limitEditTextsInput();
+        intializeBooleans();
         onSubmitButtonClick();
+    }
+
+    private void intializeBooleans() {
+        boolean benchPressChecked = false;
+        boolean overheadPressChecked = false;
+        boolean squatChecked = false;
+        boolean deadliftChecked = false;
+        boolean barbellRowChecked = false;
     }
 
     private void initializeEditTexts() {
@@ -92,12 +101,10 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 intializeStringInputs();
 
                 if (!checkIfEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
                     convertStringsToDoubles();
-
                     if (benchPressChecked && overheadPressChecked && squatChecked && deadliftChecked && barbellRowChecked) {
                         Intent intent = new Intent(AskingForWeightsActivity.this, WorkoutActivity.class);
                         startActivity(intent);
