@@ -22,4 +22,5 @@
     <string name="choose_your_level_level_is_based_on_experience_and_available_time_for_exercise_per_week">Choose your level! Level is based on experience and available time for exercise per week.</string>
     <string name="overhead_press">Overhead press</string>
     <string name="input_max_weight_for_5_reps">input max weight for 5 reps</string>
+    <string name="choose_your_level">Choose your level</string>
 </resources>
