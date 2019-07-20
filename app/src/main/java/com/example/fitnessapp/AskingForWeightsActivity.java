@@ -3,6 +3,7 @@ package com.example.fitnessapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -23,11 +24,8 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asking_for_weights);
         submitButton = (Button)findViewById(R.id.submit_weight_button);
-        benchEditText = (EditText)findViewById(R.id.textbox_bench);
-        overheadPressEditText = (EditText)findViewById(R.id.textbox_overhead);
-        squatEditText = (EditText)findViewById(R.id.textbox_squat);
-        deadliftEditText = (EditText)findViewById(R.id.textbox_deadlift);
-        barbellRowEditText = (EditText)findViewById(R.id.textbox_barbell_row);
+        initializeEditTexts();
+        limitEditTextsInput();
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +37,22 @@ public class AskingForWeightsActivity extends AppCompatActivity {
                 String barbellRowInput = barbellRowEditText.getText().toString();
             }
         });
+    }
 
+    private void initializeEditTexts() {
+        benchEditText = (EditText)findViewById(R.id.textbox_bench);
+        overheadPressEditText = (EditText)findViewById(R.id.textbox_overhead);
+        squatEditText = (EditText)findViewById(R.id.textbox_squat);
+        deadliftEditText = (EditText)findViewById(R.id.textbox_deadlift);
+        barbellRowEditText = (EditText)findViewById(R.id.textbox_barbell_row);
+    }
+
+    private void limitEditTextsInput() {
+        benchEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        overheadPressEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        squatEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        deadliftEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        barbellRowEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
     }
 
     public void onBenchPressClick (View view) {
