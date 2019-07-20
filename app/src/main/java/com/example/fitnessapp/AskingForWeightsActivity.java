@@ -2,6 +2,7 @@ package com.example.fitnessapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -92,10 +93,19 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                intializeStringInputs();;
+                intializeStringInputs();
 
                 if (!checkIfEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
                     convertStringsToDoubles();
+
+                    if (benchPressChecked && overheadPressChecked && squatChecked && deadliftChecked && barbellRowChecked) {
+                        Intent intent = new Intent(AskingForWeightsActivity.this, WorkoutActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent (AskingForWeightsActivity.this, UncheckedActivity.class);
+                        startActivity(intent);
+                    }
+
                 } else {
                     Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights are blank", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
