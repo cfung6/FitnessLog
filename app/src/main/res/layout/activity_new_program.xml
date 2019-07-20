@@ -30,7 +30,6 @@
         android:layout_weight = "1"
         android:onClick="levelClicked"
         android:text="@string/beginner_text"
-        android:textSize = "1sp"
         android:autoSizeTextType="uniform"
        />
 
@@ -44,7 +43,6 @@
         android:layout_weight = "1"
         android:onClick="levelClicked"
         android:text="@string/intermediate_text"
-        android:textSize = "1sp"
         android:autoSizeTextType="uniform"
         />
 
@@ -58,7 +56,6 @@
         android:layout_weight = "1"
         android:onClick="levelClicked"
         android:text="@string/advanced_text"
-        android:textSize = "1sp"
         android:autoSizeTextType="uniform"
         />
 
