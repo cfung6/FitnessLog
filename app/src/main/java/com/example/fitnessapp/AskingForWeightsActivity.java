@@ -11,40 +11,39 @@ import android.widget.EditText;
 
 public class AskingForWeightsActivity extends AppCompatActivity {
 
-    Button submitButton;
-    EditText benchEditText;
-    EditText overheadPressEditText;
-    EditText squatEditText;
-    EditText deadliftEditText;
-    EditText barbellRowEditText;
-
+    private Button submitButton;
+    private EditText benchEditText;
+    private EditText overheadPressEditText;
+    private EditText squatEditText;
+    private EditText deadliftEditText;
+    private EditText barbellRowEditText;
+    private double benchInput;
+    private double overheadInput;
+    private double squatInput;
+    private double deadliftInput;
+    private double barbellRowInput;
+    private String benchString;
+    private String overheadString;
+    private String squatString;
+    private String deadliftString;
+    private String barbellRowString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asking_for_weights);
-        submitButton = (Button)findViewById(R.id.submit_weight_button);
+        submitButton = findViewById(R.id.submit_weight_button);
         initializeEditTexts();
         limitEditTextsInput();
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String benchInput = benchEditText.getText().toString();
-                String overheadInput = overheadPressEditText.getText().toString();
-                String squatInput = squatEditText.getText().toString();
-                String deadliftInput = squatEditText.getText().toString();
-                String barbellRowInput = barbellRowEditText.getText().toString();
-            }
-        });
+        onSubmitButtonClick();
     }
 
     private void initializeEditTexts() {
-        benchEditText = (EditText)findViewById(R.id.textbox_bench);
-        overheadPressEditText = (EditText)findViewById(R.id.textbox_overhead);
-        squatEditText = (EditText)findViewById(R.id.textbox_squat);
-        deadliftEditText = (EditText)findViewById(R.id.textbox_deadlift);
-        barbellRowEditText = (EditText)findViewById(R.id.textbox_barbell_row);
+        benchEditText = findViewById(R.id.textbox_bench);
+        overheadPressEditText = findViewById(R.id.textbox_overhead);
+        squatEditText = findViewById(R.id.textbox_squat);
+        deadliftEditText = findViewById(R.id.textbox_deadlift);
+        barbellRowEditText = findViewById(R.id.textbox_barbell_row);
     }
 
     private void limitEditTextsInput() {
@@ -54,6 +53,46 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         deadliftEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         barbellRowEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
     }
+
+    private boolean checkIfEmpty (String str1, String str2, String str3, String str4, String str5) {
+
+        return (str1.isEmpty() || str2.isEmpty() || str3.isEmpty() || str4.isEmpty() || str1.isEmpty());
+
+    }
+
+    private void onSubmitButtonClick () {
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                intializeStringInputs();;
+
+                if (!checkIfEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
+                    convertStringsToDoubles();
+                } else {
+                    
+                }
+            }
+        });
+    }
+
+    private void intializeStringInputs () {
+        benchString = benchEditText.getText().toString();
+        overheadString = overheadPressEditText.getText().toString();
+        squatString = squatEditText.getText().toString();
+        deadliftString = deadliftEditText.getText().toString();
+        barbellRowString = barbellRowEditText.getText().toString();
+    }
+
+    private void convertStringsToDoubles () {
+        benchInput = Double.parseDouble(benchString);
+        overheadInput = Double.parseDouble(overheadString);
+        squatInput = Double.parseDouble(squatString);
+        deadliftInput = Double.parseDouble(deadliftString);
+        barbellRowInput = Double.parseDouble(barbellRowString);
+    }
+
 
     public void onBenchPressClick (View view) {
         boolean checked = ((CheckBox) view).isChecked();
@@ -105,4 +144,24 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         }
     }
 
+
+    public double getBenchInput() {
+        return benchInput;
+    }
+
+    public double getOverheadInput() {
+        return overheadInput;
+    }
+
+    public double getSquatInput() {
+        return squatInput;
+    }
+
+    public double getDeadliftInput() {
+        return deadliftInput;
+    }
+
+    public double getBarbellRowInput() {
+        return barbellRowInput;
+    }
 }
