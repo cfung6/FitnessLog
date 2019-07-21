@@ -8,7 +8,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UncheckedActivity"></activity>
         <activity android:name=".WorkoutActivity" />
         <activity android:name=".NewProgramActivity" />
         <activity android:name=".AskingForWeightsActivity" />

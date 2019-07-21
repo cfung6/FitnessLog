@@ -28,7 +28,7 @@
         android:layout_marginRight="25sp"
         android:layout_marginBottom="15sp"
         android:layout_weight = "1"
-        android:onClick="levelClicked"
+        android:onClick="beginnerLevelClicked"
         android:text="@string/beginner_text"
         android:autoSizeTextType="uniform"
        />
@@ -41,7 +41,7 @@
         android:layout_marginRight="25sp"
         android:layout_marginBottom="15sp"
         android:layout_weight = "1"
-        android:onClick="levelClicked"
+        android:onClick="intermediateLevelClicked"
         android:text="@string/intermediate_text"
         android:autoSizeTextType="uniform"
         />
@@ -54,7 +54,7 @@
         android:layout_marginRight="25sp"
         android:layout_marginBottom="15sp"
         android:layout_weight = "1"
-        android:onClick="levelClicked"
+        android:onClick="advancedLevelClicked"
         android:text="@string/advanced_text"
         android:autoSizeTextType="uniform"
         />

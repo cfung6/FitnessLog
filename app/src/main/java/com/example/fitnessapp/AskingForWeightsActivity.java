@@ -35,11 +35,14 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private boolean squatChecked;
     private boolean deadliftChecked;
     private boolean barbellRowChecked;
+    private Levels levelChosen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asking_for_weights);
+        Intent intent = getIntent();
+        levelChosen = (Levels) intent.getSerializableExtra("LEVEL_CHOSEN");
         submitButton = findViewById(R.id.submit_weight_button);
         initializeEditTexts();
         limitEditTextsInput();
@@ -104,21 +107,24 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
                 if (!isEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
                     convertStringsToDoubles();
-
-                    if (benchPressChecked && overheadPressChecked && squatChecked && deadliftChecked && barbellRowChecked) {
-                        Intent intent = new Intent(AskingForWeightsActivity.this, WorkoutActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent (AskingForWeightsActivity.this, UncheckedActivity.class);
-                        startActivity(intent);
-                    }
-
+                    passWeightsToNext (WorkoutActivity.class);
                 } else {
                     Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights are blank", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 }
             }
         });
+    }
+
+    private void passWeightsToNext (Class cls) {
+
+        Intent intent = new Intent(AskingForWeightsActivity.this, cls);
+        intent.putExtra ("BENCH_PRESS_WEIGHT", getBenchInput());
+        intent.putExtra ("OVERHEAD_PRESS_WEIGHT", getOverheadInput());
+        intent.putExtra ("SQUAT_WEIGHT", getSquatInput());
+        intent.putExtra ("DEADLIFT_WEIGHT", getDeadliftInput());
+        intent.putExtra ("BARBELL_ROW_WEIGHT", getBarbellRowInput());
+        startActivity(intent);
     }
 
     private void initializeStringInputs() {
@@ -131,20 +137,30 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     private void convertStringsToDoubles () {
 
-        if (!benchString.isEmpty()){
+        if (!benchString.isEmpty() && !benchString.equals(".") && benchPressChecked){
             benchInput = Double.parseDouble(benchString);
+        } else {
+            benchInput = -1;
         }
-        if (!overheadString.isEmpty()) {
+        if (!overheadString.isEmpty() && !overheadString.equals(".") && overheadPressChecked) {
             overheadInput = Double.parseDouble(overheadString);
+        } else {
+            overheadInput = -1;
         }
-        if (!squatString.isEmpty()) {
+        if (!squatString.isEmpty() && !squatString.equals(".") && squatChecked) {
             squatInput = Double.parseDouble(squatString);
+        } else {
+            squatInput = -1;
         }
-        if (!deadliftString.isEmpty()) {
+        if (!deadliftString.isEmpty() && !deadliftString.equals(".") && deadliftChecked){
             deadliftInput = Double.parseDouble(deadliftString);
+        } else {
+            deadliftInput = -1;
         }
-        if (!barbellRowString.isEmpty()) {
+        if (!barbellRowString.isEmpty() && !barbellRowString.equals(".") && barbellRowChecked) {
             barbellRowInput = Double.parseDouble(barbellRowString);
+        } else {
+            barbellRowInput = -1;
         }
     }
 
@@ -201,22 +217,73 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
 
     public double getBenchInput() {
-        return benchInput;
+        if (benchInput == -1) {
+            if (levelChosen == Levels.BEGINNER) {
+                return DefaultWeights.BENCH_PRESS_BEGINNER;
+            } else if (levelChosen == Levels.INTERMEDIATE) {
+                return DefaultWeights.BENCH_PRESS_INTERMEDIATE;
+            } else {
+                return DefaultWeights.BENCH_PRESS_ADVANCED;
+            }
+        } else {
+            return benchInput;
+        }
+
     }
 
     public double getOverheadInput() {
-        return overheadInput;
+        if (overheadInput == -1) {
+            if (levelChosen == Levels.BEGINNER) {
+                return DefaultWeights.OVERHEAD_PRESS_BEGINNER;
+            } else if (levelChosen == Levels.INTERMEDIATE) {
+                return DefaultWeights.OVERHEAD_PRESS_INTERMEDIATE;
+            } else {
+                return DefaultWeights.OVERHEAD_PRESS_ADVANCED;
+            }
+        } else {
+            return overheadInput;
+        }
     }
 
     public double getSquatInput() {
-        return squatInput;
+        if (squatInput == -1) {
+            if (levelChosen == Levels.BEGINNER) {
+                return DefaultWeights.SQUAT_BEGINNER;
+            } else if (levelChosen == Levels.INTERMEDIATE) {
+                return DefaultWeights.SQUAT_INTERMEDIATE;
+            } else {
+                return DefaultWeights.SQUAT_ADVANCED;
+            }
+        } else {
+            return squatInput;
+        }
     }
 
     public double getDeadliftInput() {
-        return deadliftInput;
+        if (deadliftInput == -1) {
+            if (levelChosen == Levels.BEGINNER) {
+                return DefaultWeights.DEADLIFT_BEGINNER;
+            } else if (levelChosen == Levels.INTERMEDIATE) {
+                return DefaultWeights.DEADLIFT_INTERMEDIATE;
+            } else {
+                return DefaultWeights.DEADLIFT_ADVANCED;
+            }
+        } else {
+            return deadliftInput;
+        }
     }
 
     public double getBarbellRowInput() {
-        return barbellRowInput;
+        if (barbellRowInput == -1) {
+            if (levelChosen == Levels.BEGINNER) {
+                return DefaultWeights.BARBELL_ROW_BEGINNER;
+            } else if (levelChosen == Levels.INTERMEDIATE) {
+                return DefaultWeights.BARBELL_ROW_INTERMEDIATE;
+            } else {
+                return DefaultWeights.BARBELL_ROW_ADVANCED;
+            }
+        } else {
+            return barbellRowInput;
+        }
     }
 }
