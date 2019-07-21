@@ -45,8 +45,6 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         limitEditTextsInput();
         intializeBooleans();
         onSubmitButtonClick();
-
-
     }
 
     private void intializeBooleans() {
