@@ -107,7 +107,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
                 if (!isEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
                     convertStringsToDoubles();
-                    passWeightsToNext (WorkoutActivity.class);
+                    passWeightsToNext ();
                 } else {
                     Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights are blank", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
@@ -116,9 +116,16 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         });
     }
 
-    private void passWeightsToNext (Class cls) {
+    private void passWeightsToNext () {
 
-        Intent intent = new Intent(AskingForWeightsActivity.this, cls);
+        Intent intent;
+        if (levelChosen == Levels.BEGINNER) {
+            intent = new Intent(AskingForWeightsActivity.this, BeginnerActivity.class);
+        } else if (levelChosen == Levels.INTERMEDIATE) {
+            intent = new Intent(AskingForWeightsActivity.this, IntermediateActivity.class);
+        } else  {
+            intent = new Intent(AskingForWeightsActivity.this, AdvancedActivity.class);
+        }
         intent.putExtra ("BENCH_PRESS_WEIGHT", getBenchInput());
         intent.putExtra ("OVERHEAD_PRESS_WEIGHT", getOverheadInput());
         intent.putExtra ("SQUAT_WEIGHT", getSquatInput());
