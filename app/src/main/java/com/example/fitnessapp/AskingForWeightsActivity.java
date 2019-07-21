@@ -43,11 +43,11 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.submit_weight_button);
         initializeEditTexts();
         limitEditTextsInput();
-        intializeBooleans();
+        initializeBooleans();
         onSubmitButtonClick();
     }
 
-    private void intializeBooleans() {
+    private void initializeBooleans() {
         benchPressChecked = false;
         overheadPressChecked = false;
         squatChecked = false;
@@ -100,10 +100,11 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intializeStringInputs();
+                initializeStringInputs();
 
                 if (!isEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
                     convertStringsToDoubles();
+
                     if (benchPressChecked && overheadPressChecked && squatChecked && deadliftChecked && barbellRowChecked) {
                         Intent intent = new Intent(AskingForWeightsActivity.this, WorkoutActivity.class);
                         startActivity(intent);
@@ -120,7 +121,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         });
     }
 
-    private void intializeStringInputs () {
+    private void initializeStringInputs() {
         benchString = benchEditText.getText().toString();
         overheadString = overheadPressEditText.getText().toString();
         squatString = squatEditText.getText().toString();
@@ -129,11 +130,22 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     private void convertStringsToDoubles () {
-        benchInput = Double.parseDouble(benchString);
-        overheadInput = Double.parseDouble(overheadString);
-        squatInput = Double.parseDouble(squatString);
-        deadliftInput = Double.parseDouble(deadliftString);
-        barbellRowInput = Double.parseDouble(barbellRowString);
+
+        if (!benchString.isEmpty()){
+            benchInput = Double.parseDouble(benchString);
+        }
+        if (!overheadString.isEmpty()) {
+            overheadInput = Double.parseDouble(overheadString);
+        }
+        if (!squatString.isEmpty()) {
+            squatInput = Double.parseDouble(squatString);
+        }
+        if (!deadliftString.isEmpty()) {
+            deadliftInput = Double.parseDouble(deadliftString);
+        }
+        if (!barbellRowString.isEmpty()) {
+            barbellRowInput = Double.parseDouble(barbellRowString);
+        }
     }
 
 
