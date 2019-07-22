@@ -17,7 +17,7 @@
     <string name="continue_program">Continue Program</string>
     <string name="new_program">New Program</string>
     <string name="it_s_gainz_day">it\'s Gainz Day!</string>
-    <string name="leave_the_ones_you_never_did_blank">Leave the ones you never did blank</string>
+    <string name="leave_the_ones_you_never_did_blank">Leave the ones you never did blank. Weights will be automatically assigned if left blank. </string>
     <string name="what_exercises_have_you_done">What exercises have you done?</string>
     <string name="overhead_press">Overhead press</string>
     <string name="input_max_weight_for_5_reps">input max weight for 5 reps</string>
