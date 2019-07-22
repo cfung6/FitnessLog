@@ -21,7 +21,7 @@ class Routine {
 
     // EFFECTS: calls addWeek every Sunday
     public void updateWeek() {
-        if (c.get(Calendar.DAY_OF_WEEK) == 1) {
+        if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
             addWeek();
         }
     }

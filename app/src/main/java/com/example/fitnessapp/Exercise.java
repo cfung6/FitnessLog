@@ -26,7 +26,7 @@ public class Exercise {
     }
 
     public String getName () {
-        return this.getName();
+        return this.name;
     }
 
 
