@@ -9,14 +9,12 @@ public class Exercise {
 
 
     private String name;
-    private String description;
     private double weight;
     private Map<Double, List<Integer>> goal;
     private Map<Double, List<Integer>> actual;
 
-    public Exercise (String name, String description) {
+    public Exercise (String name) {
         this.name = name;
-        this.description = description;
         this.actual = new HashMap<Double, List<Integer>>();
         this.goal = new HashMap<Double, List<Integer>>();
     }
@@ -28,8 +26,6 @@ public class Exercise {
     public String getName () {
         return this.name;
     }
-
-
 
 
     public boolean completeSet () {

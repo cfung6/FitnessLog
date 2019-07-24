@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.fitnessapp.R;
+import com.example.fitnessapp.Routine;
+import com.example.fitnessapp.Workout;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -15,6 +17,15 @@ public class BeginnerActivity extends AppCompatActivity {
     private double startingSquatWeight;
     private double startingDeadliftWeight;
     private double startingBarbellRowWeight;
+
+    private Routine beginnerRoutine;
+    private Workout workoutA;
+    private Workout workoutB;
+//    private Exercise benchPress;
+//    private Exercise overheadPress;
+//    private Exercise squat;
+//    private Exercise deadlift;
+//    private Exercise barbellRow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Set;
 
-class Routine {
+public class Routine {
     private int week;
     private int numOfWorkouts;
     private Calendar c;
