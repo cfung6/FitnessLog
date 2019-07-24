@@ -8,12 +8,10 @@ import java.util.Set;
 import java.util.Objects;
 
 public class Workout {
-
     private String name;
     private Set<Exercise> exercises;
 
     public Workout (String name, Set<Exercise> exercises) {
-
         this.name = name;
         this.exercises = exercises;
     }
@@ -32,13 +30,11 @@ public class Workout {
     }
 
     public String getName () {
-
-        return this.name;
+        return name;
     }
 
     public Set<Exercise> getExercises () {
-
-        return this.exercises;
+        return exercises;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
