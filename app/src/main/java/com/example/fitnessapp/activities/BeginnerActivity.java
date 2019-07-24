@@ -39,8 +39,5 @@ public class BeginnerActivity extends AppCompatActivity {
         startingDeadliftWeight = intent.getDoubleExtra ("DEADLIFT_WEIGHT", -1);
         startingBarbellRowWeight = intent.getDoubleExtra ("BARBELL_ROW_WEIGHT", -1);
 
-        TextView tv = findViewById(R.id.textView1);
-
-        tv.setText(startingBenchWeight+"\n"+startingOverheadWeight+"\n"+startingSquatWeight+"\n"+startingDeadliftWeight+"\n"+startingBarbellRowWeight);
     }
 }
