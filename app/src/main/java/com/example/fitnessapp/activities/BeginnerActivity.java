@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.fitnessapp.Exercise;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.Routine;
 import com.example.fitnessapp.Workout;
@@ -16,6 +17,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -28,11 +32,11 @@ public class BeginnerActivity extends AppCompatActivity {
     private Routine beginnerRoutine;
     private Workout workoutA;
     private Workout workoutB;
-//    private Exercise benchPress;
-//    private Exercise overheadPress;
-//    private Exercise squat;
-//    private Exercise deadlift;
-//    private Exercise barbellRow;
+    private Exercise benchPress;
+    private Exercise overheadPress;
+    private Exercise squat;
+    private Exercise deadlift;
+    private Exercise barbellRow;
 
     private FileOutputStream fileOutputStream;
 
@@ -48,6 +52,17 @@ public class BeginnerActivity extends AppCompatActivity {
         startingDeadliftWeight = intent.getDoubleExtra ("DEADLIFT_WEIGHT", -1);
         startingBarbellRowWeight = intent.getDoubleExtra ("BARBELL_ROW_WEIGHT", -1);
 
+        benchPress = new Exercise ("benchPress", getApplicationContext());
+        overheadPress = new Exercise("overheadPress",getApplicationContext());
+        squat = new Exercise ("squat", getApplicationContext());
+        deadlift = new Exercise ("deadlift", getApplicationContext());
+        barbellRow = new Exercise("barbellRow", getApplicationContext());
 
+        benchPress.addWeightDone(startingBenchWeight, Arrays.asList(5,5,5));
+        overheadPress.addWeightDone(startingOverheadWeight, Arrays.asList(5,5,5));
+        squat.addWeightDone(startingSquatWeight, Arrays.asList(5,5,5));
+        deadlift.addWeightDone(startingDeadliftWeight, Arrays.asList(5,5,5));
+        barbellRow.addWeightDone(startingBarbellRowWeight, Arrays.asList(5,5,5));
+        
     }
 }
