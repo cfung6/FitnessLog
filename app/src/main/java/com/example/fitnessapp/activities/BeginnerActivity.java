@@ -63,6 +63,10 @@ public class BeginnerActivity extends AppCompatActivity {
         squat.addWeightDone(startingSquatWeight, Arrays.asList(5,5,5));
         deadlift.addWeightDone(startingDeadliftWeight, Arrays.asList(5,5,5));
         barbellRow.addWeightDone(startingBarbellRowWeight, Arrays.asList(5,5,5));
-        
+
+        //For testing
+        TextView tv = findViewById(R.id.textView1);
+        benchPress.addWeightDone(500, Arrays.asList(10));
+        tv.setText(benchPress.getActualMap().keySet() + "\n" + benchPress.getActualMap().values() + "\n" + benchPress.getGoalMap().keySet() + "\n" + benchPress.getGoalMap().values());
     }
 }
