@@ -112,6 +112,7 @@ public class Exercise{
     public Map<Double,List<Integer>> getActualMap () {
         return this.actual;
     }
+
     private void increaseWeight (int increment, double weight, List<Integer> reps) {
         if (completeSet()) {
             double newWeight = weight + increment;
@@ -145,11 +146,7 @@ public class Exercise{
 
     }
 
-    public Map<Double, List<Integer>> getActualMap() {
-        return actual;
-    }
-
-
+    
     private String listToString (List<Integer> reps) {
 
         String str = "";
