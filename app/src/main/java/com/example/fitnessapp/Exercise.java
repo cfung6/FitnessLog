@@ -100,6 +100,9 @@ public class Exercise{
         return this.goal;
     }
 
+    public Map<Double,List<Integer>> getActualMap () {
+        return this.actual;
+    }
     private void increaseWeight (int increment, double weight, List<Integer> reps) {
         if (completeSet()) {
             double newWeight = weight + increment;
