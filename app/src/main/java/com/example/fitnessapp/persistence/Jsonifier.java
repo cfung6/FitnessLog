@@ -58,33 +58,33 @@ public class Jsonifier {
         return levelJson;
     }
 
-    public static JSONObject exerciseToJson(Exercise exercise) {
-        JSONObject exerciseJson = new JSONObject();
-        JSONObject goalMap = new JSONObject(exercise.getGoalMap());
-        JSONArray goalArray = new JSONArray();
-        JSONObject actualMap = new JSONObject(exercise.getActualMap());
-        JSONArray actualArray = new JSONArray();
-        try {
-            for(Iterator iteratorOne = goalMap.keys(); iteratorOne.hasNext();) {
-                Double key = (Double) iteratorOne.next();
-                String keyAsString = Double.toString(key);
-                JSONObject o = new JSONObject().put(keyAsString, exercise.getGoalMap().get(key));
-                goalArray.put(o);
-            }
-            for (Iterator iteratorTwo = actualMap.keys(); iteratorTwo.hasNext();) {
-                Double key = (Double) iteratorTwo.next();
-                String keyAsString = Double.toString(key);
-                JSONObject o = new JSONObject().put(keyAsString, exercise.getActualMap().get(key));
-                actualArray.put(o);
-            }
-            exerciseJson.put("name", exercise.getName());
-            exerciseJson.put("goal", goalArray);
-            exerciseJson.put("actual", actualArray);
-        } catch(Exception e) {
-            System.out.println("Exception from exerciseJSON conversion thrown");
-        }
-        return exerciseJson;
-    }
+//    public static JSONObject exerciseToJson(Exercise exercise) {
+//        JSONObject exerciseJson = new JSONObject();
+//        JSONObject goalMap = new JSONObject(exercise.getGoalMap());
+//        JSONArray goalArray = new JSONArray();
+//        JSONObject actualMap = new JSONObject(exercise.getActualMap());
+//        JSONArray actualArray = new JSONArray();
+//        try {
+//            for(Iterator iteratorOne = goalMap.keys(); iteratorOne.hasNext();) {
+//                Double key = (Double) iteratorOne.next();
+//                String keyAsString = Double.toString(key);
+//                JSONObject o = new JSONObject().put(keyAsString, exercise.getGoalMap().get(key));
+//                goalArray.put(o);
+//            }
+//            for (Iterator iteratorTwo = actualMap.keys(); iteratorTwo.hasNext();) {
+//                Double key = (Double) iteratorTwo.next();
+//                String keyAsString = Double.toString(key);
+//                JSONObject o = new JSONObject().put(keyAsString, exercise.getActualMap().get(key));
+//                actualArray.put(o);
+//            }
+//            exerciseJson.put("name", exercise.getName());
+//            exerciseJson.put("goal", goalArray);
+//            exerciseJson.put("actual", actualArray);
+//        } catch(Exception e) {
+//            System.out.println("Exception from exerciseJSON conversion thrown");
+//        }
+//        return exerciseJson;
+//    }
 
 
 }

@@ -52,21 +52,20 @@ public class BeginnerActivity extends AppCompatActivity {
         startingDeadliftWeight = intent.getDoubleExtra ("DEADLIFT_WEIGHT", -1);
         startingBarbellRowWeight = intent.getDoubleExtra ("BARBELL_ROW_WEIGHT", -1);
 
-        benchPress = new Exercise ("benchPress", getApplicationContext());
-        overheadPress = new Exercise("overheadPress",getApplicationContext());
-        squat = new Exercise ("squat", getApplicationContext());
-        deadlift = new Exercise ("deadlift", getApplicationContext());
-        barbellRow = new Exercise("barbellRow", getApplicationContext());
-
-        benchPress.addWeightDone(startingBenchWeight, Arrays.asList(5,5,5));
-        overheadPress.addWeightDone(startingOverheadWeight, Arrays.asList(5,5,5));
-        squat.addWeightDone(startingSquatWeight, Arrays.asList(5,5,5));
-        deadlift.addWeightDone(startingDeadliftWeight, Arrays.asList(5,5,5));
-        barbellRow.addWeightDone(startingBarbellRowWeight, Arrays.asList(5,5,5));
+        benchPress = new Exercise ("benchPress", startingBenchWeight, 5, 1, Arrays.asList(5,5,5));
+//        overheadPress = new Exercise("overheadPress",startingOverheadWeight, 5, 1, Arrays.asList(5,5,5));
+//        squat = new Exercise ("squat", startingSquatWeight, 5, 1, Arrays.asList(5,5,5));
+//        deadlift = new Exercise ("deadlift", startingDeadliftWeight, 5, 1, Arrays.asList(5,5,5));
+//        barbellRow = new Exercise("barbellRow", startingBarbellRowWeight, 5, 1, Arrays.asList(5,5,5));
 
         //For testing
-        TextView tv = findViewById(R.id.textView1);
+        benchPress.addRepsDone(75 ,5);
+        benchPress.addRepsDone(75 ,5);
+        benchPress.addRepsDone(70 ,5);
 
-        tv.setText(benchPress.getActualMap().keySet() + "\n" + benchPress.getActualMap().values() + "\n" + benchPress.getGoalMap().keySet() + "\n" + benchPress.getGoalMap().values());
+        benchPress.increaseWeight();
+
+        TextView tv = findViewById(R.id.textView1);
+        tv.setText("" + benchPress.getPass() + "\n" + benchPress.getGoalWeight());
     }
 }
