@@ -1,6 +1,7 @@
 package com.example.fitnessapp;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -45,6 +46,10 @@ public class Exercise{
         this.actual.get(weight).add(reps);
     }
 
+    public void setInitalGoalReps (double weight, List<Integer> reps) {
+
+    }
+
     public String getName () {
         return this.name;
     }
@@ -71,6 +76,7 @@ public class Exercise{
 
         //Checking if the required amount of weights are done
         if (this.actual.keySet().size() < this.goal.keySet().size()) {
+            Log.d("myTag", "1");
             return false;
         }
 
@@ -83,16 +89,20 @@ public class Exercise{
                 if (actualRepsList.size() >= goalRepsList.size()) {
                     for (int j = 0; j < goalRepsList.size(); j++) {
                         if (actualRepsList.get(j) < goalRepsList.get(j)) {
+                            Log.d("myTag", "2");
                             return false;
                         }
                     }
                 } else {
+                    Log.d("myTag", "3");
                     return false;
                 }
             } else {
+                Log.d("myTag", "4");
                 return false;
             }
         }
+        Log.d("myTag", "5");
         return true;
     }
 
@@ -108,6 +118,7 @@ public class Exercise{
             double newWeight = weight + increment;
             this.goal.put(newWeight,reps);
         }
+        this.actual.remove(weight-increment);
     }
 
     private void writeToFile (Double weight, List<Integer> reps) {

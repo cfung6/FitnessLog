@@ -66,7 +66,7 @@ public class BeginnerActivity extends AppCompatActivity {
 
         //For testing
         TextView tv = findViewById(R.id.textView1);
-        benchPress.addWeightDone(500, Arrays.asList(10));
+
         tv.setText(benchPress.getActualMap().keySet() + "\n" + benchPress.getActualMap().values() + "\n" + benchPress.getGoalMap().keySet() + "\n" + benchPress.getGoalMap().values());
     }
 }
