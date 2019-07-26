@@ -39,4 +39,19 @@ public class Routine {
         this.workouts.add(workout);
     }
 
+    public int getNumOfWorkouts() {
+        return numOfWorkouts;
+    }
+
+    public Calendar getCurrentCalendar() {
+        return c;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<Workout> getWorkouts() {
+        return workouts;
+    }
 }
