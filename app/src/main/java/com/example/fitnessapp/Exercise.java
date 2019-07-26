@@ -14,21 +14,17 @@ import java.util.Map;
 import java.util.Set;
 
 public class Exercise{
-
-
     private String name;
     private Map<Double, List<Integer>> goal;
     private Map<Double, List<Integer>> actual;
     private Context context;
     private FileOutputStream fileOutputStream;
-    private List<Integer> actualReps;
 
     public Exercise (String name, Context context) {
         this.name = name;
         this.actual = new HashMap<>();
         this.goal = new HashMap<>();
         this.context = context;
-        this.actualReps = new ArrayList<>();
     }
 
     public void addWeightDone(double weight, List<Integer> reps) {
@@ -40,7 +36,7 @@ public class Exercise{
     public void addCompletedReps (double weight, int reps) {
 
         if (!this.actual.containsKey(weight)) {
-            this.actual.put(weight,actualReps);
+            this.actual.put(weight, new ArrayList<Integer>());
         }
         this.actual.get(weight).add(reps);
     }
@@ -76,8 +72,8 @@ public class Exercise{
 
         for (int i = 0; i < this.goal.keySet().size(); i++) {
             if (actualWeightsList.get(i) >= goalWeightsList.get(i)) {
-                List<Integer> actualRepsList = this.actual.get(actualWeightsList.get(i));
-                List<Integer> goalRepsList = this.goal.get(goalWeightsList.get(i));
+                List<Integer> actualRepsList = actual.get(actualWeightsList.get(i));
+                List<Integer> goalRepsList = goal.get(goalWeightsList.get(i));
 
                 //Checking if required amount of sets are done
                 if (actualRepsList.size() >= goalRepsList.size()) {
@@ -96,6 +92,9 @@ public class Exercise{
         return true;
     }
 
+
+
+
     public Map<Double,List<Integer>> getGoalMap () {
         return this.goal;
     }
@@ -106,6 +105,8 @@ public class Exercise{
             this.goal.put(newWeight,reps);
         }
     }
+
+
 
     private void writeToFile (Double weight, List<Integer> reps) {
 
@@ -129,6 +130,11 @@ public class Exercise{
         }
 
     }
+
+    public Map<Double, List<Integer>> getActualMap() {
+        return actual;
+    }
+
 
     private String listToString (List<Integer> reps) {
 
