@@ -46,6 +46,8 @@ public class Exercise{
         if (actualRepsDone.size() < goalReps.size()) {
             return false;
         }
+        Collections.sort(actualRepsDone, Collections.<Integer>reverseOrder());
+        Collections.sort(goalReps, Collections.<Integer>reverseOrder());
         for (int i = 0; i < goalReps.size(); i++) {
             if (actualRepsDone.get(i) < goalReps.get(i)) {
                 return false;
