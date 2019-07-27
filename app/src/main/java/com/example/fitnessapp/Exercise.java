@@ -16,7 +16,7 @@ public class Exercise{
     private List<Double> actualWeightList;
     private boolean pass;
 
-    public Exercise (String name, double weight, int increment, double percentage, List<Integer> reps) {
+    public Exercise(String name, double weight, int increment, double percentage, List<Integer> reps) {
         this.name = name;
         this.increment = increment;
         this.percentage = percentage;
@@ -28,7 +28,7 @@ public class Exercise{
         pass = true;
     }
 
-    public void addRepsDone (double weight, int reps) {
+    public void addRepsDone(double weight, int reps) {
         if (weight < goalWeight) {
             pass = false;
         }
@@ -42,7 +42,7 @@ public class Exercise{
         }
     }
 
-    private boolean completeExercise () {
+    private boolean completeExercise() {
         if (actualRepsDone.size() < goalReps.size()) {
             return false;
         }
@@ -54,21 +54,50 @@ public class Exercise{
         return true;
     }
 
-    private void setActualAndGoalWeight (double weight) {
+    private void setActualAndGoalWeight(double weight) {
         capableWeight = weight;
         goalWeight = weight * percentage + increment;
     }
 
-    private double setNewCapableWeight (){
+    private double setNewCapableWeight(){
         Collections.sort(actualWeightList);
         return actualWeightList.get(0);
     }
 
-    public boolean getPass () {
+    public boolean getPass() {
         return pass && completeExercise();
     }
 
-    public double getGoalWeight () {
+    public double getGoalWeight() {
         return goalWeight;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Integer> getActualRepsDone() {
+        return actualRepsDone;
+    }
+
+    public List<Integer> getGoalReps() {
+        return goalReps;
+    }
+
+    public double getCapableWeight() {
+        return capableWeight;
+    }
+
+    public int getIncrement() {
+        return increment;
+    }
+
+    public double getPercentage() {
+        return percentage;
+    }
+
+    public List<Double> getActualWeightList() {
+        return actualWeightList;
+    }
+
 }
