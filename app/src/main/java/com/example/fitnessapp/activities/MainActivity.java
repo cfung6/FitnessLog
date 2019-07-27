@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.view.View;
 
 import com.example.fitnessapp.R;
+
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
