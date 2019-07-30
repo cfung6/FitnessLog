@@ -2,7 +2,7 @@ package com.example.fitnessapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -12,16 +12,10 @@ import com.example.fitnessapp.R;
 import com.example.fitnessapp.Routine;
 import com.example.fitnessapp.Workout;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -47,7 +41,10 @@ public class BeginnerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beginner);
         TextView dateView = findViewById(R.id.date);
-        dateView.setText(Calendar.getInstance().toString());
+        calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+
+        dateView.setText(date.toString());
 
         Intent intent = getIntent();
         startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
