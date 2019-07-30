@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -68,10 +66,10 @@ public class BeginnerActivity extends AppCompatActivity {
         exerciseOneWeightView.setText(currentExercise.getGoalWeight() + "");
 
         TextView exerciseOneSetView = findViewById(R.id.exercise_one_set);
-        exerciseOneSetView.setText(currentExercise.getGoalReps().size());
+        exerciseOneSetView.setText(currentExercise.getGoalReps().size() + "");
 
         TextView exerciseOneRepsView = findViewById(R.id.exercise_one_reps);
-        exerciseOneRepsView.setText(currentExercise.getGoalReps().get(0));
+        exerciseOneRepsView.setText(currentExercise.getGoalReps().get(0) + "");
 
 
 

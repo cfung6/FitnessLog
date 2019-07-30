@@ -8,8 +8,7 @@ import com.example.fitnessapp.Workout;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 public class Jsonifier {
 
@@ -39,7 +38,7 @@ public class Jsonifier {
         return routineJson;
     }
 
-    private static JSONArray workoutsToJsonArray(Set<Workout> workouts) {
+    private static JSONArray workoutsToJsonArray(List<Workout> workouts) {
         JSONArray workoutsJsonArray = new JSONArray();
         for (Workout w : workouts) {
             workoutsJsonArray.put(workoutToJson(w));
