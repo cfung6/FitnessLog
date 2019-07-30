@@ -4,16 +4,19 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import java.util.Set;
+import java.util.List;
 import java.util.Objects;
 
 public class Workout {
     private String name;
-    private Set<Exercise> exercises;
+    private List<Exercise> exercises;
+    private int currentExercise;
 
-    public Workout (String name, Set<Exercise> exercises) {
+
+    public Workout(String name, List<Exercise> exercises) {
         this.name = name;
         this.exercises = exercises;
+        currentExercise = 0;
     }
 
     public void addExercise (Exercise exercise) {
@@ -22,18 +25,25 @@ public class Workout {
 
     public void removeExercise (Exercise exercise) {
 
-        if (this.exercises.contains(exercise)) {
-
-            this.exercises.remove (exercise);
-        }
+        this.exercises.remove(exercise);
     }
 
     public String getName () {
         return name;
     }
 
-    public Set<Exercise> getExercises () {
+    public List<Exercise> getExercises() {
         return exercises;
+    }
+
+    public Exercise getCurrentExercise() {
+        return exercises.get(currentExercise);
+    }
+
+    public void nextExercise() {
+        int length = exercises.size();
+        currentExercise++;
+        currentExercise %= length;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

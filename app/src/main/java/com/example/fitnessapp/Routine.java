@@ -1,7 +1,9 @@
 package com.example.fitnessapp;
 
-import java.util.ArrayList;
+
 import java.util.Calendar;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Routine {
@@ -9,9 +11,10 @@ public class Routine {
     private int numOfWorkouts;
     private Calendar c;
     private String name;
-    private Set<Workout> workouts;
+    private List<Workout> workouts;
+    private int currentWorkout;
 
-    public Routine(int numOfWorkouts, String name, Set<Workout> workouts) {
+    public Routine(int numOfWorkouts, String name, List<Workout> workouts) {
         week = 1;
         this.numOfWorkouts = numOfWorkouts;
         this.name = name;
@@ -51,7 +54,17 @@ public class Routine {
         return name;
     }
 
-    public Set<Workout> getWorkouts() {
+    public List<Workout> getWorkouts() {
         return workouts;
+    }
+
+    public Workout getCurrentWorkout() {
+        return workouts.get(currentWorkout);
+    }
+
+    public void nextWorkout() {
+        int length = workouts.size();
+        currentWorkout++;
+        currentWorkout %= length;
     }
 }

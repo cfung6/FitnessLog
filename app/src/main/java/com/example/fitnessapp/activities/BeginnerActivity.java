@@ -12,10 +12,12 @@ import com.example.fitnessapp.Routine;
 import com.example.fitnessapp.Workout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class BeginnerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beginner);
+
         TextView dateView = findViewById(R.id.date);
         calendar = Calendar.getInstance();
         Date date = calendar.getTime();
@@ -57,6 +60,21 @@ public class BeginnerActivity extends AppCompatActivity {
         initializeWorkouts();
         initializeRoutine();
 
+        TextView exerciseOneView = findViewById(R.id.exercise_one);
+        Exercise currentExercise = beginnerRoutine.getCurrentWorkout().getCurrentExercise();
+        exerciseOneView.setText(currentExercise.getName());
+
+        TextView exerciseOneWeightView = findViewById(R.id.exercise_one_weight);
+        exerciseOneWeightView.setText(currentExercise.getGoalWeight() + "");
+
+        TextView exerciseOneSetView = findViewById(R.id.exercise_one_set);
+        exerciseOneSetView.setText(currentExercise.getGoalReps().size());
+
+        TextView exerciseOneRepsView = findViewById(R.id.exercise_one_reps);
+        exerciseOneRepsView.setText(currentExercise.getGoalReps().get(0));
+
+
+
 //        //For testing
 //        benchPress.addRepsDone(100 ,5);
 //        benchPress.addRepsDone(100 ,5);
@@ -68,20 +86,20 @@ public class BeginnerActivity extends AppCompatActivity {
 //        tv.setText("" + benchPress.getPass() + "\n" + benchPress.getGoalWeight());
     }
 
-    private void initializeExercises () {
-        benchPress = new Exercise ("benchPress", startingBenchWeight, 5, 1, Arrays.asList(5,5,5));
-        overheadPress = new Exercise("overheadPress",startingOverheadWeight, 5, 1, Arrays.asList(5,5,5));
-        squat = new Exercise ("squat", startingSquatWeight, 5, 1, Arrays.asList(5,5,5));
-        deadlift = new Exercise ("deadlift", startingDeadliftWeight, 5, 1, Arrays.asList(5,5,5));
-        barbellRow = new Exercise("barbellRow", startingBarbellRowWeight, 5, 1, Arrays.asList(5,5,5));
+    private void initializeExercises() {
+        benchPress = new Exercise("Bench Press", startingBenchWeight, 5, 1, Arrays.asList(5, 5, 5));
+        overheadPress = new Exercise("Overhead Press", startingOverheadWeight, 5, 1, Arrays.asList(5, 5, 5));
+        squat = new Exercise("Squat", startingSquatWeight, 5, 1, Arrays.asList(5, 5, 5));
+        deadlift = new Exercise("Deadlift", startingDeadliftWeight, 5, 1, Arrays.asList(5));
+        barbellRow = new Exercise("Barbell Row", startingBarbellRowWeight, 5, 1, Arrays.asList(5, 5, 5));
     }
 
-    private void initializeWorkouts () {
-        workoutA = new Workout ("workoutA", new HashSet<>(Arrays.asList(squat,benchPress,barbellRow)));
-        workoutB = new Workout("workoutB", new HashSet<>(Arrays.asList(squat,overheadPress,deadlift)));
+    private void initializeWorkouts() {
+        workoutA = new Workout("workoutA", new ArrayList<Exercise>(Arrays.asList(squat, benchPress, barbellRow)));
+        workoutB = new Workout("workoutB", new ArrayList<Exercise>(Arrays.asList(squat, overheadPress, deadlift)));
     }
 
-    private void initializeRoutine () {
-        beginnerRoutine = new Routine(3, "beginner_routine", new HashSet<>(Arrays.asList(workoutA,workoutB)));
+    private void initializeRoutine() {
+        beginnerRoutine = new Routine(3, "beginner_routine", new ArrayList<Workout>(Arrays.asList(workoutA, workoutB)));
     }
 }
