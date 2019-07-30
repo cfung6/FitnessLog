@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 
@@ -39,10 +40,14 @@ public class BeginnerActivity extends AppCompatActivity {
     private Exercise deadlift;
     private Exercise barbellRow;
 
+    private Calendar calendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beginner);
+        TextView dateView = findViewById(R.id.date);
+        dateView.setText(Calendar.getInstance().toString());
 
         Intent intent = getIntent();
         startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
@@ -55,15 +60,15 @@ public class BeginnerActivity extends AppCompatActivity {
         initializeWorkouts();
         initializeRoutine();
 
-        //For testing
-        benchPress.addRepsDone(100 ,5);
-        benchPress.addRepsDone(100 ,5);
-        benchPress.addRepsDone(100 ,5);
-
-        benchPress.increaseWeight();
-
-        TextView tv = findViewById(R.id.textView1);
-        tv.setText("" + benchPress.getPass() + "\n" + benchPress.getGoalWeight());
+//        //For testing
+//        benchPress.addRepsDone(100 ,5);
+//        benchPress.addRepsDone(100 ,5);
+//        benchPress.addRepsDone(100 ,5);
+//
+//        benchPress.increaseWeight();
+//
+//        TextView tv = findViewById(R.id.textView1);
+//        tv.setText("" + benchPress.getPass() + "\n" + benchPress.getGoalWeight());
     }
 
     private void initializeExercises () {
