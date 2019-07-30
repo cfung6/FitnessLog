@@ -1,17 +1,17 @@
 package com.example.fitnessapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnessapp.Exercise;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.Routine;
 import com.example.fitnessapp.Workout;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,8 +43,8 @@ public class BeginnerActivity extends AppCompatActivity {
         TextView dateView = findViewById(R.id.date);
         calendar = Calendar.getInstance();
         Date date = calendar.getTime();
-
-        dateView.setText(date.toString());
+        String full = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        dateView.setText(full);
 
         Intent intent = getIntent();
         startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
