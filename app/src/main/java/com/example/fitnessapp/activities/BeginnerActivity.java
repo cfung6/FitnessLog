@@ -65,13 +65,13 @@ public class BeginnerActivity extends AppCompatActivity {
         exerciseOneView.setText(currentExercise.getName());
 
         TextView exerciseOneWeightView = findViewById(R.id.exercise_one_weight);
-        exerciseOneWeightView.setText(currentExercise.getGoalWeight() + "");
+        exerciseOneWeightView.setText("Weight: " + currentExercise.getGoalWeight());
 
         TextView exerciseOneSetView = findViewById(R.id.exercise_one_set);
-        exerciseOneSetView.setText(currentExercise.getGoalReps().size());
+        exerciseOneSetView.setText("Sets:" + currentExercise.getGoalReps().size());
 
         TextView exerciseOneRepsView = findViewById(R.id.exercise_one_reps);
-        exerciseOneRepsView.setText(currentExercise.getGoalReps().get(0));
+        exerciseOneRepsView.setText("Reps: " + currentExercise.getGoalReps().get(0));
 
 
 
