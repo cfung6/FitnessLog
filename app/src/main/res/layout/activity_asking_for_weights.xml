@@ -39,7 +39,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <CheckBox
                 android:id="@+id/checkbox_bench"
                 android:layout_width="match_parent"
@@ -54,7 +53,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="textPersonName"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -72,7 +71,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="textPersonName"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -90,7 +89,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="textPersonName"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -108,7 +107,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="textPersonName"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -126,7 +125,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="textPersonName"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 

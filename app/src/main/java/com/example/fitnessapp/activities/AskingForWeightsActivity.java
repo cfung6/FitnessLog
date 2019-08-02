@@ -1,7 +1,5 @@
 package com.example.fitnessapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -9,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnessapp.DefaultWeights;
 import com.example.fitnessapp.Levels;
@@ -96,7 +96,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         }
 
         if (barbellRowChecked) {
-            if (str5.isEmpty()) return true;
+            return str5.isEmpty();
         }
 
         return false;
@@ -173,7 +173,6 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             barbellRowInput = -1;
         }
     }
-
 
     public void onBenchPressClick (View view) {
         benchPressChecked = ((CheckBox) view).isChecked();

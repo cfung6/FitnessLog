@@ -2,6 +2,8 @@ package com.example.fitnessapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,14 +12,13 @@ import com.example.fitnessapp.Exercise;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.Routine;
 import com.example.fitnessapp.Workout;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class BeginnerActivity extends AppCompatActivity {
     private Exercise deadlift;
     private Exercise barbellRow;
 
+    private Exercise currentExercise;
     private Calendar calendar;
 
     @Override
@@ -43,25 +45,14 @@ public class BeginnerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beginner);
 
-        TextView dateView = findViewById(R.id.date);
-        calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        String full = new SimpleDateFormat("yyyy-MM-dd").format(date);
-        dateView.setText(full);
-
-        Intent intent = getIntent();
-        startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
-        startingOverheadWeight = intent.getDoubleExtra("OVERHEAD_PRESS_WEIGHT", -1);
-        startingSquatWeight = intent.getDoubleExtra ("SQUAT_WEIGHT", -1);
-        startingDeadliftWeight = intent.getDoubleExtra ("DEADLIFT_WEIGHT", -1);
-        startingBarbellRowWeight = intent.getDoubleExtra ("BARBELL_ROW_WEIGHT", -1);
-
+        setDateText();
+        initializeWeights();
         initializeExercises();
         initializeWorkouts();
         initializeRoutine();
 
         TextView exerciseOneView = findViewById(R.id.exercise_one);
-        Exercise currentExercise = beginnerRoutine.getCurrentWorkout().getCurrentExercise();
+        currentExercise = beginnerRoutine.getCurrentWorkout().getCurrentExercise();
         exerciseOneView.setText(currentExercise.getName());
 
         TextView exerciseOneWeightView = findViewById(R.id.exercise_one_weight);
@@ -72,18 +63,55 @@ public class BeginnerActivity extends AppCompatActivity {
 
         TextView exerciseOneRepsView = findViewById(R.id.exercise_one_reps);
         exerciseOneRepsView.setText("Reps: " + currentExercise.getGoalReps().get(0));
+    }
 
+    public void submitOnClick(View view) {
 
+        EditText weight1ET = findViewById(R.id.weight1);
+        EditText weight2ET = findViewById(R.id.weight2);
+        EditText weight3ET = findViewById(R.id.weight3);
+        EditText reps1ET = findViewById(R.id.reps1);
+        EditText reps2ET = findViewById(R.id.reps2);
+        EditText reps3ET = findViewById(R.id.reps3);
 
-//        //For testing
-//        benchPress.addRepsDone(100 ,5);
-//        benchPress.addRepsDone(100 ,5);
-//        benchPress.addRepsDone(100 ,5);
-//
-//        benchPress.increaseWeight();
-//
-//        TextView tv = findViewById(R.id.textView1);
-//        tv.setText("" + benchPress.getPass() + "\n" + benchPress.getGoalWeight());
+        String weight1 = weight1ET.getText().toString();
+        String weight2 = weight2ET.getText().toString();
+        String weight3 = weight3ET.getText().toString();
+        String reps1 = reps1ET.getText().toString();
+        String reps2 = reps2ET.getText().toString();
+        String reps3 = reps3ET.getText().toString();
+
+        if (!weight1.isEmpty() && !weight1.equals(".") && !reps1.isEmpty() && !weight2ET.isShown() && !reps2ET.isShown() && !weight3ET.isShown() && !reps3ET.isShown()) {
+            currentExercise.addRepsDone(Double.parseDouble(weight1), Integer.parseInt(reps1));
+            weight2ET.setVisibility(View.VISIBLE);
+            reps2ET.setVisibility(View.VISIBLE);
+        } else if (!weight2.isEmpty() && !weight2.equals(".") && !reps2.isEmpty() && !weight3ET.isShown() && !reps3ET.isShown()) {
+            currentExercise.addRepsDone(Double.parseDouble(weight2), Integer.parseInt(reps2));
+            weight3ET.setVisibility(View.VISIBLE);
+            reps3ET.setVisibility(View.VISIBLE);
+        } else if (!weight3.isEmpty() && !weight3.equals(".") && !reps3.isEmpty()) {
+            currentExercise.addRepsDone(Double.parseDouble(weight3), Integer.parseInt(reps3));
+        } else {
+            Snackbar mySnackbar = Snackbar.make(view, "Weights and/or reps are blank", Snackbar.LENGTH_SHORT);
+            mySnackbar.show();
+        }
+    }
+
+    private void setDateText() {
+        TextView dateView = findViewById(R.id.date);
+        calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String full = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        dateView.setText(full);
+    }
+
+    private void initializeWeights() {
+        Intent intent = getIntent();
+        startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
+        startingOverheadWeight = intent.getDoubleExtra("OVERHEAD_PRESS_WEIGHT", -1);
+        startingSquatWeight = intent.getDoubleExtra("SQUAT_WEIGHT", -1);
+        startingDeadliftWeight = intent.getDoubleExtra("DEADLIFT_WEIGHT", -1);
+        startingBarbellRowWeight = intent.getDoubleExtra("BARBELL_ROW_WEIGHT", -1);
     }
 
     private void initializeExercises() {
