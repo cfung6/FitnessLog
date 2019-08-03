@@ -81,11 +81,11 @@ public class BeginnerActivity extends AppCompatActivity {
         String reps2 = reps2ET.getText().toString();
         String reps3 = reps3ET.getText().toString();
 
-        if (!weight1.isEmpty() && !weight1.equals(".") && !reps1.isEmpty() && !weight2ET.isShown() && !reps2ET.isShown() && !weight3ET.isShown() && !reps3ET.isShown()) {
+        if (!weight1.isEmpty() && !weight1.equals(".")) {
             currentExercise.addRepsDone(Double.parseDouble(weight1), Integer.parseInt(reps1));
             weight2ET.setVisibility(View.VISIBLE);
             reps2ET.setVisibility(View.VISIBLE);
-        } else if (!weight2.isEmpty() && !weight2.equals(".") && !reps2.isEmpty() && !weight3ET.isShown() && !reps3ET.isShown()) {
+        } else if (!weight2.isEmpty() && !weight2.equals(".")) {
             currentExercise.addRepsDone(Double.parseDouble(weight2), Integer.parseInt(reps2));
             weight3ET.setVisibility(View.VISIBLE);
             reps3ET.setVisibility(View.VISIBLE);
