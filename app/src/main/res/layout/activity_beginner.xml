@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.BeginnerActivity"
+    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".activities.BeginnerActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,14 +31,21 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/relative_layout_background">
+            android:layout_height="0dp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:layout_weight="1"
+            android:background="@drawable/layout_bg"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -73,6 +80,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
+                android:layout_marginRight="10sp"
+                android:layout_marginBottom="10sp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -136,7 +146,7 @@
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
                             android:inputType="numberDecimal"
-                            android:visibility="gone" />
+                            android:visibility="invisible" />
 
                         <EditText
                             android:id="@+id/weight3"
@@ -144,7 +154,7 @@
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
                             android:inputType="numberDecimal"
-                            android:visibility="gone" />
+                            android:visibility="invisible" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -172,7 +182,7 @@
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
                             android:inputType="number"
-                            android:visibility="gone" />
+                            android:visibility="invisible" />
 
                         <EditText
                             android:id="@+id/reps3"
@@ -180,24 +190,204 @@
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
                             android:inputType="number"
-                            android:visibility="gone" />
+                            android:visibility="invisible" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/exercise_one_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="Submit"
-                    android:onClick="submitOnClick" />
+                    android:onClick="submitOnClick"
+                    android:text="Submit" />
 
             </LinearLayout>
 
+        </LinearLayout>
 
-        </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/layout_bg"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10sp"
+                android:layout_marginTop="10sp">
+
+                <TextView
+                    android:id="@+id/exercise_two"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/exercise_two_weight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/exercise_two_set"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/exercise_two_reps"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
+                android:layout_marginRight="10sp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Sets" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="1" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="2" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="3" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Weight" />
+
+                        <EditText
+                            android:id="@+id/weight1ex2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="no"
+                            android:inputType="numberDecimal"
+                            android:visibility="visible" />
+
+                        <EditText
+                            android:id="@+id/weight2ex2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="no"
+                            android:inputType="numberDecimal"
+                            android:visibility="invisible" />
+
+                        <EditText
+                            android:id="@+id/weight3ex2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="no"
+                            android:inputType="numberDecimal"
+                            android:visibility="invisible" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Reps" />
+
+                        <EditText
+                            android:id="@+id/reps1ex2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="no"
+                            android:inputType="number"
+                            android:visibility="visible" />
+
+                        <EditText
+                            android:id="@+id/reps2ex2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="no"
+                            android:inputType="number"
+                            android:visibility="invisible" />
+
+                        <EditText
+                            android:id="@+id/reps3ex2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="no"
+                            android:inputType="number"
+                            android:visibility="invisible" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/exercise_two_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="Submit" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>
