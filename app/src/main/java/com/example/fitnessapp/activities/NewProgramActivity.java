@@ -1,17 +1,16 @@
 package com.example.fitnessapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.fitnessapp.Levels;
 import com.example.fitnessapp.R;
 
 
 public class NewProgramActivity extends AppCompatActivity {
-
-    private Levels levelClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
