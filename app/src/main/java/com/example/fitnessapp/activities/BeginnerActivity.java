@@ -38,6 +38,7 @@ public class BeginnerActivity extends AppCompatActivity {
     private Exercise barbellRow;
 
     private Exercise currentExercise;
+    private Workout currentWorkout;
     private Calendar calendar;
 
     @Override
@@ -51,8 +52,10 @@ public class BeginnerActivity extends AppCompatActivity {
         initializeWorkouts();
         initializeRoutine();
 
-        TextView exerciseOneView = findViewById(R.id.exercise_one);
         currentExercise = beginnerRoutine.getCurrentWorkout().getCurrentExercise();
+        currentWorkout = beginnerRoutine.getCurrentWorkout();
+
+        TextView exerciseOneView = findViewById(R.id.exercise_one);
         exerciseOneView.setText(currentExercise.getName());
 
         TextView exerciseOneWeightView = findViewById(R.id.exercise_one_weight);
@@ -81,18 +84,32 @@ public class BeginnerActivity extends AppCompatActivity {
         String reps2 = reps2ET.getText().toString();
         String reps3 = reps3ET.getText().toString();
 
-        if (!weight1.isEmpty() && !weight1.equals(".")) {
-            currentExercise.addRepsDone(Double.parseDouble(weight1), Integer.parseInt(reps1));
+        if (AreWeightsAndRepsFilled(weight1, reps1) && AreWeightsAndRepsInvisible(weight2ET, reps2ET)) {
             weight2ET.setVisibility(View.VISIBLE);
             reps2ET.setVisibility(View.VISIBLE);
-        } else if (!weight2.isEmpty() && !weight2.equals(".")) {
-            currentExercise.addRepsDone(Double.parseDouble(weight2), Integer.parseInt(reps2));
+
+        } else if (AreWeightsAndRepsFilled(weight2, reps2) && AreWeightsAndRepsInvisible(weight3ET, reps3ET)) {
             weight3ET.setVisibility(View.VISIBLE);
             reps3ET.setVisibility(View.VISIBLE);
-        } else if (!weight3.isEmpty() && !weight3.equals(".") && !reps3.isEmpty()) {
+
+        } else if (AreWeightsAndRepsFilled(weight1, reps1) && AreWeightsAndRepsFilled(weight2, reps2) && AreWeightsAndRepsFilled(weight3, reps3)) {
+            //After all lines are visible, submit button adds all the inputs at once
+            currentExercise.removeRepsDone();
+            currentExercise.addRepsDone(Double.parseDouble(weight1), Integer.parseInt(reps1));
+            currentExercise.addRepsDone(Double.parseDouble(weight2), Integer.parseInt(reps2));
             currentExercise.addRepsDone(Double.parseDouble(weight3), Integer.parseInt(reps3));
+            currentExercise.increaseWeight();
+            //Set textview based on pass or fail
+            //Textview tv = get by id
+//            if (currentExercise.passOrFail()) {
+//                tv.setText(nice job bro your next weight is blah blah);
+//            } else {
+//                tv.setText(sucks to suck stay at current weight);
+//            }
+            currentWorkout.nextExercise();
+
         } else {
-            Snackbar mySnackbar = Snackbar.make(view, "Weights and/or reps are blank", Snackbar.LENGTH_SHORT);
+            Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights and/or reps are blank", Snackbar.LENGTH_SHORT);
             mySnackbar.show();
         }
     }
@@ -123,11 +140,19 @@ public class BeginnerActivity extends AppCompatActivity {
     }
 
     private void initializeWorkouts() {
-        workoutA = new Workout("workoutA", new ArrayList<Exercise>(Arrays.asList(squat, benchPress, barbellRow)));
-        workoutB = new Workout("workoutB", new ArrayList<Exercise>(Arrays.asList(squat, overheadPress, deadlift)));
+        workoutA = new Workout("workoutA", new ArrayList<>(Arrays.asList(squat, benchPress, barbellRow)));
+        workoutB = new Workout("workoutB", new ArrayList<>(Arrays.asList(squat, overheadPress, deadlift)));
     }
 
     private void initializeRoutine() {
-        beginnerRoutine = new Routine(3, "beginner_routine", new ArrayList<Workout>(Arrays.asList(workoutA, workoutB)));
+        beginnerRoutine = new Routine(3, "beginner_routine", new ArrayList<>(Arrays.asList(workoutA, workoutB)));
+    }
+
+    private boolean AreWeightsAndRepsFilled(String weight, String reps) {
+        return !weight.isEmpty() && !weight.equals(".") && !reps.isEmpty();
+    }
+
+    private boolean AreWeightsAndRepsInvisible(EditText weight, EditText reps) {
+        return !weight.isShown() && !reps.isShown();
     }
 }
