@@ -1,7 +1,6 @@
 package com.example.fitnessapp;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,8 +36,13 @@ public class Exercise{
         actualRepsDone.add(reps);
     }
 
+    public void removeRepsDone() {
+        actualWeightList.clear();
+        actualRepsDone.clear();
+    }
+
     public void increaseWeight () {
-        if (pass && completeExercise()) {
+        if (passOrFail()) {
             setActualAndGoalWeight (setNewCapableWeight());
         }
     }
@@ -103,5 +107,7 @@ public class Exercise{
         return actualWeightList;
     }
 
-
+    public boolean passOrFail() {
+        return pass && completeExercise();
+    }
 }
