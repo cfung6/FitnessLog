@@ -1,15 +1,12 @@
 package com.example.fitnessapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.view.View;
 
-import com.example.fitnessapp.R;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.InputStream;
+import com.example.fitnessapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +18,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void newProgramClicked(View view) {
         Intent intent = new Intent (this, NewProgramActivity.class);
+        startActivity(intent);
+    }
+
+    //Just to test the calendar
+    public void continueProgramClicked(View view) {
+        Intent intent = new Intent(this, Calendar.class);
         startActivity(intent);
     }
 }

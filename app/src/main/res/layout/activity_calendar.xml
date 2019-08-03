@@ -12,12 +12,12 @@
         android:layout_height="250dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        app:compactCalendarBackgroundColor="#ffe95451"
-        app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+        app:compactCalendarBackgroundColor="#F9F9F9"
+        app:compactCalendarCurrentDayBackgroundColor="#00BCD4"
         app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
-        app:compactCalendarMultiEventIndicatorColor="#fff"
+        app:compactCalendarMultiEventIndicatorColor="#FF0000"
         app:compactCalendarTargetHeight="250dp"
-        app:compactCalendarTextColor="#fff"
+        app:compactCalendarTextColor="#000000"
         app:compactCalendarTextSize="12sp" />
 
 </RelativeLayout>

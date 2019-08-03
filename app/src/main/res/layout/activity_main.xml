@@ -38,7 +38,8 @@
         android:text="@string/continue_program"
         tools:layout_editor_absoluteX="123dp"
         tools:layout_editor_absoluteY="256dp"
-        android:autoSizeTextType="uniform"/>
+        android:autoSizeTextType="uniform"
+        android:onClick="continueProgramClicked" />
 
     <Button
         android:id="@+id/about"
