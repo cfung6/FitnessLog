@@ -164,7 +164,7 @@ public class BeginnerActivity extends AppCompatActivity {
         TextView dateView = findViewById(R.id.date);
         calendar = Calendar.getInstance();
         Date date = calendar.getTime();
-        String full = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        String full = new SimpleDateFormat("EE, MMM d YYYY").format(date);
         dateView.setText(full);
     }
 
