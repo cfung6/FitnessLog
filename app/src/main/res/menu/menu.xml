@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/calendar"
+        android:title="@string/calendar" />
+    <item
+        android:id="@+id/graphs"
+        android:title="@string/graph" />
+    <item
+        android:id="@+id/exercise_tutorials"
+        android:title="@string/exercise_tutorials" />
+    <item
+        android:id="@+id/stopwatch"
+        android:title="@string/stopwatch" />
+</menu>

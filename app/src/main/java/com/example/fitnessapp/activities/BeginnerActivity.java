@@ -2,6 +2,9 @@ package com.example.fitnessapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -81,6 +84,34 @@ public class BeginnerActivity extends AppCompatActivity {
 
         TextView exerciseTwoRepsView = findViewById(R.id.exercise_two_reps);
         exerciseTwoRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //respond to menu item selection
+        switch (item.getItemId()) {
+            case R.id.calendar:
+                startActivity(new Intent(this, WorkoutCalendar.class));
+                return true;
+//            case R.id.graphs:
+//                startActivity(new Intent(this, Graphs.class));
+//                return true;
+//            case R.id.stopwatch:
+//                startActivity(new Intent(this, Stopwatch.class));
+//                return true;
+//            case R.id.exercise_tutorials:
+//                startActivity(new Intent(this, ExerciseTutorials.class));
+//                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void submitOnClick(View view) {

@@ -21,9 +21,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //Just to test the calendar
     public void continueProgramClicked(View view) {
-        Intent intent = new Intent(this, Calendar.class);
-        startActivity(intent);
+
     }
 }
