@@ -39,6 +39,7 @@ public class Exercise{
     public void removeRepsDone() {
         actualWeightList.clear();
         actualRepsDone.clear();
+        pass = true;
     }
 
     public void increaseWeight () {

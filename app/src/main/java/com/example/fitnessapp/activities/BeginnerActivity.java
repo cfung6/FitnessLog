@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -44,6 +46,12 @@ public class BeginnerActivity extends AppCompatActivity {
     private Workout currentWorkout;
     private Calendar calendar;
 
+    private List<Button> buttons;
+    private static final int[] BUTTON_IDS = {
+            R.id.exercise_one_submit,
+            R.id.exercise_two_submit
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +63,8 @@ public class BeginnerActivity extends AppCompatActivity {
         initializeWorkouts();
         initializeRoutine();
 
-        currentExercise = beginnerRoutine.getCurrentWorkout().getCurrentExercise();
         currentWorkout = beginnerRoutine.getCurrentWorkout();
+        currentExercise = currentWorkout.getCurrentExercise();
 
         TextView exerciseOneView = findViewById(R.id.exercise_one);
         exerciseOneView.setText(currentExercise.getName());
@@ -115,7 +123,12 @@ public class BeginnerActivity extends AppCompatActivity {
     }
 
     public void submitOnClick(View view) {
+        String tag = view.getTag().toString();
+        int index = Integer.parseInt(tag);
+        submitOnClick(view, index);
+    }
 
+    public void submitOnClick(View view, int index) {
         EditText weight1ET = findViewById(R.id.weight1);
         EditText weight2ET = findViewById(R.id.weight2);
         EditText weight3ET = findViewById(R.id.weight3);
@@ -130,6 +143,8 @@ public class BeginnerActivity extends AppCompatActivity {
         String reps2 = reps2ET.getText().toString();
         String reps3 = reps3ET.getText().toString();
 
+        Exercise exercise = currentWorkout.getExeciseAtIndex(index);
+
         if (AreWeightsAndRepsFilled(weight1, reps1) && AreWeightsAndRepsInvisible(weight2ET, reps2ET)) {
             weight2ET.setVisibility(View.VISIBLE);
             reps2ET.setVisibility(View.VISIBLE);
@@ -140,23 +155,36 @@ public class BeginnerActivity extends AppCompatActivity {
 
         } else if (AreWeightsAndRepsFilled(weight1, reps1) && AreWeightsAndRepsFilled(weight2, reps2) && AreWeightsAndRepsFilled(weight3, reps3)) {
             //After all lines are visible, submit button adds all the inputs at once
-            currentExercise.removeRepsDone();
-            currentExercise.addRepsDone(Double.parseDouble(weight1), Integer.parseInt(reps1));
-            currentExercise.addRepsDone(Double.parseDouble(weight2), Integer.parseInt(reps2));
-            currentExercise.addRepsDone(Double.parseDouble(weight3), Integer.parseInt(reps3));
-            currentExercise.increaseWeight();
-            //Set textview based on pass or fail
-            //Textview tv = get by id
-//            if (currentExercise.passOrFail()) {
-//                tv.setText(nice job bro your next weight is blah blah);
-//            } else {
-//                tv.setText(sucks to suck stay at current weight);
-//            }
-            currentWorkout.nextExercise();
-
+            exercise.removeRepsDone();
+            exercise.addRepsDone(Double.parseDouble(weight1), Integer.parseInt(reps1));
+            exercise.addRepsDone(Double.parseDouble(weight2), Integer.parseInt(reps2));
+            exercise.addRepsDone(Double.parseDouble(weight3), Integer.parseInt(reps3));
+//          Set textview based on pass or fail
+            TextView tv = findViewById(R.id.message1);
+            if (exercise.passOrFail()) {
+                tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight());
+            } else {
+                tv.setText("Failure is inevitable! Stay at your current weight.");
+            }
         } else {
             Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights and/or reps are blank", Snackbar.LENGTH_SHORT);
             mySnackbar.show();
+        }
+    }
+
+    private void addButtons() {
+        buttons = new ArrayList<>();
+
+        for (int id : BUTTON_IDS) {
+            Button button = findViewById(id);
+            buttons.add(button);
+        }
+
+        for (int i = 0; i < buttons.size(); i++) {
+            String buttonID = "submit" + (i + 1);
+            int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
+            buttons[i] = findViewById(resID);
+            buttons[i].setOnClickListener((View.OnClickListener) this);
         }
     }
 
