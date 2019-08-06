@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -46,11 +44,7 @@ public class BeginnerActivity extends AppCompatActivity {
     private Workout currentWorkout;
     private Calendar calendar;
 
-    private List<Button> buttons;
-    private static final int[] BUTTON_IDS = {
-            R.id.exercise_one_submit,
-            R.id.exercise_two_submit
-    };
+    private boolean increased;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +56,7 @@ public class BeginnerActivity extends AppCompatActivity {
         initializeExercises();
         initializeWorkouts();
         initializeRoutine();
+        increased = false;
 
         currentWorkout = beginnerRoutine.getCurrentWorkout();
         currentExercise = currentWorkout.getCurrentExercise();
@@ -129,62 +124,60 @@ public class BeginnerActivity extends AppCompatActivity {
     }
 
     public void submitOnClick(View view, int index) {
-        EditText weight1ET = findViewById(R.id.weight1);
-        EditText weight2ET = findViewById(R.id.weight2);
-        EditText weight3ET = findViewById(R.id.weight3);
-        EditText reps1ET = findViewById(R.id.reps1);
-        EditText reps2ET = findViewById(R.id.reps2);
-        EditText reps3ET = findViewById(R.id.reps3);
 
-        String weight1 = weight1ET.getText().toString();
-        String weight2 = weight2ET.getText().toString();
-        String weight3 = weight3ET.getText().toString();
-        String reps1 = reps1ET.getText().toString();
-        String reps2 = reps2ET.getText().toString();
-        String reps3 = reps3ET.getText().toString();
+        int numOfSets = 3;
 
-        Exercise exercise = currentWorkout.getExeciseAtIndex(index);
+        Exercise exercise = currentWorkout.getExeciseAtIndex(index - 1);
+        EditText[] weightsET = new EditText[numOfSets + 1];
+        EditText[] repsET = new EditText[numOfSets + 1];
+        String[] weights = new String[numOfSets + 1];
+        String[] reps = new String[numOfSets + 1];
 
-        if (AreWeightsAndRepsFilled(weight1, reps1) && AreWeightsAndRepsInvisible(weight2ET, reps2ET)) {
-            weight2ET.setVisibility(View.VISIBLE);
-            reps2ET.setVisibility(View.VISIBLE);
+        for (int i = 1; i <= numOfSets; i++) {
+            int id = getResources().getIdentifier("weight" + i + "ex" + index, "id", getPackageName());
+            weightsET[i] = findViewById(id);
+        }
 
-        } else if (AreWeightsAndRepsFilled(weight2, reps2) && AreWeightsAndRepsInvisible(weight3ET, reps3ET)) {
-            weight3ET.setVisibility(View.VISIBLE);
-            reps3ET.setVisibility(View.VISIBLE);
+        for (int i = 1; i <= numOfSets; i++) {
+            int id = getResources().getIdentifier("reps" + i + "ex" + index, "id", getPackageName());
+            repsET[i] = findViewById(id);
+        }
 
-        } else if (AreWeightsAndRepsFilled(weight1, reps1) && AreWeightsAndRepsFilled(weight2, reps2) && AreWeightsAndRepsFilled(weight3, reps3)) {
+        for (int i = 1; i <= numOfSets; i++) {
+            weights[i] = weightsET[i].getText().toString();
+        }
+
+        for (int i = 1; i <= numOfSets; i++) {
+            reps[i] = repsET[i].getText().toString();
+        }
+
+        if (AreWeightsAndRepsFilled(weights[1], reps[1]) && AreWeightsAndRepsInvisible(weightsET[2], repsET[2])) {
+            weightsET[2].setVisibility(View.VISIBLE);
+            repsET[2].setVisibility(View.VISIBLE);
+
+        } else if (AreWeightsAndRepsFilled(weights[2], reps[2]) && AreWeightsAndRepsInvisible(weightsET[3], repsET[3])) {
+            weightsET[3].setVisibility(View.VISIBLE);
+            repsET[3].setVisibility(View.VISIBLE);
+
+        } else if (AreWeightsAndRepsFilled(weights[1], reps[1]) && AreWeightsAndRepsFilled(weights[2], reps[2]) && AreWeightsAndRepsFilled(weights[3], reps[3])) {
             //After all lines are visible, submit button adds all the inputs at once
             exercise.removeRepsDone();
-            exercise.addRepsDone(Double.parseDouble(weight1), Integer.parseInt(reps1));
-            exercise.addRepsDone(Double.parseDouble(weight2), Integer.parseInt(reps2));
-            exercise.addRepsDone(Double.parseDouble(weight3), Integer.parseInt(reps3));
+            exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
+            exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
+            exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
+
 //          Set textview based on pass or fail
-            TextView tv = findViewById(R.id.message1);
+            int id = getResources().getIdentifier("message" + index, "id", getPackageName());
+            TextView tv = findViewById(id);
+
             if (exercise.passOrFail()) {
-                tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight());
+                tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
             } else {
-                tv.setText("Failure is inevitable! Stay at your current weight.");
+                tv.setText("Failure is inevitable! Stay at your current weight.\n");
             }
         } else {
             Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights and/or reps are blank", Snackbar.LENGTH_SHORT);
             mySnackbar.show();
-        }
-    }
-
-    private void addButtons() {
-        buttons = new ArrayList<>();
-
-        for (int id : BUTTON_IDS) {
-            Button button = findViewById(id);
-            buttons.add(button);
-        }
-
-        for (int i = 0; i < buttons.size(); i++) {
-            String buttonID = "submit" + (i + 1);
-            int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
-            buttons[i] = findViewById(resID);
-            buttons[i].setOnClickListener((View.OnClickListener) this);
         }
     }
 
