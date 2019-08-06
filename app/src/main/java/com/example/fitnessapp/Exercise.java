@@ -48,10 +48,6 @@ public class Exercise{
         }
     }
 
-    public void reduceWeight() {
-        goalWeight = capableWeight;
-    }
-
     private boolean completeExercise() {
         if (actualRepsDone.size() < goalReps.size()) {
             return false;

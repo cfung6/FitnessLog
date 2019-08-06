@@ -44,8 +44,6 @@ public class BeginnerActivity extends AppCompatActivity {
     private Workout currentWorkout;
     private Calendar calendar;
 
-    private boolean increased;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +54,6 @@ public class BeginnerActivity extends AppCompatActivity {
         initializeExercises();
         initializeWorkouts();
         initializeRoutine();
-        increased = false;
 
         currentWorkout = beginnerRoutine.getCurrentWorkout();
         currentExercise = currentWorkout.getCurrentExercise();
