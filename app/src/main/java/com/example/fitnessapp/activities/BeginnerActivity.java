@@ -184,7 +184,7 @@ public class BeginnerActivity extends AppCompatActivity {
 
             if (exercise.isWeightIncreased()) {
                 exercise.removeRepsDone();
-                exercise.setGoalWeight(exercise.getGoalWeight() - 5);
+                exercise.setGoalWeight((exercise.getGoalWeight() - exercise.getIncrement()) / exercise.getPercentage());
                 exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
                 exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
                 exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
