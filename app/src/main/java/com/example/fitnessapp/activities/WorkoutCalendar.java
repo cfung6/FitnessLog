@@ -34,10 +34,6 @@ public class WorkoutCalendar extends AppCompatActivity {
         compactCalendar = findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
-        //Creating events
-        Event ev1 = new Event(Color.BLUE, 1564729200000L, "Workout");
-        compactCalendar.addEvent(ev1);
-
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -56,5 +52,14 @@ public class WorkoutCalendar extends AppCompatActivity {
                 actionBar.setTitle(dateFormatMonth.format(firstDayOfNewMonth));
             }
         });
+    }
+
+    public void createEvent(Date date) {
+        List<Event> events = compactCalendar.getEvents(date);
+        if (events.isEmpty()) {
+            long time = date.getTime();
+            Event ev1 = new Event(Color.BLUE, time, "Workout");
+            compactCalendar.addEvent(ev1);
+        }
     }
 }
