@@ -137,9 +137,9 @@ public class BeginnerActivity extends AppCompatActivity {
 
     public void submitOnClick(View view, int index) {
 
-        int numOfSets = 3;
-
         Exercise exercise = currentWorkout.getExeciseAtIndex(index - 1);
+        int numOfSets = exercise.getGoalReps().size();
+
         EditText[] weightsET = new EditText[numOfSets + 1];
         EditText[] repsET = new EditText[numOfSets + 1];
         String[] weights = new String[numOfSets + 1];
@@ -177,7 +177,6 @@ public class BeginnerActivity extends AppCompatActivity {
             exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
             exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
             exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
-
 
 //          Set textview based on pass or fail
             int id = getResources().getIdentifier("message" + index, "id", getPackageName());
