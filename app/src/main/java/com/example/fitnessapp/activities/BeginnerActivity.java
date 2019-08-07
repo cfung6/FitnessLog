@@ -84,6 +84,21 @@ public class BeginnerActivity extends AppCompatActivity {
 
         TextView exerciseTwoRepsView = findViewById(R.id.exercise_two_reps);
         exerciseTwoRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
+
+        currentWorkout.nextExercise();
+        currentExercise = currentWorkout.getCurrentExercise();
+
+        TextView exerciseThreeView = findViewById(R.id.exercise_three);
+        exerciseThreeView.setText(currentExercise.getName());
+
+        TextView exerciseThreeWeightView = findViewById(R.id.exercise_three_weight);
+        exerciseThreeWeightView.setText("Weight: " + currentExercise.getGoalWeight());
+
+        TextView exerciseThreeSetView = findViewById(R.id.exercise_three_set);
+        exerciseThreeSetView.setText("Sets: " + currentExercise.getGoalReps().size());
+
+        TextView exerciseThreeRepsView = findViewById(R.id.exercise_three_reps);
+        exerciseThreeRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
     }
 
     @Override
@@ -163,11 +178,28 @@ public class BeginnerActivity extends AppCompatActivity {
             exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
             exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
 
+
 //          Set textview based on pass or fail
             int id = getResources().getIdentifier("message" + index, "id", getPackageName());
             TextView tv = findViewById(id);
 
-            if (exercise.passOrFail()) {
+            if (exercise.isWeightIncreased()) {
+                exercise.removeRepsDone();
+                exercise.setGoalWeight(exercise.getGoalWeight() - 5);
+                exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
+                exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
+                exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
+                if (exercise.passOrFail()) {
+                    exercise.increaseWeight();
+                    exercise.setWeightIncreased(true);
+                    tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
+                } else {
+                    tv.setText("Failure is inevitable! Stay at your current weight.\n");
+                    exercise.setWeightIncreased(false);
+                }
+            } else if (exercise.passOrFail()) {
+                exercise.increaseWeight();
+                exercise.setWeightIncreased(true);
                 tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
             } else {
                 tv.setText("Failure is inevitable! Stay at your current weight.\n");

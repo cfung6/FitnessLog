@@ -15,6 +15,7 @@ public class Exercise{
     private double percentage;
     private List<Double> actualWeightList;
     private boolean pass;
+    private boolean weightIncreased;
 
     public Exercise(String name, double weight, int increment, double percentage, List<Integer> reps) {
         this.name = name;
@@ -26,6 +27,7 @@ public class Exercise{
         actualWeightList = new ArrayList<>();
         goalReps = reps;
         pass = true;
+        weightIncreased = false;
     }
 
     public void addRepsDone(double weight, int reps) {
@@ -110,5 +112,17 @@ public class Exercise{
 
     public boolean passOrFail() {
         return pass && completeExercise();
+    }
+
+    public void setWeightIncreased(boolean b) {
+        weightIncreased = b;
+    }
+
+    public void setGoalWeight(double d) {
+        goalWeight = d;
+    }
+
+    public boolean isWeightIncreased() {
+        return weightIncreased;
     }
 }
