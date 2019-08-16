@@ -7,20 +7,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "fitness.db";
-    private static final String ROUTINE_TABLE = "routine_table";
-    private static final String ROUTINE_NAME_COL = "Routine_name";
-    private static final String BEGINNER_TABLE = "beginner_table";
-    private static final String INTERMEDIATE_TABLE = "intermediate_table";
-    private static final String ADVANCED_TABLE = "advanced_table";
-    private static final String WORKOUT_NAME_COL = "Workout_name";
-    private static final String EXERCISE_TABLE = "exercise_table";
-    private static final String EXERCISE_NAME_COL = "Exercise_name";
+    private static final String ROUTINE_TABLE = "Routine_table";
+    private static final String ROUTINE_COL = "Routine";
+    private static final String EXERCISE_COL = "Exercise";
+    private static final String WORKOUT_COL = "Workout";
+    private static final String DATA_TABLE = "Data_table";
     private static final String DATE_COL = "Date";
-    private static final String ROUTINE_ID = "Routine_ID";
-    private static final String EXERCISE_ID = "Exercise_ID";
-    private static final String WORKOUT_ID = "Workout_ID";
     private static final String WEIGHT_COL = "Weight";
-    private static final String SETS_COL = "Sets";
     private static final String REPS_COL = "Reps";
 
     public DatabaseHelper(Context context) {
@@ -31,29 +24,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + ROUTINE_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + ROUTINE_NAME_COL + " TEXT)");
+                + ROUTINE_COL + " TEXT, "
+                + WORKOUT_COL + " INTEGER, "
+                + EXERCISE_COL + " TEXT)");
 
-        db.execSQL("CREATE TABLE " + EXERCISE_TABLE
+        db.execSQL("CREATE TABLE " + DATA_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + EXERCISE_NAME_COL + " TEXT)");
-
-        db.execSQL("CREATE TABLE " + BEGINNER_TABLE
-                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + WORKOUT_NAME_COL + "TEXT)");
-
-        db.execSQL("CREATE TABLE " + INTERMEDIATE_TABLE
-                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + WORKOUT_NAME_COL + "TEXT)");
-
-        db.execSQL("CREATE TABLE " + ADVANCED_TABLE
-                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + WORKOUT_NAME_COL + "TEXT)");
-
+                + DATE_COL + " INTEGER, "
+                + WEIGHT_COL + "REAL, "
+                + REPS_COL + "INTEGER)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + EXERCISE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + ROUTINE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + DATA_TABLE);
         onCreate(db);
     }
 
