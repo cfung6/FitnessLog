@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitnessapp.DatabaseHelper;
 import com.example.fitnessapp.Exercise;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.Routine;
@@ -43,11 +44,16 @@ public class BeginnerActivity extends AppCompatActivity {
     private Exercise currentExercise;
     private Workout currentWorkout;
     private Calendar calendar;
+    private Date date;
+
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beginner);
+        databaseHelper = new DatabaseHelper(this);
+        date = new Date();
 
         setDateText();
         initializeWeights();
@@ -58,47 +64,11 @@ public class BeginnerActivity extends AppCompatActivity {
         currentWorkout = beginnerRoutine.getCurrentWorkout();
         currentExercise = currentWorkout.getCurrentExercise();
 
-        TextView exerciseOneView = findViewById(R.id.exercise_one);
-        exerciseOneView.setText(currentExercise.getName());
-
-        TextView exerciseOneWeightView = findViewById(R.id.exercise_one_weight);
-        exerciseOneWeightView.setText("Weight: " + currentExercise.getGoalWeight());
-
-        TextView exerciseOneSetView = findViewById(R.id.exercise_one_set);
-        exerciseOneSetView.setText("Sets: " + currentExercise.getGoalReps().size());
-
-        TextView exerciseOneRepsView = findViewById(R.id.exercise_one_reps);
-        exerciseOneRepsView.setText("Reps: " + currentExercise.getGoalReps().get(0));
-
-        currentWorkout.nextExercise();
-        currentExercise = currentWorkout.getCurrentExercise();
-
-        TextView exerciseTwoView = findViewById(R.id.exercise_two);
-        exerciseTwoView.setText(currentExercise.getName());
-
-        TextView exerciseTwoWeightView = findViewById(R.id.exercise_two_weight);
-        exerciseTwoWeightView.setText("Weight: " + currentExercise.getGoalWeight());
-
-        TextView exerciseTwoSetView = findViewById(R.id.exercise_two_set);
-        exerciseTwoSetView.setText("Sets: " + currentExercise.getGoalReps().size());
-
-        TextView exerciseTwoRepsView = findViewById(R.id.exercise_two_reps);
-        exerciseTwoRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
-
-        currentWorkout.nextExercise();
-        currentExercise = currentWorkout.getCurrentExercise();
-
-        TextView exerciseThreeView = findViewById(R.id.exercise_three);
-        exerciseThreeView.setText(currentExercise.getName());
-
-        TextView exerciseThreeWeightView = findViewById(R.id.exercise_three_weight);
-        exerciseThreeWeightView.setText("Weight: " + currentExercise.getGoalWeight());
-
-        TextView exerciseThreeSetView = findViewById(R.id.exercise_three_set);
-        exerciseThreeSetView.setText("Sets: " + currentExercise.getGoalReps().size());
-
-        TextView exerciseThreeRepsView = findViewById(R.id.exercise_three_reps);
-        exerciseThreeRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
+        setFirstExercise();
+        nextExercise();
+        setSecondExercse();
+        nextExercise();
+        setThirdExercise();
     }
 
     @Override
@@ -140,6 +110,8 @@ public class BeginnerActivity extends AppCompatActivity {
         Exercise exercise = currentWorkout.getExeciseAtIndex(index - 1);
         int numOfSets = exercise.getGoalReps().size();
 
+        databaseHelper.insertBeginnerRoutineData(beginnerRoutine.getWorkouts().indexOf(currentWorkout), exercise.getName());
+
         EditText[] weightsET = new EditText[numOfSets + 1];
         EditText[] repsET = new EditText[numOfSets + 1];
         String[] weights = new String[numOfSets + 1];
@@ -175,8 +147,11 @@ public class BeginnerActivity extends AppCompatActivity {
             //After all lines are visible, submit button adds all the inputs at once
             exercise.removeRepsDone();
             exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
+            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
             exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
+            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
             exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
+            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
 
 //          Set textview based on pass or fail
             int id = getResources().getIdentifier("message" + index, "id", getPackageName());
@@ -249,5 +224,52 @@ public class BeginnerActivity extends AppCompatActivity {
 
     private boolean AreWeightsAndRepsInvisible(EditText weight, EditText reps) {
         return !weight.isShown() && !reps.isShown();
+    }
+
+    private void setFirstExercise() {
+        TextView exerciseOneView = findViewById(R.id.exercise_one);
+        exerciseOneView.setText(currentExercise.getName());
+
+        TextView exerciseOneWeightView = findViewById(R.id.exercise_one_weight);
+        exerciseOneWeightView.setText("Weight: " + currentExercise.getGoalWeight());
+
+        TextView exerciseOneSetView = findViewById(R.id.exercise_one_set);
+        exerciseOneSetView.setText("Sets: " + currentExercise.getGoalReps().size());
+
+        TextView exerciseOneRepsView = findViewById(R.id.exercise_one_reps);
+        exerciseOneRepsView.setText("Reps: " + currentExercise.getGoalReps().get(0));
+    }
+
+    private void setSecondExercse() {
+        TextView exerciseTwoView = findViewById(R.id.exercise_two);
+        exerciseTwoView.setText(currentExercise.getName());
+
+        TextView exerciseTwoWeightView = findViewById(R.id.exercise_two_weight);
+        exerciseTwoWeightView.setText("Weight: " + currentExercise.getGoalWeight());
+
+        TextView exerciseTwoSetView = findViewById(R.id.exercise_two_set);
+        exerciseTwoSetView.setText("Sets: " + currentExercise.getGoalReps().size());
+
+        TextView exerciseTwoRepsView = findViewById(R.id.exercise_two_reps);
+        exerciseTwoRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
+    }
+
+    private void setThirdExercise() {
+        TextView exerciseThreeView = findViewById(R.id.exercise_three);
+        exerciseThreeView.setText(currentExercise.getName());
+
+        TextView exerciseThreeWeightView = findViewById(R.id.exercise_three_weight);
+        exerciseThreeWeightView.setText("Weight: " + currentExercise.getGoalWeight());
+
+        TextView exerciseThreeSetView = findViewById(R.id.exercise_three_set);
+        exerciseThreeSetView.setText("Sets: " + currentExercise.getGoalReps().size());
+
+        TextView exerciseThreeRepsView = findViewById(R.id.exercise_three_reps);
+        exerciseThreeRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
+    }
+
+    private void nextExercise() {
+        currentWorkout.nextExercise();
+        currentExercise = currentWorkout.getCurrentExercise();
     }
 }
