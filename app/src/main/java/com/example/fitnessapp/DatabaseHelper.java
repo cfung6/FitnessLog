@@ -1,5 +1,6 @@
 package com.example.fitnessapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -42,8 +43,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-//    public boolean insertData() {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues contentValues = new ContentValues();
-//    }
+    public boolean insertData(long dateTime, double weight, int reps) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DATE_COL, dateTime);
+        contentValues.put(WEIGHT_COL, weight);
+        contentValues.put(REPS_COL, reps);
+        long result = db.insert(DATA_TABLE, null, contentValues);
+        return !(result == -1);
+    }
 }
