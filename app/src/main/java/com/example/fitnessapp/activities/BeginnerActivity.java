@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class BeginnerActivity extends AppCompatActivity {
 
@@ -151,13 +152,19 @@ public class BeginnerActivity extends AppCompatActivity {
             //Finds routineID corresponding to the workout and exercise
             int routineID = databaseHelper.selectRoutineID("BeginnerTable", workoutIndex, exerciseName);
             //Deletes rows with same time and routineID as to avoid duplicates
-            databaseHelper.deleteRowsInData(date.getTime(), routineID);
-            exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
-            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[1]), Integer.parseInt(reps[1]), routineID);
-            exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
-            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[2]), Integer.parseInt(reps[2]), routineID);
-            exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
-            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[3]), Integer.parseInt(reps[3]), routineID);
+//            databaseHelper.deleteRowsInData(date.getTime(), routineID);
+            if (databaseHelper.haveEntriesBeenEntered(date.getTime(), routineID)) {
+                List<Double> weightsForDataTable = new ArrayList<>(Arrays.asList(Double.parseDouble(weights[1]), Double.parseDouble(weights[2]), Double.parseDouble(weights[3])));
+                List<Integer> repsForDataTable = new ArrayList<>(Arrays.asList(Integer.parseInt(reps[1]), Integer.parseInt(reps[2]), Integer.parseInt(reps[3])));
+                databaseHelper.updateEntries(date.getTime(), weightsForDataTable, repsForDataTable, routineID);
+            } else {
+                exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
+                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[1]), Integer.parseInt(reps[1]), routineID);
+                exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
+                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[2]), Integer.parseInt(reps[2]), routineID);
+                exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
+                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[3]), Integer.parseInt(reps[3]), routineID);
+            }
 
 //          Set textview based on pass or fail
             int id = getResources().getIdentifier("message" + index, "id", getPackageName());

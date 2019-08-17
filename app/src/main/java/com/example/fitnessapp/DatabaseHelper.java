@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -142,5 +146,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteRowsInData(long time, int routineID) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(DATA_TABLE, DATE_COL + " = " + time + " AND " + ROUTINE_ID + " = " + routineID, null);
+    }
+
+    public boolean haveEntriesBeenEntered(long time, int routineID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(DATA_TABLE, null, DATE_COL + " = " + time + " AND " + ROUTINE_ID + " = " + routineID, null, null, null, null);
+        cursor.moveToFirst();
+        int count = cursor.getCount();
+        Log.d("TAG", "count = " + count);
+        cursor.close();
+        return count != 0;
+    }
+
+    public void updateEntries(long time, List<Double> weights, List<Integer> reps, int routineID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        List<Integer> ids = new ArrayList<>();
+        Cursor cursor = db.query(DATA_TABLE, new String[]{"ID"}, DATE_COL + " = " + time + " AND " + ROUTINE_ID + " = " + routineID, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("ID"));
+                ids.add(id);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        for (int i = 0; i < ids.size() || i < weights.size(); i++) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DATE_COL, time);
+            contentValues.put(WEIGHT_COL, weights.get(i));
+            contentValues.put(REPS_COL, reps.get(i));
+            contentValues.put(ROUTINE_ID, routineID);
+            db.update(DATA_TABLE, contentValues, "ID = " + ids.get(i), null);
+        }
     }
 }
