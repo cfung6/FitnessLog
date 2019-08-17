@@ -80,6 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertBeginnerRoutineData(int workout, String exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(BEGINNER_TABLE, null, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        cursor.moveToFirst();
         if (cursor.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(WORKOUT_COL, workout);
@@ -95,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertIntermediateRoutineData(int workout, String exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(INTERMEDIATE_TABLE, null, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        cursor.moveToFirst();
         if (cursor.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(WORKOUT_COL, workout);
@@ -110,6 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertAdvancedRoutineData(int workout, String exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(ADVANCED_TABLE, null, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        cursor.moveToFirst();
         if (cursor.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(WORKOUT_COL, workout);
@@ -120,5 +123,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return false;
+    }
+
+    //Returns routineID in beg/int/adv table that corresponds to the workout and exercise
+    public int selectRoutineID(String table, int workout, String exercise) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(table, new String[]{"ID"}, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        int id = -1;
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            id = cursor.getInt(cursor.getColumnIndex("ID"));
+            cursor.close();
+        }
+        return id;
+    }
+
+    //Deletes rows in Data_Table that contain the matching time and routineID so duplicates are not stored when pressing submit button multiple times
+    public void deleteRowsInData(long time, int routineID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(DATA_TABLE, DATE_COL + " = " + time + " AND " + ROUTINE_ID + " = " + routineID, null);
     }
 }
