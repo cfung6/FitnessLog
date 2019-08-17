@@ -107,7 +107,7 @@ public class BeginnerActivity extends AppCompatActivity {
 
     public void submitOnClick(View view, int index) {
 
-        Exercise exercise = currentWorkout.getExeciseAtIndex(index - 1);
+        Exercise exercise = currentWorkout.getExerciseAtIndex(index - 1);
         int numOfSets = exercise.getGoalReps().size();
 
         int workoutIndex = beginnerRoutine.getWorkouts().indexOf(currentWorkout);
