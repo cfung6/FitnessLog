@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -36,20 +40,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + BEGINNER_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + WORKOUT_COL + " INTEGER, "
-                + EXERCISE_COL + " TEXT, "
-                + ROUTINE_ID + " INTEGER) ");
+                + EXERCISE_COL + " TEXT)");
 
         db.execSQL("CREATE TABLE " + INTERMEDIATE_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + WORKOUT_COL + " INTEGER, "
-                + EXERCISE_COL + " TEXT, "
-                + ROUTINE_ID + " INTEGER) ");
+                + EXERCISE_COL + " TEXT)");
 
         db.execSQL("CREATE TABLE " + ADVANCED_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + WORKOUT_COL + " INTEGER, "
-                + EXERCISE_COL + " TEXT, "
-                + ROUTINE_ID + " INTEGER) ");
+                + EXERCISE_COL + " TEXT)");
 
         db.execSQL("CREATE TABLE " + DATA_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -83,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertBeginnerRoutineData(int workout, String exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(BEGINNER_TABLE, null, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        cursor.moveToFirst();
         if (cursor.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(WORKOUT_COL, workout);
@@ -98,6 +100,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertIntermediateRoutineData(int workout, String exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(INTERMEDIATE_TABLE, null, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        cursor.moveToFirst();
         if (cursor.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(WORKOUT_COL, workout);
@@ -113,6 +116,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertAdvancedRoutineData(int workout, String exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(ADVANCED_TABLE, null, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        cursor.moveToFirst();
         if (cursor.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(WORKOUT_COL, workout);
@@ -125,20 +129,54 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean isExerciseInBeginnerTable(Exercise exercise) {
+    //Returns routineID in beg/int/adv table that corresponds to the workout and exercise
+    public int selectRoutineID(String table, int workout, String exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(BEGINNER_TABLE, null, EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
-        return cursor.getCount() != 0;
+        Cursor cursor = db.query(table, new String[]{"ID"}, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        int id = -1;
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            id = cursor.getInt(cursor.getColumnIndex("ID"));
+            cursor.close();
+        }
+        return id;
     }
 
-    public boolean updateDataBeginnerTable(long dateTime, double weight, int reps, int id) {
+    //Deletes rows in Data_Table that contain the matching time and routineID so duplicates are not stored when pressing submit button multiple times
+    public void deleteRowsInData(long time, int routineID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DATE_COL, dateTime);
-        contentValues.put(WEIGHT_COL, weight);
-        contentValues.put(REPS_COL, reps);
-        contentValues.put(ROUTINE_ID, id);
-        long result = db.update(DATA_TABLE, contentValues, "_id=" + dateTime, null);
-        return !(result == -1);
+        db.delete(DATA_TABLE, DATE_COL + " = " + time + " AND " + ROUTINE_ID + " = " + routineID, null);
+    }
+
+    public boolean haveEntriesBeenEntered(long time, int routineID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(DATA_TABLE, null, DATE_COL + " = " + time + " AND " + ROUTINE_ID + " = " + routineID, null, null, null, null);
+        cursor.moveToFirst();
+        int count = cursor.getCount();
+        Log.d("TAG", "count = " + count);
+        cursor.close();
+        return count != 0;
+    }
+
+    public void updateEntries(long time, List<Double> weights, List<Integer> reps, int routineID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        List<Integer> ids = new ArrayList<>();
+        Cursor cursor = db.query(DATA_TABLE, new String[]{"ID"}, DATE_COL + " = " + time + " AND " + ROUTINE_ID + " = " + routineID, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex("ID"));
+                ids.add(id);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        for (int i = 0; i < ids.size() || i < weights.size(); i++) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DATE_COL, time);
+            contentValues.put(WEIGHT_COL, weights.get(i));
+            contentValues.put(REPS_COL, reps.get(i));
+            contentValues.put(ROUTINE_ID, routineID);
+            db.update(DATA_TABLE, contentValues, "ID = " + ids.get(i), null);
+        }
     }
 }
