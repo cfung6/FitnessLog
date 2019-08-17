@@ -164,7 +164,6 @@ public class BeginnerActivity extends AppCompatActivity {
             }
 
 
-
 //          Set textview based on pass or fail
             int id = getResources().getIdentifier("message" + index, "id", getPackageName());
             TextView tv = findViewById(id);
