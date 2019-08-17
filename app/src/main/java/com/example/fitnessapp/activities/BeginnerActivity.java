@@ -149,7 +149,6 @@ public class BeginnerActivity extends AppCompatActivity {
             //After all lines are visible, submit button adds all the inputs at once
 
             exercise.removeRepsDone();
-            exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
             if (databaseHelper.isExerciseInBeginnerTable(exercise)) {
                 exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
                 databaseHelper.updateDataBeginnerTable(date.getTime(), Double.parseDouble(weights[1]), Integer.parseInt(reps[1]), index);
@@ -165,10 +164,6 @@ public class BeginnerActivity extends AppCompatActivity {
                 exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
                 databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[3]), Integer.parseInt(reps[3]), index);
             }
-
-
-
-
 
 
 
