@@ -36,7 +36,7 @@ public class Workout {
         return exercises;
     }
 
-    public Exercise getExeciseAtIndex(int index) {
+    public Exercise getExerciseAtIndex(int index) {
         return exercises.get(index);
     }
 

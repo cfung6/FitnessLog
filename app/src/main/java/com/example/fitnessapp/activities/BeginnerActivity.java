@@ -1,6 +1,8 @@
 package com.example.fitnessapp.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -107,7 +109,7 @@ public class BeginnerActivity extends AppCompatActivity {
 
     public void submitOnClick(View view, int index) {
 
-        Exercise exercise = currentWorkout.getExeciseAtIndex(index - 1);
+        Exercise exercise = currentWorkout.getExerciseAtIndex(index - 1);
         int numOfSets = exercise.getGoalReps().size();
 
         databaseHelper.insertBeginnerRoutineData(beginnerRoutine.getWorkouts().indexOf(currentWorkout), exercise.getName());
@@ -145,13 +147,30 @@ public class BeginnerActivity extends AppCompatActivity {
 
         } else if (AreWeightsAndRepsFilled(weights[1], reps[1]) && AreWeightsAndRepsFilled(weights[2], reps[2]) && AreWeightsAndRepsFilled(weights[3], reps[3])) {
             //After all lines are visible, submit button adds all the inputs at once
+
             exercise.removeRepsDone();
             exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
-            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
-            exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
-            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
-            exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
-            databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
+            if (databaseHelper.isExerciseInBeginnerTable(exercise)) {
+                exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
+                databaseHelper.updateDataBeginnerTable(date.getTime(), Double.parseDouble(weights[1]), Integer.parseInt(reps[1]), index);
+                exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
+                databaseHelper.updateDataBeginnerTable(date.getTime(), Double.parseDouble(weights[2]), Integer.parseInt(reps[2]), index);
+                exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
+                databaseHelper.updateDataBeginnerTable(date.getTime(), Double.parseDouble(weights[3]), Integer.parseInt(reps[3]), index);
+            } else {
+                exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
+                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[1]), Integer.parseInt(reps[1]), index);
+                exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
+                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[2]), Integer.parseInt(reps[2]), index);
+                exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
+                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[3]), Integer.parseInt(reps[3]), index);
+            }
+
+
+
+
+
+
 
 //          Set textview based on pass or fail
             int id = getResources().getIdentifier("message" + index, "id", getPackageName());

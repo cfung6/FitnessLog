@@ -36,17 +36,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + BEGINNER_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + WORKOUT_COL + " INTEGER, "
-                + EXERCISE_COL + " TEXT)");
+                + EXERCISE_COL + " TEXT, "
+                + ROUTINE_ID + " INTEGER) ");
 
         db.execSQL("CREATE TABLE " + INTERMEDIATE_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + WORKOUT_COL + " INTEGER, "
-                + EXERCISE_COL + " TEXT)");
+                + EXERCISE_COL + " TEXT, "
+                + ROUTINE_ID + " INTEGER) ");
 
         db.execSQL("CREATE TABLE " + ADVANCED_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + WORKOUT_COL + " INTEGER, "
-                + EXERCISE_COL + " TEXT)");
+                + EXERCISE_COL + " TEXT, "
+                + ROUTINE_ID + " INTEGER) ");
 
         db.execSQL("CREATE TABLE " + DATA_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -120,5 +123,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return false;
+    }
+
+    public boolean isExerciseInBeginnerTable(Exercise exercise) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(BEGINNER_TABLE, null, EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        return cursor.getCount() != 0;
+    }
+
+    public boolean updateDataBeginnerTable(long dateTime, double weight, int reps, int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DATE_COL, dateTime);
+        contentValues.put(WEIGHT_COL, weight);
+        contentValues.put(REPS_COL, reps);
+        contentValues.put(ROUTINE_ID, id);
+        long result = db.update(DATA_TABLE, contentValues, "_id=" + dateTime, null);
+        return !(result == -1);
     }
 }
