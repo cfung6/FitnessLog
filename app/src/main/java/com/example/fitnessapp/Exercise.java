@@ -30,6 +30,9 @@ public class Exercise{
         weightIncreased = false;
     }
 
+    // EFFECTS: called when submit button is pressed
+    //          if the weight completed by the user is less than the goal weight,
+    //          pass is set to fail
     public void addRepsDone(double weight, int reps) {
         if (weight < goalWeight) {
             pass = false;
@@ -38,18 +41,24 @@ public class Exercise{
         actualRepsDone.add(reps);
     }
 
+    // EFFECTS: empties all user input for weight and reps
     public void removeRepsDone() {
         actualWeightList.clear();
         actualRepsDone.clear();
         pass = true;
     }
 
+    // EFFECTS: if user passed the prescribed goal reps/sets/weight, and set the new capable
+    //          and goal weight
     public void increaseWeight () {
         if (passOrFail()) {
-            setActualAndGoalWeight (setNewCapableWeight());
+            setActualAndGoalWeight(getNewCapableWeight());
         }
     }
 
+    // EFFECTS: Determines if an exercise is complete. Returns false if the required number of sets
+    //          is not done or if any of the reps done by the user is less than required. Otherwise,
+    //          returns true
     private boolean completeExercise() {
         if (actualRepsDone.size() < goalReps.size()) {
             return false;
@@ -64,12 +73,14 @@ public class Exercise{
         return true;
     }
 
+    // EFFECTS: sets the weight that the user is capable of lifting and sets the goal weight
     private void setActualAndGoalWeight(double weight) {
         capableWeight = weight;
         goalWeight = weight * percentage + increment;
     }
 
-    private double setNewCapableWeight(){
+    // EFFECTS: returns the lowest weight completed by the user in the current workout
+    private double getNewCapableWeight() {
         Collections.sort(actualWeightList);
         return actualWeightList.get(0);
     }
