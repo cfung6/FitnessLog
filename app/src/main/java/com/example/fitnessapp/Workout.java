@@ -24,8 +24,7 @@ public class Workout {
     }
 
     public void removeExercise (Exercise exercise) {
-
-        this.exercises.remove(exercise);
+        exercises.remove(exercise);
     }
 
     public String getName () {

@@ -29,14 +29,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, 1);
     }
 
+    // EFFECTS: creates four SQL data tables - Beginner/Intermediate/Advanced and Data Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        db.execSQL("CREATE TABLE " + ROUTINE_TABLE
-//                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-//                + ROUTINE_COL + " TEXT, "
-//                + WORKOUT_COL + " INTEGER, "
-//                + EXERCISE_COL + " TEXT)");
-
         db.execSQL("CREATE TABLE " + BEGINNER_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + WORKOUT_COL + " INTEGER, "
@@ -59,6 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + REPS_COL + " INTEGER, "
                 + ROUTINE_ID + " INTEGER)");
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
