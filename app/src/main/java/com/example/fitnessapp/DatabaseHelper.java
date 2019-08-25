@@ -54,7 +54,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + REPS_COL + " INTEGER)");
     }
 
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + BEGINNER_TABLE);
@@ -136,8 +135,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Returns workoutExerciseID in beg/int/adv table that corresponds to the workout and exercise
     public int selectWorkoutExerciseID(String table, int workout, String exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(table, new String[]{"ID"}, WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'", null, null, null, null);
+        String selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
+        Cursor cursor = db.query(table, new String[]{"ID"}, selection, null, null, null, null);
         int id = -1;
+
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             id = cursor.getInt(cursor.getColumnIndex("ID"));

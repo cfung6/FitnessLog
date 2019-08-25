@@ -237,6 +237,7 @@ public class BeginnerActivity extends AppCompatActivity {
         int increment = 5;
         int percentage = 1;
         ArrayList<Integer> goalReps = new ArrayList<>(Arrays.asList(5, 5, 5));
+
         benchPress = new Exercise("Bench Press", startingBenchWeight, increment, percentage, goalReps);
         overheadPress = new Exercise("Overhead Press", startingOverheadWeight, increment, percentage, goalReps);
         squat = new Exercise("Squat", startingSquatWeight, increment, percentage, goalReps);
