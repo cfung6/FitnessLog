@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_margin="25dp"
+    android:orientation="vertical"
     tools:context=".activities.NewProgramActivity">
 
     <TextView
         android:id="@+id/choose_level"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15sp"
+        android:layout_weight="2"
         android:gravity="center"
         android:text="@string/choose_your_level"
         android:textSize="24sp"
-        android:layout_marginBottom="15sp"
-        android:layout_weight = "2"
-        android:textStyle = "bold"
-        />
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/beginner_button"
@@ -27,11 +25,10 @@
         android:layout_marginLeft="25sp"
         android:layout_marginRight="25sp"
         android:layout_marginBottom="15sp"
-        android:layout_weight = "1"
-        android:onClick="beginnerLevelClicked"
-        android:text="@string/beginner_text"
+        android:layout_weight="1"
         android:autoSizeTextType="uniform"
-       />
+        android:onClick="beginnerLevelClicked"
+        android:text="@string/beginner_text" />
 
     <Button
         android:id="@+id/intermediate_button"
@@ -40,11 +37,10 @@
         android:layout_marginLeft="25sp"
         android:layout_marginRight="25sp"
         android:layout_marginBottom="15sp"
-        android:layout_weight = "1"
-        android:onClick="intermediateLevelClicked"
-        android:text="@string/intermediate_text"
+        android:layout_weight="1"
         android:autoSizeTextType="uniform"
-        />
+        android:onClick="intermediateLevelClicked"
+        android:text="@string/intermediate_text" />
 
     <Button
         android:id="@+id/advanced_button"
@@ -53,10 +49,9 @@
         android:layout_marginLeft="25sp"
         android:layout_marginRight="25sp"
         android:layout_marginBottom="15sp"
-        android:layout_weight = "1"
-        android:onClick="advancedLevelClicked"
-        android:text="@string/advanced_text"
+        android:layout_weight="1"
         android:autoSizeTextType="uniform"
-        />
+        android:onClick="advancedLevelClicked"
+        android:text="@string/advanced_text" />
 
 </LinearLayout>

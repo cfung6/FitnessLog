@@ -20,8 +20,8 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="26sp"
-                android:gravity="left" />
+                android:gravity="left"
+                android:textSize="26sp" />
 
 
         </LinearLayout>
@@ -39,9 +39,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10sp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -228,9 +228,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
                 android:layout_marginTop="10sp"
                 android:layout_marginBottom="10sp"
-                android:layout_marginLeft="10sp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -418,9 +418,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10sp"
                 android:orientation="horizontal">
 
                 <TextView

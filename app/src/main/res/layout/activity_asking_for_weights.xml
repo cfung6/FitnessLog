@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_margin="25dp"
+    android:orientation="vertical"
     tools:context=".activities.AskingForWeightsActivity">
 
     <TextView
         android:id="@+id/what_exercises"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:text="@string/what_exercises_have_you_done"
         android:layout_marginBottom="5dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="@string/what_exercises_have_you_done"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/leave_blank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:text="@string/leave_the_ones_you_never_did_blank"
         android:layout_marginBottom="20dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="@string/leave_the_ones_you_never_did_blank"
+        android:textSize="15sp" />
 
 
     <LinearLayout
@@ -132,13 +131,13 @@
             <TextView
                 android:layout_width="164dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/exercise_tutorials"/>
+                android:text="@string/exercise_tutorials" />
 
 
         </LinearLayout>
@@ -146,7 +145,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/submit_weight_button"
@@ -156,7 +155,6 @@
             android:text="@string/submit" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>
