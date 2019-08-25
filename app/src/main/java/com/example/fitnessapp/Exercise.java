@@ -7,13 +7,17 @@ import java.util.List;
 public class Exercise {
 
     private String name;
+
     private List<Integer> actualRepsDone;
     private List<Integer> goalReps;
+    private List<Double> actualWeightList;
+
     private double capableWeight;
     private double goalWeight;
+
     private int increment;
     private double percentage;
-    private List<Double> actualWeightList;
+
     private boolean pass;
     private boolean weightIncreased;
 
@@ -85,28 +89,20 @@ public class Exercise {
         return actualWeightList.get(0);
     }
 
-    public boolean getPass() {
-        return pass && completeExercise();
-    }
-
     public double getGoalWeight() {
         return goalWeight;
+    }
+
+    public void setGoalWeight(double d) {
+        goalWeight = d;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Integer> getActualRepsDone() {
-        return actualRepsDone;
-    }
-
     public List<Integer> getGoalReps() {
         return goalReps;
-    }
-
-    public double getCapableWeight() {
-        return capableWeight;
     }
 
     public int getIncrement() {
@@ -117,23 +113,15 @@ public class Exercise {
         return percentage;
     }
 
-    public List<Double> getActualWeightList() {
-        return actualWeightList;
-    }
-
     public boolean passOrFail() {
         return pass && completeExercise();
     }
 
-    public void setWeightIncreased(boolean b) {
-        weightIncreased = b;
-    }
-
-    public void setGoalWeight(double d) {
-        goalWeight = d;
-    }
-
     public boolean isWeightIncreased() {
         return weightIncreased;
+    }
+
+    public void setWeightIncreased(boolean b) {
+        weightIncreased = b;
     }
 }

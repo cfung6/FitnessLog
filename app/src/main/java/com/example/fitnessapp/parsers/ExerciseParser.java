@@ -16,7 +16,7 @@ public class ExerciseParser {
         try {
             JSONArray exerciseArray = new JSONArray(input);
             for (int i = 0; i < exerciseArray.length(); i++) {
-                JSONObject exerciseJSON = (JSONObject) exerciseArray.getJSONObject(i);
+                JSONObject exerciseJSON = exerciseArray.getJSONObject(i);
             }
         } catch (JSONException e) {
             e.printStackTrace();

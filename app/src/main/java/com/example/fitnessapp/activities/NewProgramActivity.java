@@ -18,22 +18,22 @@ public class NewProgramActivity extends AppCompatActivity {
     }
 
     public void levelClicked(Levels level) {
-        Intent intent = new Intent (this, AskingForWeightsActivity.class);
+        Intent intent = new Intent(this, AskingForWeightsActivity.class);
 
         //Passing on the level chosen to next activity
         intent.putExtra("LEVEL_CHOSEN", level);
         startActivity(intent);
     }
 
-    public void beginnerLevelClicked (View view) {
+    public void beginnerLevelClicked(View view) {
         levelClicked(Levels.BEGINNER);
     }
 
-    public void intermediateLevelClicked (View view) {
+    public void intermediateLevelClicked(View view) {
         levelClicked(Levels.INTERMEDIATE);
     }
 
-    public void advancedLevelClicked (View view) {
+    public void advancedLevelClicked(View view) {
         levelClicked(Levels.ADVANCED);
     }
 
