@@ -9,6 +9,8 @@ public class Routine {
     private List<Workout> workouts;
     private int currentWorkout;
 
+    // EFFECTS: constructs a routine that has a name, a list of workouts, and sets the week of
+    //          the routine to 1
     public Routine(int numOfWorkouts, String name, List<Workout> workouts) {
         this.numOfWorkouts = numOfWorkouts;
         this.name = name;

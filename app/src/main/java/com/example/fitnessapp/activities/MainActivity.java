@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void continueProgramClicked(View view) {
-
+        Intent intent = new Intent(this, ContinueProgramActivity.class);
+        startActivity(intent);
     }
 }

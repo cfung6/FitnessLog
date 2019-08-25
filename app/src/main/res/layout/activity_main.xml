@@ -41,15 +41,5 @@
         android:autoSizeTextType="uniform"
         android:onClick="continueProgramClicked" />
 
-    <Button
-        android:id="@+id/about"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:padding="20dp"
-        android:text="@string/about"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="355dp"
-        android:autoSizeTextType="uniform"/>
 
 </LinearLayout>
