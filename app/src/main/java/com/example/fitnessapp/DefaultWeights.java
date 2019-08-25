@@ -2,6 +2,7 @@ package com.example.fitnessapp;
 
 public class DefaultWeights {
 
+    //Default weights that are assigned when checkbox for exercises in NewProgramActivity are unchecked
     public static final double BENCH_PRESS_BEGINNER = 65;
     public static final double OVERHEAD_PRESS_BEGINNER = 45;
     public static final double SQUAT_BEGINNER = 95;

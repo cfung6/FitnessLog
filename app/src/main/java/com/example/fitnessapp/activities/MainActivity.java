@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newProgramClicked(View view) {
-        Intent intent = new Intent (this, NewProgramActivity.class);
+        Intent intent = new Intent(this, NewProgramActivity.class);
         startActivity(intent);
     }
 

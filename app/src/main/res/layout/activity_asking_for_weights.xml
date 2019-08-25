@@ -43,7 +43,7 @@
                 android:id="@+id/checkbox_bench"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onBenchPressClick"
+                android:onClick="onBenchPressCheckboxClick"
                 android:text="@string/bench_press" />
 
             <EditText
@@ -61,7 +61,7 @@
                 android:id="@+id/checkBox_overhead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onOverheadPressClick"
+                android:onClick="onOverheadPressCheckboxClick"
                 android:text="@string/overhead_press" />
 
             <EditText
@@ -79,7 +79,7 @@
                 android:id="@+id/checkBox_squat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onSquatClick"
+                android:onClick="onSquatCheckboxClick"
                 android:text="@string/squat" />
 
             <EditText
@@ -97,7 +97,7 @@
                 android:id="@+id/checkBox_deadlift"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onDeadliftClick"
+                android:onClick="onDeadliftCheckboxClick"
                 android:text="@string/deadlift" />
 
             <EditText
@@ -115,7 +115,7 @@
                 android:id="@+id/checkBox_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onBarbellRowClick"
+                android:onClick="onBarbellRowCheckboxClick"
                 android:text="@string/barbell_row" />
 
             <EditText

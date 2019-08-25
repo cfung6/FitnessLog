@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Exercise{
+public class Exercise {
 
     private String name;
     private List<Integer> actualRepsDone;
@@ -44,9 +44,9 @@ public class Exercise{
         pass = true;
     }
 
-    public void increaseWeight () {
+    public void increaseWeight() {
         if (passOrFail()) {
-            setActualAndGoalWeight (setNewCapableWeight());
+            setActualAndGoalWeight(setNewCapableWeight());
         }
     }
 
@@ -69,7 +69,7 @@ public class Exercise{
         goalWeight = weight * percentage + increment;
     }
 
-    private double setNewCapableWeight(){
+    private double setNewCapableWeight() {
         Collections.sort(actualWeightList);
         return actualWeightList.get(0);
     }

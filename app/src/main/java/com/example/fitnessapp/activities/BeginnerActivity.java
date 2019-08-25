@@ -34,16 +34,16 @@ public class BeginnerActivity extends AppCompatActivity {
     private double startingBarbellRowWeight;
 
     private Routine beginnerRoutine;
+    private Workout currentWorkout;
     private Workout workoutA;
     private Workout workoutB;
+
     private Exercise benchPress;
     private Exercise overheadPress;
     private Exercise squat;
     private Exercise deadlift;
     private Exercise barbellRow;
 
-    private Exercise currentExercise;
-    private Workout currentWorkout;
     private Calendar calendar;
     private Date date;
 
@@ -53,6 +53,7 @@ public class BeginnerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beginner);
+
         databaseHelper = new DatabaseHelper(this);
         date = new Date();
 
@@ -62,19 +63,19 @@ public class BeginnerActivity extends AppCompatActivity {
         initializeWorkouts();
         initializeRoutine();
 
+        //Setting current workout depending on last entries in database
         currentWorkout = beginnerRoutine.getCurrentWorkout();
-        currentExercise = currentWorkout.getCurrentExercise();
 
+        //Setting TextViews for exercises
         setFirstExercise();
-        nextExercise();
-        setSecondExercse();
-        nextExercise();
+        setSecondExercise();
         setThirdExercise();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
@@ -101,18 +102,21 @@ public class BeginnerActivity extends AppCompatActivity {
     }
 
     public void submitOnClick(View view) {
+        //Each submit button has an integer tag that is passed (First submit is 1, second is 2, etc)
         String tag = view.getTag().toString();
-        int index = Integer.parseInt(tag);
-        submitOnClick(view, index);
+        int currentExerciseNum = Integer.parseInt(tag);
+
+        submitOnClick(view, currentExerciseNum);
     }
 
-    public void submitOnClick(View view, int index) {
-
-        Exercise exercise = currentWorkout.getExerciseAtIndex(index - 1);
-        int numOfSets = exercise.getGoalReps().size();
-
+    public void submitOnClick(View view, int currentExerciseNum) {
+        //Sets current exercise depending on which submit button was pressed
+        Exercise exercise = currentWorkout.getExerciseAtIndex(currentExerciseNum - 1);
+        //Gets index of current workout
         int workoutIndex = beginnerRoutine.getWorkouts().indexOf(currentWorkout);
+        int numOfSets = exercise.getGoalReps().size();
         String exerciseName = exercise.getName();
+        //Inserts exercise name and associated workout number into table if it does not already exist
         databaseHelper.insertBeginnerRoutineData(workoutIndex, exerciseName);
 
         EditText[] weightsET = new EditText[numOfSets + 1];
@@ -120,63 +124,76 @@ public class BeginnerActivity extends AppCompatActivity {
         String[] weights = new String[numOfSets + 1];
         String[] reps = new String[numOfSets + 1];
 
-        for (int i = 1; i <= numOfSets; i++) {
-            int id = getResources().getIdentifier("weight" + i + "ex" + index, "id", getPackageName());
-            weightsET[i] = findViewById(id);
+        //Assigns variables in the four arrays depending on which set and exercise the user is on
+        for (int currentSetNum = 1; currentSetNum <= numOfSets; currentSetNum++) {
+            String weightsETName = "weight" + currentSetNum + "ex" + currentExerciseNum;
+            String repsETName = "reps" + currentSetNum + "ex" + currentExerciseNum;
+
+            //Finds the correct EditText depending on the current exercise and set
+            int weightsETid = getResources().getIdentifier(weightsETName, "id", getPackageName());
+            int repsETid = getResources().getIdentifier(repsETName, "id", getPackageName());
+
+            weightsET[currentSetNum] = findViewById(weightsETid);
+            repsET[currentSetNum] = findViewById(repsETid);
+
+            weights[currentSetNum] = weightsET[currentSetNum].getText().toString();
+            reps[currentSetNum] = repsET[currentSetNum].getText().toString();
         }
 
-        for (int i = 1; i <= numOfSets; i++) {
-            int id = getResources().getIdentifier("reps" + i + "ex" + index, "id", getPackageName());
-            repsET[i] = findViewById(id);
-        }
-
-        for (int i = 1; i <= numOfSets; i++) {
-            weights[i] = weightsET[i].getText().toString();
-        }
-
-        for (int i = 1; i <= numOfSets; i++) {
-            reps[i] = repsET[i].getText().toString();
-        }
-
-        if (AreWeightsAndRepsFilled(weights[1], reps[1]) && AreWeightsAndRepsInvisible(weightsET[2], repsET[2])) {
+        if (areWeightsAndRepsFilled(weights[1], reps[1]) && areWeightsAndRepsInvisible(weightsET[2], repsET[2])) {
             weightsET[2].setVisibility(View.VISIBLE);
             repsET[2].setVisibility(View.VISIBLE);
 
-        } else if (AreWeightsAndRepsFilled(weights[2], reps[2]) && AreWeightsAndRepsInvisible(weightsET[3], repsET[3])) {
+        } else if (areWeightsAndRepsFilled(weights[2], reps[2]) && areWeightsAndRepsInvisible(weightsET[3], repsET[3])) {
             weightsET[3].setVisibility(View.VISIBLE);
             repsET[3].setVisibility(View.VISIBLE);
 
-        } else if (AreWeightsAndRepsFilled(weights[1], reps[1]) && AreWeightsAndRepsFilled(weights[2], reps[2]) && AreWeightsAndRepsFilled(weights[3], reps[3])) {
-            //After all lines are visible, submit button adds all the inputs at once
-            exercise.removeRepsDone();
-            //Finds routineID corresponding to the workout and exercise
-            int routineID = databaseHelper.selectRoutineID("BeginnerTable", workoutIndex, exerciseName);
-            //Deletes rows with same time and routineID as to avoid duplicates
-//            databaseHelper.deleteRowsInData(date.getTime(), routineID);
-            if (databaseHelper.haveEntriesBeenEntered(date.getTime(), routineID)) {
-                List<Double> weightsForDataTable = new ArrayList<>(Arrays.asList(Double.parseDouble(weights[1]), Double.parseDouble(weights[2]), Double.parseDouble(weights[3])));
-                List<Integer> repsForDataTable = new ArrayList<>(Arrays.asList(Integer.parseInt(reps[1]), Integer.parseInt(reps[2]), Integer.parseInt(reps[3])));
-                databaseHelper.updateEntries(date.getTime(), weightsForDataTable, repsForDataTable, routineID);
+        } else if (areAllFilled(weights, reps)) {
+            long timeOfToday = date.getTime();
+
+            double weights1 = Double.parseDouble(weights[1]);
+            double weights2 = Double.parseDouble(weights[2]);
+            double weights3 = Double.parseDouble(weights[3]);
+
+            int reps1 = Integer.parseInt(reps[1]);
+            int reps2 = Integer.parseInt(reps[2]);
+            int reps3 = Integer.parseInt(reps[3]);
+
+            //Finds workoutExerciseID corresponding to the current workout and exercise
+            int workoutExerciseID = databaseHelper.selectWorkoutExerciseID("BeginnerTable", workoutIndex, exerciseName);
+
+            //Checks if database contains any entries with the current time of today and workoutExerciseID
+            if (databaseHelper.haveEntriesBeenEntered(timeOfToday, workoutExerciseID)) {
+                List<Double> weightsForDataTable = new ArrayList<>(Arrays.asList(weights1, weights2, weights3));
+                List<Integer> repsForDataTable = new ArrayList<>(Arrays.asList(reps1, reps2, reps3));
+
+                databaseHelper.updateEntries(timeOfToday, workoutExerciseID, weightsForDataTable, repsForDataTable);
             } else {
-                exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
-                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[1]), Integer.parseInt(reps[1]), routineID);
-                exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
-                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[2]), Integer.parseInt(reps[2]), routineID);
-                exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
-                databaseHelper.insertData(date.getTime(), Double.parseDouble(weights[3]), Integer.parseInt(reps[3]), routineID);
+                //After all lines are visible, submit button removes all weights and reps so all can be added at once
+                exercise.removeRepsDone();
+                exercise.addRepsDone(weights1, reps1);
+                exercise.addRepsDone(weights2, reps2);
+                exercise.addRepsDone(weights3, reps3);
+
+                databaseHelper.insertData(timeOfToday, workoutExerciseID, weights1, reps1);
+                databaseHelper.insertData(timeOfToday, workoutExerciseID, weights2, reps2);
+                databaseHelper.insertData(timeOfToday, workoutExerciseID, weights3, reps3);
             }
 
 //          Set textview based on pass or fail
-            int id = getResources().getIdentifier("message" + index, "id", getPackageName());
-            TextView tv = findViewById(id);
+            int textViewid = getResources().getIdentifier("message" + currentExerciseNum, "id", getPackageName());
+            TextView tv = findViewById(textViewid);
 
+            //Checks if goal weight has already increased when submit button is pressed to avoid incrementing more than once
             if (exercise.isWeightIncreased()) {
                 exercise.removeRepsDone();
                 exercise.setGoalWeight((exercise.getGoalWeight() - exercise.getIncrement()) / exercise.getPercentage());
-                exercise.addRepsDone(Double.parseDouble(weights[1]), Integer.parseInt(reps[1]));
-                exercise.addRepsDone(Double.parseDouble(weights[2]), Integer.parseInt(reps[2]));
-                exercise.addRepsDone(Double.parseDouble(weights[3]), Integer.parseInt(reps[3]));
+                exercise.addRepsDone(weights1, reps1);
+                exercise.addRepsDone(weights2, reps2);
+                exercise.addRepsDone(weights3, reps3);
+
                 if (exercise.passOrFail()) {
+                    //Increases exercise goal weight
                     exercise.increaseWeight();
                     exercise.setWeightIncreased(true);
                     tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
@@ -197,6 +214,7 @@ public class BeginnerActivity extends AppCompatActivity {
         }
     }
 
+    //Sets textView for the current date
     private void setDateText() {
         TextView dateView = findViewById(R.id.date);
         calendar = Calendar.getInstance();
@@ -205,6 +223,7 @@ public class BeginnerActivity extends AppCompatActivity {
         dateView.setText(full);
     }
 
+    //Gets weights from NewProgramActivity
     private void initializeWeights() {
         Intent intent = getIntent();
         startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
@@ -215,11 +234,14 @@ public class BeginnerActivity extends AppCompatActivity {
     }
 
     private void initializeExercises() {
-        benchPress = new Exercise("Bench Press", startingBenchWeight, 5, 1, Arrays.asList(5, 5, 5));
-        overheadPress = new Exercise("Overhead Press", startingOverheadWeight, 5, 1, Arrays.asList(5, 5, 5));
-        squat = new Exercise("Squat", startingSquatWeight, 5, 1, Arrays.asList(5, 5, 5));
-        deadlift = new Exercise("Deadlift", startingDeadliftWeight, 5, 1, Arrays.asList(5));
-        barbellRow = new Exercise("Barbell Row", startingBarbellRowWeight, 5, 1, Arrays.asList(5, 5, 5));
+        int increment = 5;
+        int percentage = 1;
+        ArrayList<Integer> goalReps = new ArrayList<>(Arrays.asList(5, 5, 5));
+        benchPress = new Exercise("Bench Press", startingBenchWeight, increment, percentage, goalReps);
+        overheadPress = new Exercise("Overhead Press", startingOverheadWeight, increment, percentage, goalReps);
+        squat = new Exercise("Squat", startingSquatWeight, increment, percentage, goalReps);
+        deadlift = new Exercise("Deadlift", startingDeadliftWeight, increment, percentage, goalReps);
+        barbellRow = new Exercise("Barbell Row", startingBarbellRowWeight, increment, percentage, goalReps);
     }
 
     private void initializeWorkouts() {
@@ -231,15 +253,16 @@ public class BeginnerActivity extends AppCompatActivity {
         beginnerRoutine = new Routine(3, "beginner_routine", new ArrayList<>(Arrays.asList(workoutA, workoutB)));
     }
 
-    private boolean AreWeightsAndRepsFilled(String weight, String reps) {
+    private boolean areWeightsAndRepsFilled(String weight, String reps) {
         return !weight.isEmpty() && !weight.equals(".") && !reps.isEmpty();
     }
 
-    private boolean AreWeightsAndRepsInvisible(EditText weight, EditText reps) {
+    private boolean areWeightsAndRepsInvisible(EditText weight, EditText reps) {
         return !weight.isShown() && !reps.isShown();
     }
 
     private void setFirstExercise() {
+        Exercise currentExercise = currentWorkout.getExercises().get(0);
         TextView exerciseOneView = findViewById(R.id.exercise_one);
         exerciseOneView.setText(currentExercise.getName());
 
@@ -253,7 +276,8 @@ public class BeginnerActivity extends AppCompatActivity {
         exerciseOneRepsView.setText("Reps: " + currentExercise.getGoalReps().get(0));
     }
 
-    private void setSecondExercse() {
+    private void setSecondExercise() {
+        Exercise currentExercise = currentWorkout.getExercises().get(1);
         TextView exerciseTwoView = findViewById(R.id.exercise_two);
         exerciseTwoView.setText(currentExercise.getName());
 
@@ -268,6 +292,7 @@ public class BeginnerActivity extends AppCompatActivity {
     }
 
     private void setThirdExercise() {
+        Exercise currentExercise = currentWorkout.getExercises().get(2);
         TextView exerciseThreeView = findViewById(R.id.exercise_three);
         exerciseThreeView.setText(currentExercise.getName());
 
@@ -278,11 +303,12 @@ public class BeginnerActivity extends AppCompatActivity {
         exerciseThreeSetView.setText("Sets: " + currentExercise.getGoalReps().size());
 
         TextView exerciseThreeRepsView = findViewById(R.id.exercise_three_reps);
-        exerciseThreeRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
+        exerciseThreeRepsView.setText("Reps: " + currentExercise.getGoalReps().get(2));
     }
 
-    private void nextExercise() {
-        currentWorkout.nextExercise();
-        currentExercise = currentWorkout.getCurrentExercise();
+    private boolean areAllFilled(String[] weights, String[] reps) {
+        return areWeightsAndRepsFilled(weights[1], reps[1])
+                && areWeightsAndRepsFilled(weights[2], reps[2])
+                && areWeightsAndRepsFilled(weights[3], reps[3]);
     }
 }

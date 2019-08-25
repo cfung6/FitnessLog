@@ -8,27 +8,24 @@ import java.util.List;
 import java.util.Objects;
 
 public class Workout {
+
     private String name;
     private List<Exercise> exercises;
-    private int currentExercise;
-
 
     public Workout(String name, List<Exercise> exercises) {
         this.name = name;
         this.exercises = exercises;
-        currentExercise = 0;
     }
 
-    public void addExercise (Exercise exercise) {
+    public void addExercise(Exercise exercise) {
         exercises.add(exercise);
     }
 
-    public void removeExercise (Exercise exercise) {
-
+    public void removeExercise(Exercise exercise) {
         this.exercises.remove(exercise);
     }
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
@@ -38,16 +35,6 @@ public class Workout {
 
     public Exercise getExerciseAtIndex(int index) {
         return exercises.get(index);
-    }
-
-    public Exercise getCurrentExercise() {
-        return exercises.get(currentExercise);
-    }
-
-    public void nextExercise() {
-        int length = exercises.size();
-        currentExercise++;
-        currentExercise %= length;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

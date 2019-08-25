@@ -1,10 +1,9 @@
 package com.example.fitnessapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnessapp.R;
 
@@ -24,9 +23,9 @@ public class AdvancedActivity extends AppCompatActivity {
         Intent intent = getIntent();
         startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
         startingOverheadWeight = intent.getDoubleExtra("OVERHEAD_PRESS_WEIGHT", -1);
-        startingSquatWeight = intent.getDoubleExtra ("SQUAT_WEIGHT", -1);
-        startingDeadliftWeight = intent.getDoubleExtra ("DEADLIFT_WEIGHT", -1);
-        startingBarbellRowWeight = intent.getDoubleExtra ("BARBELL_ROW_WEIGHT", -1);
+        startingSquatWeight = intent.getDoubleExtra("SQUAT_WEIGHT", -1);
+        startingDeadliftWeight = intent.getDoubleExtra("DEADLIFT_WEIGHT", -1);
+        startingBarbellRowWeight = intent.getDoubleExtra("BARBELL_ROW_WEIGHT", -1);
 
     }
 }
