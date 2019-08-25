@@ -44,8 +44,7 @@ public class BeginnerActivity extends AppCompatActivity {
     private Exercise deadlift;
     private Exercise barbellRow;
 
-    private Calendar calendar;
-    private Date date;
+    private long timeOfDate;
 
     private DatabaseHelper databaseHelper;
 
@@ -55,7 +54,12 @@ public class BeginnerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_beginner);
 
         databaseHelper = new DatabaseHelper(this);
-        date = new Date();
+        Date date = new Date();
+        /*
+        This will need to change depending on which activity they came from,
+        as clicking different dates in the calendar view will result in a different timeOfDate
+         */
+        timeOfDate = date.getTime();
 
         setDateText();
         initializeWeights();
@@ -149,8 +153,6 @@ public class BeginnerActivity extends AppCompatActivity {
             repsET[3].setVisibility(View.VISIBLE);
 
         } else if (areAllFilled(weights, reps)) {
-            long timeOfToday = date.getTime();
-
             double weights1 = Double.parseDouble(weights[1]);
             double weights2 = Double.parseDouble(weights[2]);
             double weights3 = Double.parseDouble(weights[3]);
@@ -163,11 +165,11 @@ public class BeginnerActivity extends AppCompatActivity {
             int workoutExerciseID = databaseHelper.selectWorkoutExerciseID("BeginnerTable", workoutIndex, exerciseName);
 
             //Checks if database contains any entries with the current time of today and workoutExerciseID
-            if (databaseHelper.haveEntriesBeenEntered(timeOfToday, workoutExerciseID)) {
+            if (databaseHelper.haveEntriesBeenEntered(timeOfDate, workoutExerciseID)) {
                 List<Double> weightsForDataTable = new ArrayList<>(Arrays.asList(weights1, weights2, weights3));
                 List<Integer> repsForDataTable = new ArrayList<>(Arrays.asList(reps1, reps2, reps3));
 
-                databaseHelper.updateEntries(timeOfToday, workoutExerciseID, weightsForDataTable, repsForDataTable);
+                databaseHelper.updateEntries(timeOfDate, workoutExerciseID, weightsForDataTable, repsForDataTable);
             } else {
                 //After all lines are visible, submit button removes all weights and reps so all can be added at once
                 exercise.removeRepsDone();
@@ -175,9 +177,9 @@ public class BeginnerActivity extends AppCompatActivity {
                 exercise.addRepsDone(weights2, reps2);
                 exercise.addRepsDone(weights3, reps3);
 
-                databaseHelper.insertData(timeOfToday, workoutExerciseID, weights1, reps1);
-                databaseHelper.insertData(timeOfToday, workoutExerciseID, weights2, reps2);
-                databaseHelper.insertData(timeOfToday, workoutExerciseID, weights3, reps3);
+                databaseHelper.insertData(timeOfDate, workoutExerciseID, weights1, reps1);
+                databaseHelper.insertData(timeOfDate, workoutExerciseID, weights2, reps2);
+                databaseHelper.insertData(timeOfDate, workoutExerciseID, weights3, reps3);
             }
 
 //          Set textview based on pass or fail
@@ -217,7 +219,7 @@ public class BeginnerActivity extends AppCompatActivity {
     //Sets textView for the current date
     private void setDateText() {
         TextView dateView = findViewById(R.id.date);
-        calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         String full = new SimpleDateFormat("EE, MMM d yyyy").format(date);
         dateView.setText(full);

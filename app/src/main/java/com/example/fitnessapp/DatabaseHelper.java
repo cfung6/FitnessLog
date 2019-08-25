@@ -16,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String BEGINNER_TABLE = "BeginnerTable";
     private static final String INTERMEDIATE_TABLE = "IntermediateTable";
     private static final String ADVANCED_TABLE = "AdvancedTable";
-    private static final String WORKOUT_EXERCISE_ID = "Workout_Exercise_ID";
+    private static final String WORKOUT_EXERCISE_ID = "WorkoutExerciseID";
     private static final String EXERCISE_COL = "Exercise";
     private static final String WORKOUT_COL = "Workout";
     private static final String DATA_TABLE = "DataTable";
