@@ -153,12 +153,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    //Deletes rows in Data_Table that contain the matching time and workoutExerciseID so duplicates are not stored when pressing submit button multiple times
-//    public void deleteRowsInData(long time, int workoutExerciseID) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.delete(DATA_TABLE, DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID, null);
-//    }
-
     //Checks if database contains any entries with the current time of today and workoutExerciseID
     public boolean haveEntriesBeenEntered(long time, int workoutExerciseID) {
         int count;
@@ -201,5 +195,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(NEXT_WEIGHT_COL, nextWeight);
             db.update(DATA_TABLE, contentValues, "ID = " + ids.get(i), null);
         }
+    }
+
+    //Checks if table is completely empty
+    public boolean isEmpty() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selection = "SELECT count(*)";
+        Cursor cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
+
+        cursor.moveToFirst();
+        int count = cursor.getCount();
+        cursor.close();
+        return count == 0;
+    }
+
+    //Organizes the table in ascending order by time
+    public void orderByDate() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String orderBy = DATE_COL + " ASC";
+        Cursor cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy);
+
+        cursor.moveToFirst();
+        cursor.close();
     }
 }
