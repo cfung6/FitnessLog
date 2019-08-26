@@ -224,11 +224,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public double getNextBenchWeight(String s) {
+    // EFFECTS: given beg/int/adv table and an exercise name, returns a double representing the
+    //          next weight (i.e. goal weight)
+    public double getExerciseNextWeight(String s, String exerciseName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT NextWeight FROM DataTable INNER JOIN " + s +
                 " ON DataTable.WorkoutExerciseID = " + s +
-                ".ID WHERE Exercise = 'Bench Press' ORDER BY DATE_COL DESC";
+                ".ID WHERE Exercise = " + "'" + exerciseName + "' " + "ORDER BY DATE_COL DESC";
         Cursor cursor = db.rawQuery(query, null);
         double weight = 0.0;
         if (cursor != null && cursor.getCount() > 0) {
@@ -238,4 +240,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return weight;
     }
+
 }
