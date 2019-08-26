@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String REPS_COL = "Reps";
     private static final String ROUTINE_ID = "RoutineID";
     private static final String NEXT_WEIGHT_COL = "NextWeight";
+
+    private SQLiteDatabase db;
+    private Cursor cursor;
+    private String selection;
+    private String orderBy;
+    private ContentValues contentValues;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -69,8 +74,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Inserting data into data table
     public boolean insertData(long dateTime, int routineID, int workoutExerciseID, double weight, int reps, double nextWeight) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+        db = this.getWritableDatabase();
+        contentValues = new ContentValues();
 
         contentValues.put(DATE_COL, dateTime);
         contentValues.put(ROUTINE_ID, routineID);
@@ -84,9 +89,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Inserts exercise name and associated workout number into table if it does not already exist
     public boolean insertBeginnerRoutineData(int workout, String exercise) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
-        Cursor cursor = db.query(BEGINNER_TABLE, null, selection, null, null, null, null);
+        db = this.getWritableDatabase();
+        selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
+        cursor = db.query(BEGINNER_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
         if (cursor.getCount() == 0) {
@@ -103,9 +108,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean insertIntermediateRoutineData(int workout, String exercise) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
-        Cursor cursor = db.query(INTERMEDIATE_TABLE, null, selection, null, null, null, null);
+        db = this.getWritableDatabase();
+        selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
+        cursor = db.query(INTERMEDIATE_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
         if (cursor.getCount() == 0) {
@@ -121,9 +126,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean insertAdvancedRoutineData(int workout, String exercise) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
-        Cursor cursor = db.query(ADVANCED_TABLE, null, selection, null, null, null, null);
+        db = this.getWritableDatabase();
+        selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
+        cursor = db.query(ADVANCED_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
         if (cursor.getCount() == 0) {
@@ -140,9 +145,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Returns workoutExerciseID in beg/int/adv table that corresponds to the workout and exercise
     public int selectWorkoutExerciseID(String table, int workout, String exercise) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
-        Cursor cursor = db.query(table, new String[]{"ID"}, selection, null, null, null, null);
+        db = this.getWritableDatabase();
+        selection = WORKOUT_COL + "=" + workout + " AND " + EXERCISE_COL + " LIKE '" + exercise + "'";
+        cursor = db.query(table, new String[]{"ID"}, selection, null, null, null, null);
         int id = -1;
 
         if (cursor != null && cursor.getCount() > 0) {
@@ -156,22 +161,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Checks if database contains any entries with the current time of today and workoutExerciseID
     public boolean haveEntriesBeenEntered(long time, int workoutExerciseID) {
         int count;
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selection = DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
-        Cursor cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
+        db = this.getWritableDatabase();
+        selection = DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
         count = cursor.getCount();
-        Log.d("TAG", "count = " + count);
         cursor.close();
         return count != 0;
     }
 
     public void updateEntries(long time, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double nextWeight) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         List<Integer> ids = new ArrayList<>();
-        String selection = DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
-        Cursor cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, null);
+        selection = DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, null);
 
         //Finds all entries with the matching time and workoutExerciseID and puts the primary key of those entries into an array
         if (cursor.moveToFirst()) {
@@ -185,7 +189,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Updates database entries with the new corresponding weights and reps value
         for (int i = 0; i < ids.size() || i < weights.size(); i++) {
-            ContentValues contentValues = new ContentValues();
+            contentValues = new ContentValues();
 
             contentValues.put(DATE_COL, time);
             contentValues.put(ROUTINE_ID, routineID);
@@ -199,9 +203,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Checks if table is completely empty
     public boolean isEmpty() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selection = "SELECT count(*)";
-        Cursor cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
+        db = this.getWritableDatabase();
+        cursor = db.query(DATA_TABLE, new String[]{"ID"}, null, null, null, null, null);
 
         cursor.moveToFirst();
         int count = cursor.getCount();
@@ -209,13 +212,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count == 0;
     }
 
-
     // EFFECTS: returns 1 for beginner routine, 2 for intermediate routine, and 3 for advance routine
     public int getLatestRoutineID() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String orderBy = DATE_COL + " DESC";
-        Cursor cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy, "1");
+        db = this.getWritableDatabase();
+        orderBy = DATE_COL + " DESC";
+        cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy, "1");
         int id = -1;
+
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             id = cursor.getInt(cursor.getColumnIndex(ROUTINE_ID));
@@ -224,15 +227,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    //Gets the latest workoutExerciseID from DataTable
+    public int getLatestWorkoutExerciseID() {
+        db = this.getWritableDatabase();
+        orderBy = DATE_COL + " DESC";
+        cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy, "1");
+        int workoutExerciseID = -1;
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            workoutExerciseID = cursor.getInt(cursor.getColumnIndex(WORKOUT_EXERCISE_ID));
+            cursor.close();
+        }
+        return workoutExerciseID;
+    }
+
+    //Gets the latest workout number from beg/int/adv tables using the latest workoutExerciseID
+    public int getLatestWorkout(String table) {
+        int workoutExerciseID = getLatestWorkoutExerciseID();
+        db = this.getWritableDatabase();
+        selection = "ID = " + workoutExerciseID;
+        cursor = db.query(table, null, selection, null, null, null, null);
+        int workoutNum = -1;
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            workoutNum = cursor.getInt(cursor.getColumnIndex("Workout"));
+            cursor.close();
+        }
+        return workoutNum;
+    }
+
     // EFFECTS: given beg/int/adv table and an exercise name, returns a double representing the
     //          next weight (i.e. goal weight)
     public double getExerciseNextWeight(String s, String exerciseName) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         String query = "SELECT NextWeight FROM DataTable INNER JOIN " + s +
                 " ON DataTable.WorkoutExerciseID = " + s +
-                ".ID WHERE Exercise = " + "'" + exerciseName + "' " + "ORDER BY DATE_COL DESC";
-        Cursor cursor = db.rawQuery(query, null);
-        double weight = 0.0;
+                ".ID WHERE Exercise = " + "'" + exerciseName + "' " + "ORDER BY Date DESC";
+        cursor = db.rawQuery(query, null);
+        double weight = -1;
+
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             weight = cursor.getDouble(cursor.getColumnIndex(NEXT_WEIGHT_COL));
@@ -240,5 +275,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return weight;
     }
-
 }

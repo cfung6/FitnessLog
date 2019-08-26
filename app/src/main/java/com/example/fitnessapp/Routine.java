@@ -1,26 +1,22 @@
 package com.example.fitnessapp;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.util.List;
 
 public class Routine {
 
-    private int numOfWorkouts;
     private String name;
     private List<Workout> workouts;
-    private int currentWorkout;
+    private DatabaseHelper databaseHelper;
 
     // EFFECTS: constructs a routine that has a name, a list of workouts, and sets the week of
     //          the routine to 1
-    public Routine(int numOfWorkouts, String name, List<Workout> workouts) {
-        this.numOfWorkouts = numOfWorkouts;
+    public Routine(String name, List<Workout> workouts, Context context) {
         this.name = name;
         this.workouts = workouts;
-        //Will need to change currentWorkout to be dependent on previous entry in database
-        currentWorkout = 0;
-    }
-
-    public int getNumOfWorkouts() {
-        return numOfWorkouts;
+        databaseHelper = new DatabaseHelper(context);
     }
 
     public String getName() {
@@ -32,7 +28,16 @@ public class Routine {
     }
 
     public Workout getCurrentWorkout() {
-        return workouts.get(currentWorkout);
+        int currentWorkoutNum = getCurrentWorkoutNum();
+        return workouts.get(currentWorkoutNum);
     }
 
+    private int getCurrentWorkoutNum() {
+        String tableName = this.name + "Table";
+        int lastWorkout = databaseHelper.getLatestWorkout(tableName);
+        Log.d("TAG", "Lastworkout " + lastWorkout);
+        int currentWorkout = (lastWorkout + 1) % this.workouts.size();
+        Log.d("TAG", "currentworkout " + currentWorkout);
+        return currentWorkout;
+    }
 }

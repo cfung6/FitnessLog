@@ -35,6 +35,7 @@ public class BeginnerActivity extends AppCompatActivity {
 
     private Routine beginnerRoutine;
     private int routineID;
+    private int numOfWorkouts;
 
     private Workout currentWorkout;
     private Workout workoutA;
@@ -47,7 +48,7 @@ public class BeginnerActivity extends AppCompatActivity {
     private Exercise barbellRow;
 
     private long timeOfDate;
-
+    private Intent intent;
     private DatabaseHelper databaseHelper;
 
     @Override
@@ -55,15 +56,15 @@ public class BeginnerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beginner);
 
+        intent = getIntent();
+        databaseHelper = new DatabaseHelper(this);
         //Beginner ID is 1, intermediate is 2, advanced is 3
         routineID = 1;
-        databaseHelper = new DatabaseHelper(this);
-        Date date = new Date();
-        /*
-        This will need to change depending on which activity they came from,
-        as clicking different dates in the calendar view will result in a different timeOfDate
-         */
-        timeOfDate = date.getTime();
+        numOfWorkouts = 3;
+        long time = new Date().getTime();
+        Date date = new Date(time - time % (24 * 60 * 60 * 1000));
+        //Receives time from WorkoutCalendar, defaults to today's time if the previous activity is anything else
+        timeOfDate = intent.getLongExtra("TIME", date.getTime());
 
         setDateText();
         initializeWeights();
@@ -229,7 +230,6 @@ public class BeginnerActivity extends AppCompatActivity {
 
     //Gets weights from NewProgramActivity
     private void initializeWeights() {
-        Intent intent = getIntent();
         startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
         startingOverheadWeight = intent.getDoubleExtra("OVERHEAD_PRESS_WEIGHT", -1);
         startingSquatWeight = intent.getDoubleExtra("SQUAT_WEIGHT", -1);
@@ -255,7 +255,8 @@ public class BeginnerActivity extends AppCompatActivity {
     }
 
     private void initializeRoutine() {
-        beginnerRoutine = new Routine(3, "beginner_routine", new ArrayList<>(Arrays.asList(workoutA, workoutB)));
+        ArrayList<Workout> workouts = new ArrayList<>(Arrays.asList(workoutA, workoutB));
+        beginnerRoutine = new Routine("beginner", workouts, this);
     }
 
     private boolean areWeightsAndRepsFilled(String weight, String reps) {
