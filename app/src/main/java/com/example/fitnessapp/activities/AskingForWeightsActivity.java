@@ -83,11 +83,11 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         Intent intent;
 
         if (levelChosen == Levels.BEGINNER) {
-            intent = new Intent(AskingForWeightsActivity.this, BeginnerActivity.class);
+            intent = new Intent(this, BeginnerActivity.class);
         } else if (levelChosen == Levels.INTERMEDIATE) {
-            intent = new Intent(AskingForWeightsActivity.this, IntermediateActivity.class);
+            intent = new Intent(this, IntermediateActivity.class);
         } else {
-            intent = new Intent(AskingForWeightsActivity.this, AdvancedActivity.class);
+            intent = new Intent(this, AdvancedActivity.class);
         }
 
         //Passes input if EditTexts are filled, else pass default weight if checkboxes are unchecked

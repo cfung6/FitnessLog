@@ -209,13 +209,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count == 0;
     }
 
-    //Organizes the table in ascending order by time
-    public void orderByDate() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String orderBy = DATE_COL + " ASC";
-        Cursor cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy);
 
-        cursor.moveToFirst();
-        cursor.close();
+    // EFFECTS: returns 1 for beginner routine, 2 for intermediate routine, and 3 for advance routine
+    public int getLatestRoutineID() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String orderBy = DATE_COL + " DESC";
+        Cursor cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy, "1");
+        int id = -1;
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            id = cursor.getInt(cursor.getColumnIndex(ROUTINE_ID));
+            cursor.close();
+        }
+        return id;
     }
 }
