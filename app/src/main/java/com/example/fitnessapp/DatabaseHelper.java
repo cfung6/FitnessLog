@@ -23,6 +23,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATE_COL = "Date";
     private static final String WEIGHT_COL = "Weight";
     private static final String REPS_COL = "Reps";
+    private static final String ROUTINE_ID = "RoutineID";
+    private static final String NEXT_WEIGHT_COL = "NextWeight";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -49,9 +51,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + DATA_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DATE_COL + " INTEGER, "
+                + ROUTINE_ID + " INTEGER, "
                 + WORKOUT_EXERCISE_ID + " INTEGER, "
                 + WEIGHT_COL + " REAL, "
-                + REPS_COL + " INTEGER)");
+                + REPS_COL + " INTEGER, "
+                + NEXT_WEIGHT_COL + " REAL)");
     }
 
     @Override
@@ -64,14 +68,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Inserting data into data table
-    public boolean insertData(long dateTime, int id, double weight, int reps) {
+    public boolean insertData(long dateTime, int routineID, int workoutExerciseID, double weight, int reps, double nextWeight) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(DATE_COL, dateTime);
-        contentValues.put(WORKOUT_EXERCISE_ID, id);
+        contentValues.put(ROUTINE_ID, routineID);
+        contentValues.put(WORKOUT_EXERCISE_ID, workoutExerciseID);
         contentValues.put(WEIGHT_COL, weight);
         contentValues.put(REPS_COL, reps);
+        contentValues.put(NEXT_WEIGHT_COL, nextWeight);
         long result = db.insert(DATA_TABLE, null, contentValues);
         return !(result == -1);
     }
@@ -167,7 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count != 0;
     }
 
-    public void updateEntries(long time, int workoutExerciseID, List<Double> weights, List<Integer> reps) {
+    public void updateEntries(long time, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double nextWeight) {
         SQLiteDatabase db = this.getWritableDatabase();
         List<Integer> ids = new ArrayList<>();
         String selection = DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
@@ -188,9 +194,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ContentValues contentValues = new ContentValues();
 
             contentValues.put(DATE_COL, time);
+            contentValues.put(ROUTINE_ID, routineID);
             contentValues.put(WEIGHT_COL, weights.get(i));
             contentValues.put(REPS_COL, reps.get(i));
             contentValues.put(WORKOUT_EXERCISE_ID, workoutExerciseID);
+            contentValues.put(NEXT_WEIGHT_COL, nextWeight);
             db.update(DATA_TABLE, contentValues, "ID = " + ids.get(i), null);
         }
     }

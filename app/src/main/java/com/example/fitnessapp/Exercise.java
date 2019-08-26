@@ -12,7 +12,6 @@ public class Exercise {
     private List<Integer> goalReps;
     private List<Double> actualWeightList;
 
-    private double capableWeight;
     private double goalWeight;
 
     private int increment;
@@ -25,7 +24,6 @@ public class Exercise {
         this.name = name;
         this.increment = increment;
         this.percentage = percentage;
-        capableWeight = weight;
         goalWeight = weight * percentage + increment;
         actualRepsDone = new ArrayList<>();
         actualWeightList = new ArrayList<>();
@@ -79,7 +77,6 @@ public class Exercise {
 
     // EFFECTS: sets the weight that the user is capable of lifting and sets the goal weight
     private void setActualAndGoalWeight(double weight) {
-        capableWeight = weight;
         goalWeight = weight * percentage + increment;
     }
 
