@@ -223,4 +223,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return id;
     }
+
+    public double getNextBenchWeight(String s) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT NextWeight FROM DataTable INNER JOIN " + s +
+                " ON DataTable.WorkoutExerciseID = " + s +
+                ".ID WHERE Exercise = 'Bench Press' ORDER BY DATE_COL DESC";
+        Cursor cursor = db.rawQuery(query, null);
+        double weight = 0.0;
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            weight = cursor.getDouble(cursor.getColumnIndex(NEXT_WEIGHT_COL));
+            cursor.close();
+        }
+        return weight;
+    }
 }

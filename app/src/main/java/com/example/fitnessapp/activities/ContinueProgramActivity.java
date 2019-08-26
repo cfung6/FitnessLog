@@ -33,15 +33,17 @@ public class ContinueProgramActivity extends AppCompatActivity {
                 startActivity(intent);
             } else if (routineID == 1) {
                 intent = new Intent(this, BeginnerActivity.class);
+                initializeWeight("BeginnerTable");
             } else if (routineID == 2) {
                 intent = new Intent(this, IntermediateActivity.class);
+                initializeWeight("IntermediateTable");
             } else if (routineID == 3) {
                 intent = new Intent(this, AdvancedActivity.class);
+                initializeWeight("AdvancedTable");
             } else {
                 throw new IllegalArgumentException();
             }
             if (!isEmpty) {
-                initializeWeight();
                 intent.putExtra("BENCH_PRESS_WEIGHT", nextBenchWeight);
                 intent.putExtra("OVERHEAD_PRESS_WEIGHT", nextOverheadWeight);
                 intent.putExtra("SQUAT_WEIGHT", nextSquatWeight);
@@ -53,7 +55,12 @@ public class ContinueProgramActivity extends AppCompatActivity {
         }
     }
 
-    private void initializeWeight() {
+    private void initializeWeight(String s) {
+        nextBenchWeight = databaseHelper.getNextBenchWeight(s);
+        nextOverheadWeight = databaseHelper.getNextOverheadWeight(s);
+        nextSquatWeight = databaseHelper.getNextSquatWeight(s);
+        nextDeadliftWeight = databaseHelper.getNextDeadliftWeight(s);
+        nextBarbellRowWeight = databaseHelper.getNextBarbellWeight(s);
     }
 
 
