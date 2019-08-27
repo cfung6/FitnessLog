@@ -158,60 +158,68 @@ public class BeginnerActivity extends AppCompatActivity {
             repsET[3].setVisibility(View.VISIBLE);
 
         } else if (areAllFilled(weights, reps)) {
-            double weights1 = Double.parseDouble(weights[1]);
-            double weights2 = Double.parseDouble(weights[2]);
-            double weights3 = Double.parseDouble(weights[3]);
+            try {
+                double weights1 = Double.parseDouble(weights[1]);
+                double weights2 = Double.parseDouble(weights[2]);
+                double weights3 = Double.parseDouble(weights[3]);
 
-            int reps1 = Integer.parseInt(reps[1]);
-            int reps2 = Integer.parseInt(reps[2]);
-            int reps3 = Integer.parseInt(reps[3]);
+                int reps1 = Integer.parseInt(reps[1]);
+                int reps2 = Integer.parseInt(reps[2]);
+                int reps3 = Integer.parseInt(reps[3]);
 
-//          Set textview based on pass or fail
-            int textViewid = getResources().getIdentifier("message" + currentExerciseNum, "id", getPackageName());
-            TextView tv = findViewById(textViewid);
+//              Set textview based on pass or fail
+                int textViewid = getResources().getIdentifier("message" + currentExerciseNum, "id", getPackageName());
+                TextView tv = findViewById(textViewid);
 
-            //After all lines are visible, submit button removes all weights and reps so all can be added at once
-            exercise.removeRepsDone();
-            exercise.addRepsDone(weights1, reps1);
-            exercise.addRepsDone(weights2, reps2);
-            exercise.addRepsDone(weights3, reps3);
+                //After all lines are visible, submit button removes all weights and reps so all can be added at once
+                exercise.removeRepsDone();
+                exercise.addRepsDone(weights1, reps1);
+                exercise.addRepsDone(weights2, reps2);
+                exercise.addRepsDone(weights3, reps3);
 
-            //Checks if goal weight has already increased when submit button is pressed to avoid incrementing more than once
-            if (exercise.isWeightIncreased()) {
-                exercise.setGoalWeight((exercise.getGoalWeight() - exercise.getIncrement()) / exercise.getPercentage());
+                //Checks if goal weight has already increased when submit button is pressed to avoid incrementing more than once
+                if (exercise.isWeightIncreased()) {
+                    exercise.setGoalWeight((exercise.getGoalWeight() - exercise.getIncrement()) / exercise.getPercentage());
 
-                if (exercise.passOrFail()) {
-                    //Increases exercise goal weight
+                    if (exercise.passOrFail()) {
+                        //Increases exercise goal weight
+                        exercise.increaseWeight();
+                        exercise.setWeightIncreased(true);
+                        tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
+                    } else {
+                        tv.setText("Failure is inevitable! Stay at your current weight.\n");
+                        exercise.setWeightIncreased(false);
+                    }
+                } else if (exercise.passOrFail()) {
                     exercise.increaseWeight();
                     exercise.setWeightIncreased(true);
                     tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
                 } else {
                     tv.setText("Failure is inevitable! Stay at your current weight.\n");
-                    exercise.setWeightIncreased(false);
                 }
-            } else if (exercise.passOrFail()) {
-                exercise.increaseWeight();
-                exercise.setWeightIncreased(true);
-                tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
-            } else {
-                tv.setText("Failure is inevitable! Stay at your current weight.\n");
-            }
 
-            //Finds workoutExerciseID corresponding to the current workout and exercise
-            int workoutExerciseID = databaseHelper.selectWorkoutExerciseID("BeginnerTable", workoutIndex, exerciseName);
-            //Gets new goal weight
-            double capableWeight = exercise.getCapableWeight();
+                //Finds workoutExerciseID corresponding to the current workout and exercise
+                int workoutExerciseID = databaseHelper.selectWorkoutExerciseID("BeginnerTable", workoutIndex, exerciseName);
+                //Gets new goal weight
+                double capableWeight = exercise.getCapableWeight();
 
-            //Checks if database contains any entries with the current time of today and workoutExerciseID
-            if (databaseHelper.haveEntriesBeenEntered(timeOfDate, workoutExerciseID)) {
-                List<Double> weightsForDataTable = new ArrayList<>(Arrays.asList(weights1, weights2, weights3));
-                List<Integer> repsForDataTable = new ArrayList<>(Arrays.asList(reps1, reps2, reps3));
+                //Checks if database contains any entries with the current time of today and workoutExerciseID
+                if (databaseHelper.haveEntriesBeenEntered(timeOfDate, workoutExerciseID)) {
+                    List<Double> weightsForDataTable
+                            = new ArrayList<>(Arrays.asList(weights1, weights2, weights3));
+                    List<Integer> repsForDataTable
+                            = new ArrayList<>(Arrays.asList(reps1, reps2, reps3));
 
-                databaseHelper.updateEntries(timeOfDate, routineID, workoutExerciseID, weightsForDataTable, repsForDataTable, capableWeight);
-            } else {
-                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights1, reps1, capableWeight);
-                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights2, reps2, capableWeight);
-                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights3, reps3, capableWeight);
+                    databaseHelper.updateEntries(timeOfDate, routineID, workoutExerciseID,
+                            weightsForDataTable, repsForDataTable, capableWeight);
+                } else {
+                    databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights1, reps1, capableWeight);
+                    databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights2, reps2, capableWeight);
+                    databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights3, reps3, capableWeight);
+                }
+            } catch (IllegalArgumentException e) {
+                Snackbar mySnackbar = Snackbar.make(view, "Invalid input(s)", Snackbar.LENGTH_SHORT);
+                mySnackbar.show();
             }
         } else {
             Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights and/or reps are blank", Snackbar.LENGTH_SHORT);

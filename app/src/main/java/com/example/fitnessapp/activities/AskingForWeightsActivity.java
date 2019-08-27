@@ -69,8 +69,13 @@ public class AskingForWeightsActivity extends AppCompatActivity {
                 initializeStringInputs();
 
                 if (!isEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
-                    convertStringsToDoubles();
-                    passWeightsToNext();
+                    try {
+                        convertStringsToDoubles();
+                        passWeightsToNext();
+                    } catch (IllegalArgumentException e) {
+                        Snackbar mySnackbar = Snackbar.make(view, "Invalid input(s)", Snackbar.LENGTH_SHORT);
+                        mySnackbar.show();
+                    }
                 } else {
                     Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights are blank", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
