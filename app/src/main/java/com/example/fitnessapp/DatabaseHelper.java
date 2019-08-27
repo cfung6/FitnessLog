@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String WEIGHT_COL = "Weight";
     private static final String REPS_COL = "Reps";
     private static final String ROUTINE_ID = "RoutineID";
-    private static final String NEXT_WEIGHT_COL = "NextWeight";
+    private static final String CAPABLE_WEIGHT_COL = "CapableWeight";
 
     private SQLiteDatabase db;
     private Cursor cursor;
@@ -60,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + WORKOUT_EXERCISE_ID + " INTEGER, "
                 + WEIGHT_COL + " REAL, "
                 + REPS_COL + " INTEGER, "
-                + NEXT_WEIGHT_COL + " REAL)");
+                + CAPABLE_WEIGHT_COL + " REAL)");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Inserting data into data table
-    public boolean insertData(long dateTime, int routineID, int workoutExerciseID, double weight, int reps, double nextWeight) {
+    public boolean insertData(long dateTime, int routineID, int workoutExerciseID, double weight, int reps, double capableWeight) {
         db = this.getWritableDatabase();
         contentValues = new ContentValues();
 
@@ -82,7 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(WORKOUT_EXERCISE_ID, workoutExerciseID);
         contentValues.put(WEIGHT_COL, weight);
         contentValues.put(REPS_COL, reps);
-        contentValues.put(NEXT_WEIGHT_COL, nextWeight);
+        contentValues.put(CAPABLE_WEIGHT_COL, capableWeight);
         long result = db.insert(DATA_TABLE, null, contentValues);
         return !(result == -1);
     }
@@ -171,7 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count != 0;
     }
 
-    public void updateEntries(long time, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double nextWeight) {
+    public void updateEntries(long time, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
         db = this.getWritableDatabase();
         List<Integer> ids = new ArrayList<>();
         selection = DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
@@ -196,7 +196,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(WEIGHT_COL, weights.get(i));
             contentValues.put(REPS_COL, reps.get(i));
             contentValues.put(WORKOUT_EXERCISE_ID, workoutExerciseID);
-            contentValues.put(NEXT_WEIGHT_COL, nextWeight);
+            contentValues.put(CAPABLE_WEIGHT_COL, capableWeight);
             db.update(DATA_TABLE, contentValues, "ID = " + ids.get(i), null);
         }
     }
@@ -259,10 +259,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // EFFECTS: given beg/int/adv table and an exercise name, returns a double representing the
-    //          next weight (i.e. goal weight)
-    public double getExerciseNextWeight(String s, String exerciseName) {
+    //          weight that the user is capable of lifting
+    public double getExerciseCapableWeight(String s, String exerciseName) {
         db = this.getWritableDatabase();
-        String query = "SELECT NextWeight FROM DataTable INNER JOIN " + s +
+        String query = "SELECT CapableWeight FROM DataTable INNER JOIN " + s +
                 " ON DataTable.WorkoutExerciseID = " + s +
                 ".ID WHERE Exercise = " + "'" + exerciseName + "' " + "ORDER BY Date DESC";
         cursor = db.rawQuery(query, null);
@@ -270,7 +270,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            weight = cursor.getDouble(cursor.getColumnIndex(NEXT_WEIGHT_COL));
+            weight = cursor.getDouble(cursor.getColumnIndex(CAPABLE_WEIGHT_COL));
             cursor.close();
         }
         return weight;

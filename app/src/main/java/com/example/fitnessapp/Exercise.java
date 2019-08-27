@@ -121,4 +121,9 @@ public class Exercise {
     public void setWeightIncreased(boolean b) {
         weightIncreased = b;
     }
+
+    // EFFECTS: returns the capable weight that was used to determine the goal weight
+    public double getCapableWeight() {
+        return (goalWeight - increment) / percentage;
+    }
 }

@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitnessapp.DatabaseHelper;
 import com.example.fitnessapp.DefaultWeights;
 import com.example.fitnessapp.Levels;
 import com.example.fitnessapp.R;
@@ -81,13 +82,17 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     //Passing starting weights for each exercise to next activity
     private void passWeightsToNext() {
         Intent intent;
+        String tableName = "";
 
         if (levelChosen == Levels.BEGINNER) {
             intent = new Intent(this, BeginnerActivity.class);
+            tableName = "BeginnerTable";
         } else if (levelChosen == Levels.INTERMEDIATE) {
             intent = new Intent(this, IntermediateActivity.class);
+            tableName = "IntermediateTable";
         } else {
             intent = new Intent(this, AdvancedActivity.class);
+            tableName = "AdvancedTable";
         }
 
         //Passes input if EditTexts are filled, else pass default weight if checkboxes are unchecked
@@ -96,8 +101,48 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         intent.putExtra("SQUAT_WEIGHT", getSquatInput());
         intent.putExtra("DEADLIFT_WEIGHT", getDeadliftInput());
         intent.putExtra("BARBELL_ROW_WEIGHT", getBarbellRowInput());
+
+        insertDataToSQL(tableName);
         startActivity(intent);
     }
+
+    // EFFECTS: inserts each exercise into the given data table (name) then inserts the capableWeight
+    //          into DATA_TABLE
+    private void insertDataToSQL(String tableName) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        if (tableName == "BeginnerTable") {
+            databaseHelper.insertBeginnerRoutineData(0, "Bench Press");
+            databaseHelper.insertBeginnerRoutineData(0, "Overhead Press");
+            databaseHelper.insertBeginnerRoutineData(0, "Squat");
+            databaseHelper.insertBeginnerRoutineData(0, "Deadlift");
+            databaseHelper.insertBeginnerRoutineData(0, "Barbell Row");
+        } else if (tableName == "IntermediateTable") {
+            databaseHelper.insertIntermediateRoutineData(0, "Bench Press");
+            databaseHelper.insertIntermediateRoutineData(0, "Overhead Press");
+            databaseHelper.insertIntermediateRoutineData(0, "Squat");
+            databaseHelper.insertIntermediateRoutineData(0, "Deadlift");
+            databaseHelper.insertIntermediateRoutineData(0, "Barbell Row");
+        } else {
+            databaseHelper.insertAdvancedRoutineData(0, "Bench Press");
+            databaseHelper.insertAdvancedRoutineData(0, "Overhead Press");
+            databaseHelper.insertAdvancedRoutineData(0, "Squat");
+            databaseHelper.insertAdvancedRoutineData(0, "Deadlift");
+            databaseHelper.insertAdvancedRoutineData(0, "Barbell Row");
+        }
+
+        int workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Bench Press");
+        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, benchInput);
+        workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Overhead Press");
+        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, overheadInput);
+        workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Squat");
+        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, squatInput);
+        workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Deadlift");
+        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, deadliftInput);
+        workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Barbell Row");
+        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, barbellRowInput);
+    }
+
+
 
     public void onBenchPressCheckboxClick(View view) {
         benchPressChecked = ((CheckBox) view).isChecked();

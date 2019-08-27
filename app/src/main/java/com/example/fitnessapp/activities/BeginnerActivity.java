@@ -200,18 +200,18 @@ public class BeginnerActivity extends AppCompatActivity {
             //Finds workoutExerciseID corresponding to the current workout and exercise
             int workoutExerciseID = databaseHelper.selectWorkoutExerciseID("BeginnerTable", workoutIndex, exerciseName);
             //Gets new goal weight
-            double nextWeight = exercise.getGoalWeight();
+            double capableWeight = exercise.getCapableWeight();
 
             //Checks if database contains any entries with the current time of today and workoutExerciseID
             if (databaseHelper.haveEntriesBeenEntered(timeOfDate, workoutExerciseID)) {
                 List<Double> weightsForDataTable = new ArrayList<>(Arrays.asList(weights1, weights2, weights3));
                 List<Integer> repsForDataTable = new ArrayList<>(Arrays.asList(reps1, reps2, reps3));
 
-                databaseHelper.updateEntries(timeOfDate, routineID, workoutExerciseID, weightsForDataTable, repsForDataTable, nextWeight);
+                databaseHelper.updateEntries(timeOfDate, routineID, workoutExerciseID, weightsForDataTable, repsForDataTable, capableWeight);
             } else {
-                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights1, reps1, nextWeight);
-                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights2, reps2, nextWeight);
-                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights3, reps3, nextWeight);
+                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights1, reps1, capableWeight);
+                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights2, reps2, capableWeight);
+                databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights3, reps3, capableWeight);
             }
         } else {
             Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights and/or reps are blank", Snackbar.LENGTH_SHORT);
