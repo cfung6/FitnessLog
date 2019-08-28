@@ -181,6 +181,10 @@ public class BeginnerActivity extends AppCompatActivity {
                 //Checks if goal weight has already increased when submit button is pressed to avoid incrementing more than once
                 if (exercise.isWeightIncreased()) {
                     exercise.setGoalWeight((exercise.getGoalWeight() - exercise.getIncrement()) / exercise.getPercentage());
+                    exercise.removeRepsDone();
+                    exercise.addRepsDone(weights1, reps1);
+                    exercise.addRepsDone(weights2, reps2);
+                    exercise.addRepsDone(weights3, reps3);
 
                     if (exercise.passOrFail()) {
                         //Increases exercise goal weight
@@ -196,6 +200,7 @@ public class BeginnerActivity extends AppCompatActivity {
                     exercise.setWeightIncreased(true);
                     tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
                 } else {
+                    exercise.setWeightIncreased(false);
                     tv.setText("Failure is inevitable! Stay at your current weight.\n");
                 }
 
