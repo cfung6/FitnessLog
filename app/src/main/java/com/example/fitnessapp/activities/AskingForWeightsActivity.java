@@ -38,7 +38,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private double[] exerciseWeightInputs;
     private String[] exerciseStrings;
     private boolean[] exerciseChecked;
-    private List<String> exerciseWeightNames;
+    private List<String> exerciseNames;
 
     private DatabaseHelper databaseHelper;
     private int workoutNum;
@@ -125,7 +125,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         //Passes input if EditTexts are filled, else pass default weight if checkboxes are unchecked
         for (int i = 0; i < numOfExercises; i++) {
-            intent.putExtra(exerciseWeightNames.get(i), getExerciseInput(i));
+            intent.putExtra(exerciseNames.get(i), getExerciseInput(i));
         }
 
         insertDataToSQL(tableName);
@@ -167,27 +167,20 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         long currentTime = new Date().getTime();
         long todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
 
-        //If the list of exercises is different for each routine, exercises must be initialized within each if block
-        List<String> exercises = new ArrayList<>(Arrays.asList(
-                "Bench Press",
-                "Overhead Press",
-                "Squat",
-                "Deadlift",
-                "Barbell Row"));
 
         if (tableName.equals("BeginnerTable")) {
-            addDataToBeginner(exercises);
+            addDataToBeginner(exerciseNames);
             routineID = 1;
         } else if (tableName.equals("IntermediateTable")) {
-            addDataToIntermediate(exercises);
+            addDataToIntermediate(exerciseNames);
             routineID = 2;
         } else {
-            addDataToAdvanced(exercises);
+            addDataToAdvanced(exerciseNames);
             routineID = 3;
         }
 
         for (int i = 0; i < numOfExercises; i++) {
-            workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exercises.get(i));
+            workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames.get(i));
             databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, workoutNum, 0, getExerciseInput(i));
         }
     }
@@ -227,13 +220,12 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         exerciseStrings = new String[numOfExercises];
         exerciseEditTexts = new EditText[numOfExercises];
         exerciseChecked = new boolean[numOfExercises];
-        exerciseWeightNames = new ArrayList<>(Arrays.asList(
-                "BENCH_PRESS_WEIGHT",
-                "OVERHEAD_PRESS_WEIGHT",
-                "SQUAT_WEIGHT",
-                "DEADLIFT_WEIGHT",
-                "BARBELL_ROW_WEIGHT"
-        ));
+        exerciseNames = new ArrayList<>(Arrays.asList(
+                "Bench Press",
+                "Overhead Press",
+                "Squat",
+                "Deadlift",
+                "Barbell Row"));
     }
 
     private void initializeBooleans() {

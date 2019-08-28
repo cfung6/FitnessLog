@@ -10,19 +10,39 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fitnessapp.DatabaseHelper;
 import com.example.fitnessapp.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseHelper databaseHelper;
-    double nextBenchWeight;
-    double nextOverheadWeight;
-    double nextSquatWeight;
-    double nextDeadliftWeight;
-    double nextBarbellRowWeight;
+    private DatabaseHelper databaseHelper;
+
+    /*
+    ALL ARRAYS ARE IN THE FOLLOWING ORDER:
+        BENCH
+        OVERHEAD PRESS
+        SQUAT
+        DEADLIFT
+        BARBELL ROW
+     */
+
+    private double[] exerciseCapableWeights;
+    private List<String> exerciseNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        exerciseNames = new ArrayList<>(Arrays.asList(
+                "Bench Press",
+                "Overhead Press",
+                "Squat",
+                "Deadlift",
+                "Barbell Row"));
+
+        exerciseCapableWeights = new double[exerciseNames.size()];
     }
 
     public void newProgramClicked(View view) {
@@ -35,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
         boolean isEmpty = databaseHelper.isEmpty();
 
+        //If database is empty, defaults to new program
         if (isEmpty) {
             intent = new Intent(this, NewProgramActivity.class);
             startActivity(intent);
@@ -42,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
         int routineID = databaseHelper.getLatestRoutineID();
 
-        //If database is empty, defaults to new program
         try {
             if (routineID == 1) {
                 intent = new Intent(this, BeginnerActivity.class);
@@ -56,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 throw new IllegalArgumentException();
             }
-            intent.putExtra("BENCH_PRESS_WEIGHT", nextBenchWeight);
-            intent.putExtra("OVERHEAD_PRESS_WEIGHT", nextOverheadWeight);
-            intent.putExtra("SQUAT_WEIGHT", nextSquatWeight);
-            intent.putExtra("DEADLIFT_WEIGHT", nextDeadliftWeight);
-            intent.putExtra("BARBELL_ROW_WEIGHT", nextBarbellRowWeight);
+
+            //Passing the capable weights to Beg/Int/Adv activities
+            for (int i = 0; i < exerciseNames.size(); i++) {
+                intent.putExtra(exerciseNames.get(i), exerciseCapableWeights[i]);
+            }
             startActivity(intent);
         } catch (IllegalArgumentException e) {
             Log.d("TAG", "Invalid Routine ID found in SQL data table");
@@ -69,10 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
     // EFFECTS: initializes the Next Weight (i.e. goal weight) of all the exercises
     private void initializeWeight(String table) {
-        nextBenchWeight = databaseHelper.getExerciseCapableWeight(table, "Bench Press");
-        nextOverheadWeight = databaseHelper.getExerciseCapableWeight(table, "Overhead Press");
-        nextSquatWeight = databaseHelper.getExerciseCapableWeight(table, "Squat");
-        nextDeadliftWeight = databaseHelper.getExerciseCapableWeight(table, "Deadlift");
-        nextBarbellRowWeight = databaseHelper.getExerciseCapableWeight(table, "Barbell Row");
+        for (int i = 0; i < exerciseNames.size(); i++) {
+            exerciseCapableWeights[i] = databaseHelper.getExerciseCapableWeight(table, exerciseNames.get(i));
+        }
     }
 }
