@@ -19,7 +19,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String EXERCISE_COL = "Exercise";
     private static final String WORKOUT_COL = "Workout";
     private static final String DATA_TABLE = "DataTable";
-    private static final String DATE_COL = "Date";
+    private static final String CURRENT_TIME_COL = "CurrentTime";
+    private static final String TODAYS_TIME_COL = "TodaysTime";
     private static final String WEIGHT_COL = "Weight";
     private static final String REPS_COL = "Reps";
     private static final String ROUTINE_ID = "RoutineID";
@@ -55,7 +56,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE TABLE " + DATA_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DATE_COL + " INTEGER, "
+                + CURRENT_TIME_COL + " INTEGER, "
+                + TODAYS_TIME_COL + " INTEGER, "
                 + ROUTINE_ID + " INTEGER, "
                 + WORKOUT_EXERCISE_ID + " INTEGER, "
                 + WEIGHT_COL + " REAL, "
@@ -73,11 +75,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Inserting data into data table
-    public boolean insertData(long dateTime, int routineID, int workoutExerciseID, double weight, int reps, double capableWeight) {
+    public boolean insertData(long currentTime, long todaysTime, int routineID, int workoutExerciseID, double weight, int reps, double capableWeight) {
         db = this.getWritableDatabase();
         contentValues = new ContentValues();
 
-        contentValues.put(DATE_COL, dateTime);
+        contentValues.put(CURRENT_TIME_COL, currentTime);
+        contentValues.put(TODAYS_TIME_COL, todaysTime);
         contentValues.put(ROUTINE_ID, routineID);
         contentValues.put(WORKOUT_EXERCISE_ID, workoutExerciseID);
         contentValues.put(WEIGHT_COL, weight);
@@ -162,7 +165,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean haveEntriesBeenEntered(long time, int workoutExerciseID) {
         int count;
         db = this.getWritableDatabase();
-        selection = DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        selection = TODAYS_TIME_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
@@ -171,10 +174,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count != 0;
     }
 
-    public void updateEntries(long time, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
+    public void updateEntries(long time, long todaysTime, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
         db = this.getWritableDatabase();
         List<Integer> ids = new ArrayList<>();
-        selection = DATE_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        selection = TODAYS_TIME_COL + " = " + todaysTime + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, null);
 
         //Finds all entries with the matching time and workoutExerciseID and puts the primary key of those entries into an array
@@ -191,7 +194,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         for (int i = 0; i < ids.size() || i < weights.size(); i++) {
             contentValues = new ContentValues();
 
-            contentValues.put(DATE_COL, time);
+            contentValues.put(CURRENT_TIME_COL, time);
+            contentValues.put(TODAYS_TIME_COL, todaysTime);
             contentValues.put(ROUTINE_ID, routineID);
             contentValues.put(WEIGHT_COL, weights.get(i));
             contentValues.put(REPS_COL, reps.get(i));
@@ -215,7 +219,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // EFFECTS: returns 1 for beginner routine, 2 for intermediate routine, and 3 for advance routine
     public int getLatestRoutineID() {
         db = this.getWritableDatabase();
-        orderBy = DATE_COL + " DESC";
+        orderBy = CURRENT_TIME_COL + " DESC";
         cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy, "1");
         int id = -1;
 
@@ -227,19 +231,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    //Gets the latest workoutExerciseID from DataTable
-    public int getLatestWorkoutExerciseID() {
+
+    // EFFECTS: given beg/int/adv table and an exercise name, returns a double representing the
+    //          weight that the user is capable of lifting
+    public double getExerciseCapableWeight(String table, String exerciseName) {
         db = this.getWritableDatabase();
-        orderBy = DATE_COL + " DESC";
-        cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy, "1");
-        int workoutExerciseID = -1;
+        String query = "SELECT CapableWeight FROM DataTable INNER JOIN " + table +
+                " ON DataTable.WorkoutExerciseID = " + table +
+                ".ID WHERE Exercise = " + "'" + exerciseName + "' " + "ORDER BY " + CURRENT_TIME_COL + " DESC";
+        cursor = db.rawQuery(query, null);
+        double weight = -1;
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            workoutExerciseID = cursor.getInt(cursor.getColumnIndex(WORKOUT_EXERCISE_ID));
+            weight = cursor.getDouble(cursor.getColumnIndex(CAPABLE_WEIGHT_COL));
             cursor.close();
         }
-        return workoutExerciseID;
+        return weight;
     }
 
     //Gets the latest workout number from beg/int/adv tables using the latest workoutExerciseID
@@ -258,21 +266,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return workoutNum;
     }
 
-    // EFFECTS: given beg/int/adv table and an exercise name, returns a double representing the
-    //          weight that the user is capable of lifting
-    public double getExerciseCapableWeight(String s, String exerciseName) {
+    //Gets the latest workoutExerciseID from DataTable
+    private int getLatestWorkoutExerciseID() {
         db = this.getWritableDatabase();
-        String query = "SELECT CapableWeight FROM DataTable INNER JOIN " + s +
-                " ON DataTable.WorkoutExerciseID = " + s +
-                ".ID WHERE Exercise = " + "'" + exerciseName + "' " + "ORDER BY Date DESC";
-        cursor = db.rawQuery(query, null);
-        double weight = -1;
+        orderBy = CURRENT_TIME_COL + " DESC";
+        cursor = db.query(DATA_TABLE, null, null, null, null, null, orderBy, "1");
+        int workoutExerciseID = -1;
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            weight = cursor.getDouble(cursor.getColumnIndex(CAPABLE_WEIGHT_COL));
+            workoutExerciseID = cursor.getInt(cursor.getColumnIndex(WORKOUT_EXERCISE_ID));
             cursor.close();
         }
-        return weight;
+        return workoutExerciseID;
     }
 }

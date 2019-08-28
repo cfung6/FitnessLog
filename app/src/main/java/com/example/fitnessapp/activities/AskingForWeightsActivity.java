@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class AskingForWeightsActivity extends AppCompatActivity {
@@ -163,6 +164,9 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         int workoutExerciseID;
         int routineID;
 
+        long currentTime = new Date().getTime();
+        long todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
+
         //If the list of exercises is different for each routine, exercises must be initialized within each if block
         List<String> exercises = new ArrayList<>(Arrays.asList(
                 "Bench Press",
@@ -184,7 +188,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         for (int i = 0; i < numOfExercises; i++) {
             workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exercises.get(i));
-            databaseHelper.insertData(0, routineID, workoutExerciseID, workoutNum, 0, getExerciseInput(i));
+            databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, workoutNum, 0, getExerciseInput(i));
         }
     }
 

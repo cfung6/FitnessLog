@@ -47,7 +47,8 @@ public class BeginnerActivity extends AppCompatActivity {
     private Exercise deadlift;
     private Exercise barbellRow;
 
-    private long timeOfDate;
+    private long currentTime;
+    private long todaysTime;
     private Intent intent;
     private DatabaseHelper databaseHelper;
 
@@ -61,10 +62,10 @@ public class BeginnerActivity extends AppCompatActivity {
         //Beginner ID is 1, intermediate is 2, advanced is 3
         routineID = 1;
         numOfWorkouts = 3;
-        long time = new Date().getTime();
-        Date date = new Date(time - time % (24 * 60 * 60 * 1000));
+
         //Receives time from WorkoutCalendar, defaults to today's time if the previous activity is anything else
-        timeOfDate = intent.getLongExtra("TIME", date.getTime());
+        currentTime = intent.getLongExtra("TIME", new Date().getTime());
+        todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
 
         setDateText();
         initializeWeights();
@@ -204,18 +205,18 @@ public class BeginnerActivity extends AppCompatActivity {
                 double capableWeight = exercise.getCapableWeight();
 
                 //Checks if database contains any entries with the current time of today and workoutExerciseID
-                if (databaseHelper.haveEntriesBeenEntered(timeOfDate, workoutExerciseID)) {
+                if (databaseHelper.haveEntriesBeenEntered(todaysTime, workoutExerciseID)) {
                     List<Double> weightsForDataTable
                             = new ArrayList<>(Arrays.asList(weights1, weights2, weights3));
                     List<Integer> repsForDataTable
                             = new ArrayList<>(Arrays.asList(reps1, reps2, reps3));
 
-                    databaseHelper.updateEntries(timeOfDate, routineID, workoutExerciseID,
+                    databaseHelper.updateEntries(currentTime, todaysTime, routineID, workoutExerciseID,
                             weightsForDataTable, repsForDataTable, capableWeight);
                 } else {
-                    databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights1, reps1, capableWeight);
-                    databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights2, reps2, capableWeight);
-                    databaseHelper.insertData(timeOfDate, routineID, workoutExerciseID, weights3, reps3, capableWeight);
+                    databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, weights1, reps1, capableWeight);
+                    databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, weights2, reps2, capableWeight);
+                    databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, weights3, reps3, capableWeight);
                 }
             } catch (IllegalArgumentException e) {
                 Snackbar mySnackbar = Snackbar.make(view, "Invalid input(s)", Snackbar.LENGTH_SHORT);
