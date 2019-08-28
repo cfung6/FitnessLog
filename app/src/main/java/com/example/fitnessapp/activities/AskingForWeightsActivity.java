@@ -161,6 +161,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     //          into DATA_TABLE
     private void insertDataToSQL(String tableName) {
         int workoutExerciseID;
+        int routineID;
 
         //If the list of exercises is different for each routine, exercises must be initialized within each if block
         List<String> exercises = new ArrayList<>(Arrays.asList(
@@ -172,15 +173,18 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         if (tableName.equals("BeginnerTable")) {
             addDataToBeginner(exercises);
+            routineID = 1;
         } else if (tableName.equals("IntermediateTable")) {
             addDataToIntermediate(exercises);
+            routineID = 2;
         } else {
             addDataToAdvanced(exercises);
+            routineID = 3;
         }
 
         for (int i = 0; i < numOfExercises; i++) {
             workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exercises.get(i));
-            databaseHelper.insertData(0, 0, workoutExerciseID, workoutNum, 0, getExerciseInput(i));
+            databaseHelper.insertData(0, routineID, workoutExerciseID, workoutNum, 0, getExerciseInput(i));
         }
     }
 
