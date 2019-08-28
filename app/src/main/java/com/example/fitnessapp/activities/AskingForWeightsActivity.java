@@ -16,34 +16,32 @@ import com.example.fitnessapp.Levels;
 import com.example.fitnessapp.R;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class AskingForWeightsActivity extends AppCompatActivity {
 
     private Button submitButton;
 
-    private EditText benchEditText;
-    private EditText overheadPressEditText;
-    private EditText squatEditText;
-    private EditText deadliftEditText;
-    private EditText barbellRowEditText;
+    /*
+    ALL ARRAYS ARE IN THE FOLLOWING ORDER:
+        BENCH
+        OVERHEAD PRESS
+        SQUAT
+        DEADLIFT
+        BARBELL ROW
+     */
 
-    private double benchInput;
-    private double overheadInput;
-    private double squatInput;
-    private double deadliftInput;
-    private double barbellRowInput;
+    private EditText[] exerciseEditTexts;
+    private double[] exerciseWeightInputs;
+    private String[] exerciseStrings;
+    private boolean[] exerciseChecked;
+    private List<String> exerciseWeightNames;
 
-    private String benchString;
-    private String overheadString;
-    private String squatString;
-    private String deadliftString;
-    private String barbellRowString;
-
-    private boolean benchPressChecked;
-    private boolean overheadPressChecked;
-    private boolean squatChecked;
-    private boolean deadliftChecked;
-    private boolean barbellRowChecked;
-
+    private DatabaseHelper databaseHelper;
+    private int workoutNum;
+    private int numOfExercises;
     private Levels levelChosen;
 
     @Override
@@ -55,11 +53,34 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         //Assigns variable to the level that the user picked
         levelChosen = (Levels) intent.getSerializableExtra("LEVEL_CHOSEN");
         submitButton = findViewById(R.id.submit_weight_button);
+        databaseHelper = new DatabaseHelper(this);
+        workoutNum = -1;
+        numOfExercises = 5;
 
+        initializeArrays();
         initializeEditTexts();
         limitEditTextsInput();
         initializeBooleans();
         onSubmitButtonClick();
+    }
+
+    public void onCheckboxClick(View view) {
+        //Each checkbox has an integer tag that is passed (First checkbox is 0, second is 1, etc)
+        String tag = view.getTag().toString();
+        int checkboxNum = Integer.parseInt(tag);
+
+        onCheckboxClick(view, checkboxNum);
+    }
+
+    private void onCheckboxClick(View view, int checkboxNum) {
+        exerciseChecked[checkboxNum] = ((CheckBox) view).isChecked();
+
+        //When checkbox is checked, the EditText for that exercise appears
+        if (exerciseChecked[checkboxNum]) {
+            exerciseEditTexts[checkboxNum].setVisibility(View.VISIBLE);
+        } else {
+            exerciseEditTexts[checkboxNum].setVisibility(View.GONE);
+        }
     }
 
     private void onSubmitButtonClick() {
@@ -68,7 +89,8 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 initializeStringInputs();
 
-                if (!isEmpty(benchString, overheadString, squatString, deadliftString, barbellRowString)) {
+                //Checking if any of the EditTexts are empty if the checkbox is checked
+                if (!areEditTextsEmpty()) {
                     try {
                         convertStringsToDoubles();
                         passWeightsToNext();
@@ -77,7 +99,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
                         mySnackbar.show();
                     }
                 } else {
-                    Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights are blank", Snackbar.LENGTH_LONG);
+                    Snackbar mySnackbar = Snackbar.make(view, "One or more of the weights are blank", Snackbar.LENGTH_SHORT);
                     mySnackbar.show();
                 }
             }
@@ -87,7 +109,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     //Passing starting weights for each exercise to next activity
     private void passWeightsToNext() {
         Intent intent;
-        String tableName = "";
+        String tableName;
 
         if (levelChosen == Levels.BEGINNER) {
             intent = new Intent(this, BeginnerActivity.class);
@@ -101,253 +123,135 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         }
 
         //Passes input if EditTexts are filled, else pass default weight if checkboxes are unchecked
-        intent.putExtra("BENCH_PRESS_WEIGHT", getBenchInput());
-        intent.putExtra("OVERHEAD_PRESS_WEIGHT", getOverheadInput());
-        intent.putExtra("SQUAT_WEIGHT", getSquatInput());
-        intent.putExtra("DEADLIFT_WEIGHT", getDeadliftInput());
-        intent.putExtra("BARBELL_ROW_WEIGHT", getBarbellRowInput());
+        for (int i = 0; i < numOfExercises; i++) {
+            intent.putExtra(exerciseWeightNames.get(i), getExerciseInput(i));
+        }
 
         insertDataToSQL(tableName);
         startActivity(intent);
     }
 
-    // EFFECTS: inserts each exercise into the given data table (name) then inserts the capableWeight
-    //          into DATA_TABLE
-    private void insertDataToSQL(String tableName) {
-        DatabaseHelper databaseHelper = new DatabaseHelper(this);
-        if (tableName == "BeginnerTable") {
-            databaseHelper.insertBeginnerRoutineData(0, "Bench Press");
-            databaseHelper.insertBeginnerRoutineData(0, "Overhead Press");
-            databaseHelper.insertBeginnerRoutineData(0, "Squat");
-            databaseHelper.insertBeginnerRoutineData(0, "Deadlift");
-            databaseHelper.insertBeginnerRoutineData(0, "Barbell Row");
-        } else if (tableName == "IntermediateTable") {
-            databaseHelper.insertIntermediateRoutineData(0, "Bench Press");
-            databaseHelper.insertIntermediateRoutineData(0, "Overhead Press");
-            databaseHelper.insertIntermediateRoutineData(0, "Squat");
-            databaseHelper.insertIntermediateRoutineData(0, "Deadlift");
-            databaseHelper.insertIntermediateRoutineData(0, "Barbell Row");
-        } else {
-            databaseHelper.insertAdvancedRoutineData(0, "Bench Press");
-            databaseHelper.insertAdvancedRoutineData(0, "Overhead Press");
-            databaseHelper.insertAdvancedRoutineData(0, "Squat");
-            databaseHelper.insertAdvancedRoutineData(0, "Deadlift");
-            databaseHelper.insertAdvancedRoutineData(0, "Barbell Row");
-        }
-
-        int workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Bench Press");
-        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, benchInput);
-        workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Overhead Press");
-        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, overheadInput);
-        workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Squat");
-        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, squatInput);
-        workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Deadlift");
-        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, deadliftInput);
-        workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, 0, "Barbell Row");
-        databaseHelper.insertData(0, 0, workoutExerciseID, 0, 0, barbellRowInput);
-    }
-
-
-
-    public void onBenchPressCheckboxClick(View view) {
-        benchPressChecked = ((CheckBox) view).isChecked();
-
-        if (benchPressChecked) {
-            benchEditText.setVisibility(View.VISIBLE);
-        } else {
-            benchEditText.setVisibility(View.GONE);
-        }
-    }
-
-    public void onOverheadPressCheckboxClick(View view) {
-        overheadPressChecked = ((CheckBox) view).isChecked();
-
-        if (overheadPressChecked) {
-            overheadPressEditText.setVisibility(View.VISIBLE);
-        } else {
-            overheadPressEditText.setVisibility(View.GONE);
-        }
-    }
-
-    public void onSquatCheckboxClick(View view) {
-        squatChecked = ((CheckBox) view).isChecked();
-
-        if (squatChecked) {
-            squatEditText.setVisibility(View.VISIBLE);
-        } else {
-            squatEditText.setVisibility(View.GONE);
-        }
-    }
-
-    public void onDeadliftCheckboxClick(View view) {
-        deadliftChecked = ((CheckBox) view).isChecked();
-
-        if (deadliftChecked) {
-            deadliftEditText.setVisibility(View.VISIBLE);
-        } else {
-            deadliftEditText.setVisibility(View.GONE);
-        }
-    }
-
-    public void onBarbellRowCheckboxClick(View view) {
-        barbellRowChecked = ((CheckBox) view).isChecked();
-
-        if (barbellRowChecked) {
-            barbellRowEditText.setVisibility(View.VISIBLE);
-        } else {
-            barbellRowEditText.setVisibility(View.GONE);
-        }
-    }
-
-    public double getBenchInput() {
-        if (benchInput == -1) {
+    //If checkboxes are left unchecked, default value is returned for that exercise
+    private double getExerciseInput(int exerciseNum) {
+        if (exerciseWeightInputs[exerciseNum] == -1) {
             if (levelChosen == Levels.BEGINNER) {
-                return DefaultWeights.BENCH_PRESS_BEGINNER;
+                return DefaultWeights.defaultWeights.get(exerciseNum);
             } else if (levelChosen == Levels.INTERMEDIATE) {
-                return DefaultWeights.BENCH_PRESS_INTERMEDIATE;
+                return DefaultWeights.defaultWeights.get(exerciseNum + numOfExercises);
             } else {
-                return DefaultWeights.BENCH_PRESS_ADVANCED;
+                return DefaultWeights.defaultWeights.get(exerciseNum + (numOfExercises * 2));
             }
         } else {
-            return benchInput;
-        }
-    }
-
-    public double getOverheadInput() {
-        if (overheadInput == -1) {
-            if (levelChosen == Levels.BEGINNER) {
-                return DefaultWeights.OVERHEAD_PRESS_BEGINNER;
-            } else if (levelChosen == Levels.INTERMEDIATE) {
-                return DefaultWeights.OVERHEAD_PRESS_INTERMEDIATE;
-            } else {
-                return DefaultWeights.OVERHEAD_PRESS_ADVANCED;
-            }
-        } else {
-            return overheadInput;
-        }
-    }
-
-    public double getSquatInput() {
-        if (squatInput == -1) {
-            if (levelChosen == Levels.BEGINNER) {
-                return DefaultWeights.SQUAT_BEGINNER;
-            } else if (levelChosen == Levels.INTERMEDIATE) {
-                return DefaultWeights.SQUAT_INTERMEDIATE;
-            } else {
-                return DefaultWeights.SQUAT_ADVANCED;
-            }
-        } else {
-            return squatInput;
-        }
-    }
-
-    public double getDeadliftInput() {
-        if (deadliftInput == -1) {
-            if (levelChosen == Levels.BEGINNER) {
-                return DefaultWeights.DEADLIFT_BEGINNER;
-            } else if (levelChosen == Levels.INTERMEDIATE) {
-                return DefaultWeights.DEADLIFT_INTERMEDIATE;
-            } else {
-                return DefaultWeights.DEADLIFT_ADVANCED;
-            }
-        } else {
-            return deadliftInput;
-        }
-    }
-
-    public double getBarbellRowInput() {
-        if (barbellRowInput == -1) {
-            if (levelChosen == Levels.BEGINNER) {
-                return DefaultWeights.BARBELL_ROW_BEGINNER;
-            } else if (levelChosen == Levels.INTERMEDIATE) {
-                return DefaultWeights.BARBELL_ROW_INTERMEDIATE;
-            } else {
-                return DefaultWeights.BARBELL_ROW_ADVANCED;
-            }
-        } else {
-            return barbellRowInput;
+            return exerciseWeightInputs[exerciseNum];
         }
     }
 
     //Converts strings to doubles only if EditTexts are filled
     private void convertStringsToDoubles() {
-        if (!benchString.isEmpty() && !benchString.equals(".") && benchPressChecked) {
-            benchInput = Double.parseDouble(benchString);
-        } else {
-            benchInput = -1;
+        for (int i = 0; i < numOfExercises; i++) {
+            if (!exerciseStrings[i].isEmpty() && !exerciseStrings[i].equals(".") && exerciseChecked[i]) {
+                exerciseWeightInputs[i] = Double.parseDouble(exerciseStrings[i]);
+            } else {
+                exerciseWeightInputs[i] = -1;
+            }
         }
-        if (!overheadString.isEmpty() && !overheadString.equals(".") && overheadPressChecked) {
-            overheadInput = Double.parseDouble(overheadString);
+    }
+
+    // EFFECTS: inserts each exercise into the given data table (name) then inserts the capableWeight
+    //          into DATA_TABLE
+    private void insertDataToSQL(String tableName) {
+        int workoutExerciseID;
+
+        //If the list of exercises is different for each routine, exercises must be initialized within each if block
+        List<String> exercises = new ArrayList<>(Arrays.asList(
+                "Bench Press",
+                "Overhead Press",
+                "Squat",
+                "Deadlift",
+                "Barbell Row"));
+
+        if (tableName.equals("BeginnerTable")) {
+            addDataToBeginner(exercises);
+        } else if (tableName.equals("IntermediateTable")) {
+            addDataToIntermediate(exercises);
         } else {
-            overheadInput = -1;
+            addDataToAdvanced(exercises);
         }
-        if (!squatString.isEmpty() && !squatString.equals(".") && squatChecked) {
-            squatInput = Double.parseDouble(squatString);
-        } else {
-            squatInput = -1;
+
+        for (int i = 0; i < numOfExercises; i++) {
+            workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exercises.get(i));
+            databaseHelper.insertData(0, 0, workoutExerciseID, workoutNum, 0, getExerciseInput(i));
         }
-        if (!deadliftString.isEmpty() && !deadliftString.equals(".") && deadliftChecked) {
-            deadliftInput = Double.parseDouble(deadliftString);
-        } else {
-            deadliftInput = -1;
+    }
+
+    private void addDataToBeginner(List<String> exercises) {
+        for (int i = 0; i < exercises.size(); i++) {
+            databaseHelper.insertBeginnerRoutineData(workoutNum, exercises.get(i));
         }
-        if (!barbellRowString.isEmpty() && !barbellRowString.equals(".") && barbellRowChecked) {
-            barbellRowInput = Double.parseDouble(barbellRowString);
-        } else {
-            barbellRowInput = -1;
+    }
+
+    private void addDataToIntermediate(List<String> exercises) {
+        for (int i = 0; i < exercises.size(); i++) {
+            databaseHelper.insertIntermediateRoutineData(workoutNum, exercises.get(i));
+        }
+    }
+
+    private void addDataToAdvanced(List<String> exercises) {
+        for (int i = 0; i < exercises.size(); i++) {
+            databaseHelper.insertAdvancedRoutineData(workoutNum, exercises.get(i));
         }
     }
 
     //Checking if checkboxes are checked but EditTexts are empty
-    private boolean isEmpty(String str1, String str2, String str3, String str4, String str5) {
-        if (benchPressChecked) {
-            if (str1.isEmpty()) return true;
-        }
-        if (overheadPressChecked) {
-            if (str2.isEmpty()) return true;
-        }
-        if (squatChecked) {
-            if (str3.isEmpty()) return true;
-        }
-        if (deadliftChecked) {
-            if (str4.isEmpty()) return true;
-        }
-        if (barbellRowChecked) {
-            return str5.isEmpty();
+    private boolean areEditTextsEmpty() {
+        for (int i = 0; i < numOfExercises; i++) {
+            if (exerciseChecked[i]) {
+                if (exerciseStrings[i].isEmpty()) {
+                    return true;
+                }
+            }
         }
         return false;
     }
 
+    private void initializeArrays() {
+        exerciseWeightInputs = new double[numOfExercises];
+        exerciseStrings = new String[numOfExercises];
+        exerciseEditTexts = new EditText[numOfExercises];
+        exerciseChecked = new boolean[numOfExercises];
+        exerciseWeightNames = new ArrayList<>(Arrays.asList(
+                "BENCH_PRESS_WEIGHT",
+                "OVERHEAD_PRESS_WEIGHT",
+                "SQUAT_WEIGHT",
+                "DEADLIFT_WEIGHT",
+                "BARBELL_ROW_WEIGHT"
+        ));
+    }
+
     private void initializeBooleans() {
-        benchPressChecked = false;
-        overheadPressChecked = false;
-        squatChecked = false;
-        deadliftChecked = false;
-        barbellRowChecked = false;
+        for (int i = 0; i < numOfExercises; i++) {
+            exerciseChecked[i] = false;
+        }
     }
 
     //Limiting EditText inputs to only numbers and decimal
     private void limitEditTextsInput() {
-        benchEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        overheadPressEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        squatEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        deadliftEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        barbellRowEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        for (int i = 0; i < numOfExercises; i++) {
+            exerciseEditTexts[i].setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        }
     }
 
     private void initializeStringInputs() {
-        benchString = benchEditText.getText().toString();
-        overheadString = overheadPressEditText.getText().toString();
-        squatString = squatEditText.getText().toString();
-        deadliftString = deadliftEditText.getText().toString();
-        barbellRowString = barbellRowEditText.getText().toString();
+        for (int i = 0; i < numOfExercises; i++) {
+            exerciseStrings[i] = exerciseEditTexts[i].getText().toString();
+        }
     }
 
     private void initializeEditTexts() {
-        benchEditText = findViewById(R.id.textbox_bench);
-        overheadPressEditText = findViewById(R.id.textbox_overhead);
-        squatEditText = findViewById(R.id.textbox_squat);
-        deadliftEditText = findViewById(R.id.textbox_deadlift);
-        barbellRowEditText = findViewById(R.id.textbox_barbell_row);
+        exerciseEditTexts[0] = findViewById(R.id.textbox_bench);
+        exerciseEditTexts[1] = findViewById(R.id.textbox_overhead);
+        exerciseEditTexts[2] = findViewById(R.id.textbox_squat);
+        exerciseEditTexts[3] = findViewById(R.id.textbox_deadlift);
+        exerciseEditTexts[4] = findViewById(R.id.textbox_barbell_row);
     }
 }

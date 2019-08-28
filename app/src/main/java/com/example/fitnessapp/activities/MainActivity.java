@@ -68,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // EFFECTS: initializes the Next Weight (i.e. goal weight) of all the exercises
-    private void initializeWeight(String s) {
-        nextBenchWeight = databaseHelper.getExerciseNextWeight(s, "Bench Press");
-        nextOverheadWeight = databaseHelper.getExerciseNextWeight(s, "Overhead Press");
-        nextSquatWeight = databaseHelper.getExerciseNextWeight(s, "Squat");
-        nextDeadliftWeight = databaseHelper.getExerciseNextWeight(s, "Deadlift");
-        nextBarbellRowWeight = databaseHelper.getExerciseNextWeight(s, "Barbell Row");
+    private void initializeWeight(String table) {
+        nextBenchWeight = databaseHelper.getExerciseCapableWeight(table, "Bench Press");
+        nextOverheadWeight = databaseHelper.getExerciseCapableWeight(table, "Overhead Press");
+        nextSquatWeight = databaseHelper.getExerciseCapableWeight(table, "Squat");
+        nextDeadliftWeight = databaseHelper.getExerciseCapableWeight(table, "Deadlift");
+        nextBarbellRowWeight = databaseHelper.getExerciseCapableWeight(table, "Barbell Row");
     }
 }
