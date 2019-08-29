@@ -10,6 +10,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.WorkoutCalendar" />
         <activity android:name=".activities.AdvancedActivity" />
+        <activity android:name=".activities.Stopwatch" />
         <activity android:name=".activities.IntermediateActivity" />
         <activity android:name=".activities.BeginnerActivity" />
         <activity android:name=".activities.NewProgramActivity" />
