@@ -81,6 +81,16 @@
                 android:layout_marginBottom="10sp"
                 android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/exercise_one_submit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:onClick="submitOnClick"
+                    android:tag="0"
+                    android:text="Submit" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -130,7 +140,7 @@
                             android:text="Weight" />
 
                         <EditText
-                            android:id="@+id/weight1ex1"
+                            android:id="@+id/weight0ex0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -138,7 +148,7 @@
                             android:visibility="visible" />
 
                         <EditText
-                            android:id="@+id/weight2ex1"
+                            android:id="@+id/weight1ex0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -146,7 +156,7 @@
                             android:visibility="invisible" />
 
                         <EditText
-                            android:id="@+id/weight3ex1"
+                            android:id="@+id/weight2ex0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -166,7 +176,7 @@
                             android:text="Reps" />
 
                         <EditText
-                            android:id="@+id/reps1ex1"
+                            android:id="@+id/reps0ex0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -174,7 +184,7 @@
                             android:visibility="visible" />
 
                         <EditText
-                            android:id="@+id/reps2ex1"
+                            android:id="@+id/reps1ex0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -182,7 +192,7 @@
                             android:visibility="invisible" />
 
                         <EditText
-                            android:id="@+id/reps3ex1"
+                            android:id="@+id/reps2ex0"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -193,20 +203,10 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/exercise_one_submit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:onClick="submitOnClick"
-                    android:tag="1"
-                    android:text="Submit" />
-
             </LinearLayout>
 
             <TextView
-                android:id="@+id/message1"
+                android:id="@+id/message0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center" />
@@ -270,6 +270,16 @@
                 android:layout_marginRight="10sp"
                 android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/exercise_two_submit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:onClick="submitOnClick"
+                    android:tag="1"
+                    android:text="Submit" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -320,7 +330,7 @@
                             android:text="Weight" />
 
                         <EditText
-                            android:id="@+id/weight1ex2"
+                            android:id="@+id/weight0ex1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -328,7 +338,7 @@
                             android:visibility="visible" />
 
                         <EditText
-                            android:id="@+id/weight2ex2"
+                            android:id="@+id/weight1ex1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -336,7 +346,7 @@
                             android:visibility="invisible" />
 
                         <EditText
-                            android:id="@+id/weight3ex2"
+                            android:id="@+id/weight2ex1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -356,7 +366,7 @@
                             android:text="Reps" />
 
                         <EditText
-                            android:id="@+id/reps1ex2"
+                            android:id="@+id/reps0ex1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -364,7 +374,7 @@
                             android:visibility="visible" />
 
                         <EditText
-                            android:id="@+id/reps2ex2"
+                            android:id="@+id/reps1ex1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -372,7 +382,7 @@
                             android:visibility="invisible" />
 
                         <EditText
-                            android:id="@+id/reps3ex2"
+                            android:id="@+id/reps2ex1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -382,20 +392,10 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/exercise_two_submit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:onClick="submitOnClick"
-                    android:tag="2"
-                    android:text="Submit" />
-
             </LinearLayout>
 
             <TextView
-                android:id="@+id/message2"
+                android:id="@+id/message1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center" />
@@ -460,6 +460,16 @@
                 android:layout_marginBottom="10sp"
                 android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/exercise_three_submit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:onClick="submitOnClick"
+                    android:tag="2"
+                    android:text="Submit" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -509,7 +519,7 @@
                             android:text="Weight" />
 
                         <EditText
-                            android:id="@+id/weight1ex3"
+                            android:id="@+id/weight0ex2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -517,7 +527,7 @@
                             android:visibility="visible" />
 
                         <EditText
-                            android:id="@+id/weight2ex3"
+                            android:id="@+id/weight1ex2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -525,7 +535,7 @@
                             android:visibility="invisible" />
 
                         <EditText
-                            android:id="@+id/weight3ex3"
+                            android:id="@+id/weight2ex2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -545,7 +555,7 @@
                             android:text="Reps" />
 
                         <EditText
-                            android:id="@+id/reps1ex3"
+                            android:id="@+id/reps0ex2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -553,7 +563,7 @@
                             android:visibility="visible" />
 
                         <EditText
-                            android:id="@+id/reps2ex3"
+                            android:id="@+id/reps1ex2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -561,7 +571,7 @@
                             android:visibility="invisible" />
 
                         <EditText
-                            android:id="@+id/reps3ex3"
+                            android:id="@+id/reps2ex2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="no"
@@ -572,20 +582,10 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/exercise_three_submit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:onClick="submitOnClick"
-                    android:tag="3"
-                    android:text="Submit" />
-
             </LinearLayout>
 
             <TextView
-                android:id="@+id/message3"
+                android:id="@+id/message2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center" />

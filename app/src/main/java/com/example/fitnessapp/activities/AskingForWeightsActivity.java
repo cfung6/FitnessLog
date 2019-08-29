@@ -39,7 +39,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private List<Double> finalWeightInputs;
     private String[] exerciseStrings;
     private boolean[] exerciseChecked;
-    private List<String> exerciseNames;
+    private String[] exerciseNames;
 
     private DatabaseHelper databaseHelper;
     private int workoutNum;
@@ -95,7 +95,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
                 if (!areEditTextsEmpty()) {
                     try {
                         convertStringsToDoubles();
-                        passWeightsToNext();
+                        passWeightsAndNames();
                     } catch (IllegalArgumentException e) {
                         Snackbar mySnackbar = Snackbar.make(view, "Invalid input(s)", Snackbar.LENGTH_SHORT);
                         mySnackbar.show();
@@ -108,8 +108,8 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         });
     }
 
-    //Passing starting weights for each exercise to next activity
-    private void passWeightsToNext() {
+    //Passing weights and names for each exercise to next activity
+    private void passWeightsAndNames() {
         Intent intent;
         String tableName;
 
@@ -135,7 +135,8 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             weightInputs[i] = finalWeightInputs.get(i);
         }
 
-        intent.putExtra("weights", weightInputs);
+        intent.putExtra("WEIGHTS", weightInputs);
+        intent.putExtra("NAMES", exerciseNames);
 
         insertDataToSQL(tableName);
         startActivity(intent);
@@ -189,26 +190,26 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         }
 
         for (int i = 0; i < numOfExercises; i++) {
-            workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames.get(i));
+            workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames[i]);
             databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, workoutNum, 0, finalWeightInputs.get(i));
         }
     }
 
-    private void addDataToBeginner(List<String> exercises) {
-        for (int i = 0; i < exercises.size(); i++) {
-            databaseHelper.insertBeginnerRoutineData(workoutNum, exercises.get(i));
+    private void addDataToBeginner(String[] exercises) {
+        for (int i = 0; i < exercises.length; i++) {
+            databaseHelper.insertBeginnerRoutineData(workoutNum, exercises[i]);
         }
     }
 
-    private void addDataToIntermediate(List<String> exercises) {
-        for (int i = 0; i < exercises.size(); i++) {
-            databaseHelper.insertIntermediateRoutineData(workoutNum, exercises.get(i));
+    private void addDataToIntermediate(String[] exercises) {
+        for (int i = 0; i < exercises.length; i++) {
+            databaseHelper.insertIntermediateRoutineData(workoutNum, exercises[i]);
         }
     }
 
-    private void addDataToAdvanced(List<String> exercises) {
-        for (int i = 0; i < exercises.size(); i++) {
-            databaseHelper.insertAdvancedRoutineData(workoutNum, exercises.get(i));
+    private void addDataToAdvanced(String[] exercises) {
+        for (int i = 0; i < exercises.length; i++) {
+            databaseHelper.insertAdvancedRoutineData(workoutNum, exercises[i]);
         }
     }
 
@@ -230,12 +231,18 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         exerciseStrings = new String[numOfExercises];
         exerciseEditTexts = new EditText[numOfExercises];
         exerciseChecked = new boolean[numOfExercises];
-        exerciseNames = new ArrayList<>(Arrays.asList(
+        exerciseNames = new String[numOfExercises];
+        List<String> exerciseNameList = new ArrayList<>(Arrays.asList(
                 "Bench Press",
                 "Overhead Press",
                 "Squat",
                 "Deadlift",
                 "Barbell Row"));
+
+        //Turning List<String> into String[]
+        for (int i = 0; i < exerciseNames.length; i++) {
+            exerciseNames[i] = exerciseNameList.get(i);
+        }
     }
 
     private void initializeBooleans() {

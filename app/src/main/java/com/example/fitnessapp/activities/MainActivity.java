@@ -28,21 +28,27 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private double[] exerciseCapableWeights;
-    private List<String> exerciseNames;
+    private String[] exerciseNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        exerciseNames = new ArrayList<>(Arrays.asList(
+        List<String> exerciseNameList = new ArrayList<>(Arrays.asList(
                 "Bench Press",
                 "Overhead Press",
                 "Squat",
                 "Deadlift",
                 "Barbell Row"));
 
-        exerciseCapableWeights = new double[exerciseNames.size()];
+        exerciseCapableWeights = new double[exerciseNameList.size()];
+        exerciseNames = new String[exerciseNameList.size()];
+
+        //Turning String List to String[]
+        for (int i = 0; i < exerciseNames.length; i++) {
+            exerciseNames[i] = exerciseNameList.get(i);
+        }
     }
 
     public void newProgramClicked(View view) {
@@ -77,18 +83,20 @@ public class MainActivity extends AppCompatActivity {
                 throw new IllegalArgumentException();
             }
 
-            //Passing the capable weights to Beg/Int/Adv activities
-            intent.putExtra("weights", exerciseCapableWeights);
+            //Passing the capable weights and names to Beg/Int/Adv activities
+            intent.putExtra("WEIGHTS", exerciseCapableWeights);
+            intent.putExtra("NAMES", exerciseNames);
+
             startActivity(intent);
         } catch (IllegalArgumentException e) {
             Log.d("TAG", "Invalid Routine ID found in SQL data table");
         }
     }
 
-    // EFFECTS: initializes the Next Weight (i.e. goal weight) of all the exercises
+    // EFFECTS: initializes the capable weight of all the exercises
     private void initializeWeight(String table) {
-        for (int i = 0; i < exerciseNames.size(); i++) {
-            exerciseCapableWeights[i] = databaseHelper.getExerciseCapableWeight(table, exerciseNames.get(i));
+        for (int i = 0; i < exerciseNames.length; i++) {
+            exerciseCapableWeights[i] = databaseHelper.getExerciseCapableWeight(table, exerciseNames[i]);
         }
     }
 }

@@ -9,24 +9,10 @@ import java.util.Objects;
 
 public class Workout {
 
-    private String name;
     private List<Exercise> exercises;
 
-    public Workout(String name, List<Exercise> exercises) {
-        this.name = name;
+    public Workout(List<Exercise> exercises) {
         this.exercises = exercises;
-    }
-
-    public void addExercise(Exercise exercise) {
-        exercises.add(exercise);
-    }
-
-    public void removeExercise(Exercise exercise) {
-        this.exercises.remove(exercise);
-    }
-
-    public String getName() {
-        return name;
     }
 
     public List<Exercise> getExercises() {
@@ -43,14 +29,12 @@ public class Workout {
         if (this == o) return true;
         if (!(o instanceof Workout)) return false;
         Workout workout = (Workout) o;
-        return Objects.equals(this.name, workout.getName()) &&
-                Objects.equals(this.exercises, workout.getExercises());
+        return Objects.equals(this.exercises, workout.getExercises());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public int hashCode() {
-        return Objects.hash(name, exercises);
+        return Objects.hash(exercises);
     }
-
 }
