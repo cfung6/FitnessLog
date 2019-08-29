@@ -23,9 +23,7 @@
                 android:gravity="left"
                 android:textSize="26sp" />
 
-
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,16 +78,6 @@
                 android:layout_marginRight="10sp"
                 android:layout_marginBottom="10sp"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/exercise_one_submit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:onClick="submitOnClick"
-                    android:tag="0"
-                    android:text="Submit" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -162,6 +150,7 @@
                             android:autofillHints="no"
                             android:inputType="numberDecimal"
                             android:visibility="invisible" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -203,6 +192,16 @@
 
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/exercise_one_submit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:onClick="submitOnClick"
+                    android:tag="0"
+                    android:text="Submit" />
+
             </LinearLayout>
 
             <TextView
@@ -212,10 +211,6 @@
                 android:gravity="center" />
 
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -269,16 +264,6 @@
                 android:layout_marginLeft="10sp"
                 android:layout_marginRight="10sp"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/exercise_two_submit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:onClick="submitOnClick"
-                    android:tag="1"
-                    android:text="Submit" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -352,6 +337,7 @@
                             android:autofillHints="no"
                             android:inputType="numberDecimal"
                             android:visibility="invisible" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -388,9 +374,20 @@
                             android:autofillHints="no"
                             android:inputType="number"
                             android:visibility="invisible" />
+
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/exercise_two_submit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:onClick="submitOnClick"
+                    android:tag="1"
+                    android:text="Submit" />
 
             </LinearLayout>
 
@@ -401,10 +398,6 @@
                 android:gravity="center" />
 
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -459,16 +452,6 @@
                 android:layout_marginRight="10sp"
                 android:layout_marginBottom="10sp"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/exercise_three_submit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:onClick="submitOnClick"
-                    android:tag="2"
-                    android:text="Submit" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -541,6 +524,7 @@
                             android:autofillHints="no"
                             android:inputType="numberDecimal"
                             android:visibility="invisible" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -582,6 +566,16 @@
 
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/exercise_three_submit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:onClick="submitOnClick"
+                    android:tag="2"
+                    android:text="Submit" />
+
             </LinearLayout>
 
             <TextView
@@ -592,6 +586,13 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10sp" />
 
     </LinearLayout>
 </ScrollView>

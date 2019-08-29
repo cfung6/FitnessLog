@@ -58,7 +58,6 @@ public class BeginnerActivity extends AppCompatActivity {
     private Intent intent;
     private DatabaseHelper databaseHelper;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +159,7 @@ public class BeginnerActivity extends AppCompatActivity {
 
         //Sets the next EditTexts to visible
         if (!setNextToVisible(numOfSets, weightsInput, repsInput, weightsET, repsET)) {
+            //Checking to see if all EditTexts are filled
             if (areAllFilled(weightsInput, repsInput)) {
                 try {
                     double[] weights = new double[currentWorkout.getExercises().size()];
@@ -183,23 +183,17 @@ public class BeginnerActivity extends AppCompatActivity {
                         exercise.setGoalWeight((exercise.getGoalWeight() - exercise.getIncrement()) / exercise.getPercentage());
                         exercise.removeRepsDone();
                         addRepsDoneToExercise(exercise, weights, reps);
+                    }
 
-                        if (exercise.passOrFail()) {
-                            //Increases exercise goal weight
-                            exercise.increaseWeight();
-                            exercise.setWeightIncreased(true);
-                            tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
-                        } else {
-                            tv.setText("Failure is inevitable! Stay at your current weight.\n");
-                            exercise.setWeightIncreased(false);
-                        }
-                    } else if (exercise.passOrFail()) {
+                    //Checks if the required reps and weight were done for the exercise
+                    if (exercise.passOrFail()) {
+                        //Increases exercise goal weight
                         exercise.increaseWeight();
                         exercise.setWeightIncreased(true);
                         tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
                     } else {
-                        exercise.setWeightIncreased(false);
                         tv.setText("Failure is inevitable! Stay at your current weight.\n");
+                        exercise.setWeightIncreased(false);
                     }
 
                     //Finds workoutExerciseID corresponding to the current workout and exercise
@@ -244,11 +238,28 @@ public class BeginnerActivity extends AppCompatActivity {
         dateView.setText(full);
     }
 
+    //Sets the next EditTexts to visible, returns true if it works, false if not
+    private boolean setNextToVisible(int numOfSets, String[] weightsInput, String[] repsInput, EditText[] weightsET, EditText[] repsET) {
+        for (int i = 0; i < numOfSets - 1; i++) {
+            if (areWeightsAndRepsFilled(weightsInput[i], repsInput[i])
+                    && areWeightsAndRepsInvisible(weightsET[i + 1], repsET[i + 1])) {
+
+                weightsET[i + 1].setVisibility(View.VISIBLE);
+                repsET[i + 1].setVisibility(View.VISIBLE);
+
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void initializeArrays() {
+        //Getting weights and names from previous activity
         exerciseWeights = intent.getDoubleArrayExtra("WEIGHTS");
         exerciseNames = intent.getStringArrayExtra("NAMES");
         exercises = new ArrayList<>();
         workouts = new ArrayList<>();
+        //Goalreps may be different for each exercise
         goalReps = new ArrayList<>(Arrays.asList(5, 5, 5));
     }
 
@@ -300,21 +311,6 @@ public class BeginnerActivity extends AppCompatActivity {
         for (int i = 0; i < weights.length; i++) {
             exercise.addRepsDone(weights[i], reps[i]);
         }
-    }
-
-    //Sets the next EditTexts to visible, returns true if it works, false if not
-    private boolean setNextToVisible(int numOfSets, String[] weightsInput, String[] repsInput, EditText[] weightsET, EditText[] repsET) {
-        for (int i = 0; i < numOfSets - 1; i++) {
-            if (areWeightsAndRepsFilled(weightsInput[i], repsInput[i])
-                    && areWeightsAndRepsInvisible(weightsET[i + 1], repsET[i + 1])) {
-
-                weightsET[i + 1].setVisibility(View.VISIBLE);
-                repsET[i + 1].setVisibility(View.VISIBLE);
-
-                return true;
-            }
-        }
-        return false;
     }
 
     private void setFirstExercise() {
