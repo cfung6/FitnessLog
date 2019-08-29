@@ -249,6 +249,8 @@ public class BeginnerActivity extends AppCompatActivity {
         startingSquatWeight = intent.getDoubleExtra("SQUAT_WEIGHT", -1);
         startingDeadliftWeight = intent.getDoubleExtra("DEADLIFT_WEIGHT", -1);
         startingBarbellRowWeight = intent.getDoubleExtra("BARBELL_ROW_WEIGHT", -1);
+
+        double[] exerciseWeights = intent.getDoubleArrayExtra("weights");
     }
 
     private void initializeExercises() {

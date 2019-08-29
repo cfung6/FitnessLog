@@ -78,9 +78,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //Passing the capable weights to Beg/Int/Adv activities
-            for (int i = 0; i < exerciseNames.size(); i++) {
-                intent.putExtra(exerciseNames.get(i), exerciseCapableWeights[i]);
-            }
+            intent.putExtra("weights", exerciseCapableWeights);
             startActivity(intent);
         } catch (IllegalArgumentException e) {
             Log.d("TAG", "Invalid Routine ID found in SQL data table");

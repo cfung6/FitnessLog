@@ -36,6 +36,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     private EditText[] exerciseEditTexts;
     private double[] exerciseWeightInputs;
+    private List<Double> finalWeightInputs;
     private String[] exerciseStrings;
     private boolean[] exerciseChecked;
     private List<String> exerciseNames;
@@ -123,27 +124,35 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             tableName = "AdvancedTable";
         }
 
-        //Passes input if EditTexts are filled, else pass default weight if checkboxes are unchecked
+        //Adds input to array if EditTexts are filled, else adds default weight if checkboxes are unchecked
         for (int i = 0; i < numOfExercises; i++) {
-            intent.putExtra(exerciseNames.get(i), getExerciseInput(i));
+            addExerciseInput(i);
         }
+
+        //Converting List<Double> to double[]
+        double[] weightInputs = new double[finalWeightInputs.size()];
+        for (int i = 0; i < weightInputs.length; i++) {
+            weightInputs[i] = finalWeightInputs.get(i);
+        }
+
+        intent.putExtra("weights", weightInputs);
 
         insertDataToSQL(tableName);
         startActivity(intent);
     }
 
     //If checkboxes are left unchecked, default value is returned for that exercise
-    private double getExerciseInput(int exerciseNum) {
+    private void addExerciseInput(int exerciseNum) {
         if (exerciseWeightInputs[exerciseNum] == -1) {
             if (levelChosen == Levels.BEGINNER) {
-                return DefaultWeights.defaultWeights.get(exerciseNum);
+                finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum));
             } else if (levelChosen == Levels.INTERMEDIATE) {
-                return DefaultWeights.defaultWeights.get(exerciseNum + numOfExercises);
+                finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum + numOfExercises));
             } else {
-                return DefaultWeights.defaultWeights.get(exerciseNum + (numOfExercises * 2));
+                finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum + (numOfExercises * 2)));
             }
         } else {
-            return exerciseWeightInputs[exerciseNum];
+            finalWeightInputs.add(exerciseWeightInputs[exerciseNum]);
         }
     }
 
@@ -181,7 +190,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         for (int i = 0; i < numOfExercises; i++) {
             workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames.get(i));
-            databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, workoutNum, 0, getExerciseInput(i));
+            databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, workoutNum, 0, finalWeightInputs.get(i));
         }
     }
 
@@ -217,6 +226,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     private void initializeArrays() {
         exerciseWeightInputs = new double[numOfExercises];
+        finalWeightInputs = new ArrayList<>();
         exerciseStrings = new String[numOfExercises];
         exerciseEditTexts = new EditText[numOfExercises];
         exerciseChecked = new boolean[numOfExercises];
