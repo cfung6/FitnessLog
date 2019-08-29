@@ -96,6 +96,7 @@ public class Stopwatch extends AppCompatActivity {
                 customerHandler.postDelayed(updateTimerThread, 0);
                 customerHandler.removeCallbacks(updateTimerThread);
                 timerValue.setText("0:00:000");
+                container.removeAllViews();
             }
         });
     }
