@@ -35,7 +35,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
      */
 
     private EditText[] exerciseEditTexts;
-    private double[] exerciseWeightInputs;
+    private double[] rawWeightInputs;
     private List<Double> finalWeightInputs;
     private String[] exerciseStrings;
     private boolean[] exerciseChecked;
@@ -143,7 +143,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     //If checkboxes are left unchecked, default value is returned for that exercise
     private void addExerciseInput(int exerciseNum) {
-        if (exerciseWeightInputs[exerciseNum] == -1) {
+        if (rawWeightInputs[exerciseNum] == -1) {
             if (levelChosen == Levels.BEGINNER) {
                 finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum));
             } else if (levelChosen == Levels.INTERMEDIATE) {
@@ -152,7 +152,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
                 finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum + (numOfExercises * 2)));
             }
         } else {
-            finalWeightInputs.add(exerciseWeightInputs[exerciseNum]);
+            finalWeightInputs.add(rawWeightInputs[exerciseNum]);
         }
     }
 
@@ -160,9 +160,9 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private void convertStringsToDoubles() {
         for (int i = 0; i < numOfExercises; i++) {
             if (!exerciseStrings[i].isEmpty() && !exerciseStrings[i].equals(".") && exerciseChecked[i]) {
-                exerciseWeightInputs[i] = Double.parseDouble(exerciseStrings[i]);
+                rawWeightInputs[i] = Double.parseDouble(exerciseStrings[i]);
             } else {
-                exerciseWeightInputs[i] = -1;
+                rawWeightInputs[i] = -1;
             }
         }
     }
@@ -225,7 +225,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     private void initializeArrays() {
-        exerciseWeightInputs = new double[numOfExercises];
+        rawWeightInputs = new double[numOfExercises];
         finalWeightInputs = new ArrayList<>();
         exerciseStrings = new String[numOfExercises];
         exerciseEditTexts = new EditText[numOfExercises];
