@@ -110,9 +110,9 @@ public class BeginnerActivity extends AppCompatActivity {
             case R.id.stopwatch:
                 startActivity(new Intent(this, Stopwatch.class));
                 return true;
-//            case R.id.exercise_tutorials:
-//                startActivity(new Intent(this, ExerciseTutorials.class));
-//                return true;
+            case R.id.exercise_tutorials:
+                startActivity(new Intent(this, ExerciseTutorials.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
