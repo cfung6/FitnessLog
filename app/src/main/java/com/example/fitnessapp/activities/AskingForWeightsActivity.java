@@ -66,6 +66,12 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         onSubmitButtonClick();
     }
 
+    //Button goes to ExerciseTutorial Activity
+    public void onExerciseTutorialClick(View view) {
+        Intent intent = new Intent(this, ExerciseTutorials.class);
+        startActivity(intent);
+    }
+
     public void onCheckboxClick(View view) {
         //Each checkbox has an integer tag that is passed (First checkbox is 0, second is 1, etc)
         String tag = view.getTag().toString();
@@ -144,6 +150,10 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     //If checkboxes are left unchecked, default value is returned for that exercise
     private void addExerciseInput(int exerciseNum) {
+        //Making sure that ArrayList of weights cannot be bigger than num of exercises
+        if (finalWeightInputs.size() >= numOfExercises) {
+            finalWeightInputs.clear();
+        }
         if (rawWeightInputs[exerciseNum] == -1) {
             if (levelChosen == Levels.BEGINNER) {
                 finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum));
