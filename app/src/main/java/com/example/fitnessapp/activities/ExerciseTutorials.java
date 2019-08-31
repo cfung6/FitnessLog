@@ -20,6 +20,9 @@ public class ExerciseTutorials extends AppCompatActivity {
 
         initializeBenchPress();
         initializeSquat();
+        initializeOverhead();
+        initializeDeadLift();
+        initializeBarbellRow();
     }
 
 
@@ -29,6 +32,42 @@ public class ExerciseTutorials extends AppCompatActivity {
         StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
         spannableString.setSpan(boldSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(spannableString);
+    }
+
+    private void initializeDeadLift() {
+        TextView stepOneView = findViewById(R.id.step_one_deadlift);
+        String stepOneText = "1. Stand with your mid-foot under the barbell.";
+        boldText(stepOneText, 28, 33, stepOneView);
+
+        TextView stepTwoView = findViewById(R.id.step_two_deadlift);
+        String stepTwoText = "2. Bend over and grab the bar with a shoulder-width grip.";
+        boldText(stepTwoText, 0, 0, stepTwoView);
+
+        TextView stepThreeView = findViewById(R.id.step_three_deadlift);
+        String stepThreeText = "3. Bend your knees until your shins touch the bar.";
+        boldText(stepThreeText, 3, 18, stepThreeView);
+
+        TextView stepFourView = findViewById(R.id.step_four_deadlift);
+        String stepFourText = "4. Lift your chest up and straighten your lower back.";
+        boldText(stepFourText, 26, 36, stepFourView);
+
+        TextView stepFiveView = findViewById(R.id.step_five_deadlift);
+        String stepFiveText = "5. Take a big breath, hold it, and stand up with the weight.";
+        boldText(stepFiveText, 10, 20, stepFiveView);
+    }
+
+    private void initializeOverhead() {
+        TextView stepOneView = findViewById(R.id.step_one_overhead);
+        String stepOneText = "1. Stand with the bar on your front shoulders, and your hands next to your shoulders.";
+        boldText(stepOneText, 0, 0, stepOneView);
+
+        TextView stepTwoView = findViewById(R.id.step_two_overhead);
+        String stepTwoText = "2. Press the bar over your head, until it’s balanced over your shoulders and mid-foot.";
+        boldText(stepTwoText, 17, 21, stepTwoView);
+
+        TextView stepThreeView = findViewById(R.id.step_three_overhead);
+        String stepThreeText = "3. Lock your elbows at the top, and shrug your shoulders to the ceiling.";
+        boldText(stepThreeText, 3, 19, stepThreeView);
     }
 
     private void initializeSquat() {
@@ -78,5 +117,28 @@ public class ExerciseTutorials extends AppCompatActivity {
         String stepFiveText = "5. Press. Press the bar from your mid-chest to above your shoulders. " +
                 "Keep your butt on the bench. Lock your elbows at the top. Breathe.";
         boldText(stepFiveText, 3, 8, stepFiveView);
+    }
+
+    private void initializeBarbellRow() {
+        TextView stepOneView = findViewById(R.id.step_one_barbellrow);
+        String stepOneText = "1. Stand with your mid-foot under the bar (medium stance).";
+        boldText(stepOneText, 28, 33, stepOneView);
+
+        TextView stepTwoView = findViewById(R.id.step_two_barbellrow);
+        String stepTwoText = "2. Bend over and grab the bar (palms down, medium-grip).";
+        boldText(stepTwoText, 3, 12, stepTwoView);
+
+        TextView stepThreeView = findViewById(R.id.step_three_barbellrow);
+        String stepThreeText = "3. Unlock your knees while keeping your hips high.";
+        boldText(stepThreeText, 3, 9, stepThreeView);
+
+        TextView stepFourView = findViewById(R.id.step_four_barbellrow);
+        String stepFourText = "4. Lift your chest and straighten your back.";
+        boldText(stepFourText, 23, 33, stepFourView);
+
+        TextView stepFiveView = findViewById(R.id.step_five_barbellrow);
+        String stepFiveText = "5. Pull the bar against your lower chest.";
+        boldText(stepFiveText, 3, 7, stepFiveView);
+
     }
 }

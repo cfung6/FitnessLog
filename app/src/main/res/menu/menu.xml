@@ -4,9 +4,6 @@
         android:id="@+id/calendar"
         android:title="@string/calendar" />
     <item
-        android:id="@+id/graphs"
-        android:title="@string/graph" />
-    <item
         android:id="@+id/exercise_tutorials"
         android:title="@string/exercise_tutorials" />
     <item
