@@ -27,7 +27,6 @@ import java.util.List;
 
 public class BeginnerActivity extends AppCompatActivity {
 
-
     /*
     ALL ARRAYS ARE IN THE FOLLOWING ORDER:
         BENCH
