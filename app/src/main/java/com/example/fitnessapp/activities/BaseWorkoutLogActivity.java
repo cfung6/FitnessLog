@@ -1,6 +1,5 @@
 package com.example.fitnessapp.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,7 +20,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -64,17 +62,13 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base_workout_log);
 
         intent = getIntent();
+        databaseHelper = new DatabaseHelper(this);
 
         currentTime = intent.getLongExtra("TIME", new Date().getTime());
         todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
 
         setDateText();
         initializeArrays();
-        initializeExercises();
-        initializeWorkouts();
-
-        //Setting current workout depending on last entries in database
-        currentWorkout = routine.getCurrentWorkout();
     }
 
     @Override
@@ -251,16 +245,23 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     protected abstract void initializeWorkouts();
 
-    private void initializeExercises() {
-        //Goalreps may be different for each exercise
-        goalReps = new ArrayList<>(Arrays.asList(5, 5, 5));
-        for (int i = 0; i < exerciseWeights.length; i++) {
-            exercises.add(new Exercise(exerciseNames[i], exerciseWeights[i], increment, percentage, goalReps));
-        }
+    protected abstract void initializeExercises();
+
+    protected void initializeRoutine(String name) {
+        routine = new Routine(name, workouts, this);
     }
 
-    protected void initializeRoutine(String name, Context context) {
-        routine = new Routine(name, workouts, context);
+    protected void initializeCurrentWorkout() {
+        //Setting current workout depending on last entries in database
+        currentWorkout = routine.getCurrentWorkout();
+    }
+
+    protected void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
+    }
+
+    protected void setWorkouts(List<Workout> workouts) {
+        this.workouts = workouts;
     }
 
     protected void setRoutineID(int id) {
@@ -273,10 +274,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     protected void setPercentage(int perc) {
         percentage = perc;
-    }
-
-    protected void setNewDatabaseHelper(Context context) {
-        databaseHelper = new DatabaseHelper(context);
     }
 
     //Sets the next EditTexts to visible, returns true if it works, false if not
