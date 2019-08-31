@@ -8,6 +8,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.BaseWorkoutLogActivity"></activity>
         <activity android:name=".activities.WorkoutCalendar" />
         <activity android:name=".activities.AdvancedActivity" />
         <activity android:name=".activities.Stopwatch" />
