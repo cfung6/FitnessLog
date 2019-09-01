@@ -53,7 +53,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -72,7 +72,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -91,7 +91,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -110,7 +110,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 
@@ -129,7 +129,7 @@
                 android:autofillHints="no"
                 android:ems="10"
                 android:hint="@string/input_max_weight_for_5_reps"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textSize="12sp"
                 android:visibility="gone" />
 

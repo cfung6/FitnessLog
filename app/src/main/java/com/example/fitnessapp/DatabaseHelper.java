@@ -60,9 +60,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + TODAYS_TIME_COL + " INTEGER, "
                 + ROUTINE_ID + " INTEGER, "
                 + WORKOUT_EXERCISE_ID + " INTEGER, "
-                + WEIGHT_COL + " INTEGER, "
+                + WEIGHT_COL + " REAL, "
                 + REPS_COL + " INTEGER, "
-                + CAPABLE_WEIGHT_COL + " INTEGER)");
+                + CAPABLE_WEIGHT_COL + " REAL)");
     }
 
     @Override
@@ -75,7 +75,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Inserting data into data table
-    public boolean insertData(long currentTime, long todaysTime, int routineID, int workoutExerciseID, int weight, int reps, int capableWeight) {
+    public boolean insertData(long currentTime, long todaysTime, int routineID, int workoutExerciseID, double weight, int reps, double capableWeight) {
         db = this.getWritableDatabase();
         contentValues = new ContentValues();
 
@@ -174,7 +174,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count != 0;
     }
 
-    public void updateEntries(long time, long todaysTime, int routineID, int workoutExerciseID, List<Integer> weights, List<Integer> reps, int capableWeight) {
+    public void updateEntries(long time, long todaysTime, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
         db = this.getWritableDatabase();
         List<Integer> ids = new ArrayList<>();
         selection = TODAYS_TIME_COL + " = " + todaysTime + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
@@ -232,19 +232,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    // EFFECTS: given beg/int/adv table and an exercise name, returns a int representing the
+    // EFFECTS: given beg/int/adv table and an exercise name, returns a double representing the
     //          weight that the user is capable of lifting
-    public int getExerciseCapableWeight(String table, String exerciseName) {
+    public double getExerciseCapableWeight(String table, String exerciseName) {
         db = this.getWritableDatabase();
         String query = "SELECT CapableWeight FROM DataTable INNER JOIN " + table +
                 " ON DataTable.WorkoutExerciseID = " + table +
                 ".ID WHERE Exercise = " + "'" + exerciseName + "' " + "ORDER BY " + CURRENT_TIME_COL + " DESC";
         cursor = db.rawQuery(query, null);
-        int weight = -1;
+        double weight = -1;
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-            weight = cursor.getInt(cursor.getColumnIndex(CAPABLE_WEIGHT_COL));
+            weight = cursor.getDouble(cursor.getColumnIndex(CAPABLE_WEIGHT_COL));
             cursor.close();
         }
         return weight;

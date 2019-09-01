@@ -7,22 +7,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AdvancedActivity extends AppCompatActivity {
 
-    private int startingBenchWeight;
-    private int startingOverheadWeight;
-    private int startingSquatWeight;
-    private int startingDeadliftWeight;
-    private int startingBarbellRowWeight;
+    private double startingBenchWeight;
+    private double startingOverheadWeight;
+    private double startingSquatWeight;
+    private double startingDeadliftWeight;
+    private double startingBarbellRowWeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        startingBenchWeight = intent.getIntExtra("BENCH_PRESS_WEIGHT", -1);
-        startingOverheadWeight = intent.getIntExtra("OVERHEAD_PRESS_WEIGHT", -1);
-        startingSquatWeight = intent.getIntExtra("SQUAT_WEIGHT", -1);
-        startingDeadliftWeight = intent.getIntExtra("DEADLIFT_WEIGHT", -1);
-        startingBarbellRowWeight = intent.getIntExtra("BARBELL_ROW_WEIGHT", -1);
+        startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
+        startingOverheadWeight = intent.getDoubleExtra("OVERHEAD_PRESS_WEIGHT", -1);
+        startingSquatWeight = intent.getDoubleExtra("SQUAT_WEIGHT", -1);
+        startingDeadliftWeight = intent.getDoubleExtra("DEADLIFT_WEIGHT", -1);
+        startingBarbellRowWeight = intent.getDoubleExtra("BARBELL_ROW_WEIGHT", -1);
 
     }
 }
