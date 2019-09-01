@@ -1,6 +1,5 @@
 package com.example.fitnessapp.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -54,7 +53,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private long todaysTime;
 
     private Intent intent;
-    private Context context;
     private DatabaseHelper databaseHelper;
 
     @Override
@@ -63,7 +61,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base_workout_log);
 
         intent = getIntent();
-        databaseHelper = new DatabaseHelper(context);
+        databaseHelper = new DatabaseHelper(this);
 
         currentTime = intent.getLongExtra("TIME", new Date().getTime());
         todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
@@ -85,16 +83,16 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         //respond to menu item selection
         switch (item.getItemId()) {
             case R.id.calendar:
-                startActivity(new Intent(context, WorkoutCalendar.class));
+                startActivity(new Intent(this, WorkoutCalendar.class));
                 return true;
 //            case R.id.graphs:
-//                startActivity(new Intent(context, Graphs.class));
+//                startActivity(new Intent(this, Graphs.class));
 //                return true;
             case R.id.stopwatch:
-                startActivity(new Intent(context, Stopwatch.class));
+                startActivity(new Intent(this, Stopwatch.class));
                 return true;
             case R.id.exercise_tutorials:
-                startActivity(new Intent(context, ExerciseTutorials.class));
+                startActivity(new Intent(this, ExerciseTutorials.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -227,10 +225,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         }
     }
 
-    protected void setContext(Context context) {
-        this.context = context;
-    }
-
     protected void setRoutineID(int id) {
         routineID = id;
     }
@@ -264,7 +258,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     }
 
     protected void initializeRoutine(String name) {
-        routine = new Routine(name, workouts, context);
+        routine = new Routine(name, workouts, this);
     }
 
     protected void initializeCurrentWorkout() {

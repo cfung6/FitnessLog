@@ -5,8 +5,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fitnessapp.R;
-
 public class AdvancedActivity extends AppCompatActivity {
 
     private int startingBenchWeight;
@@ -18,7 +16,6 @@ public class AdvancedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_advanced);
 
         Intent intent = getIntent();
         startingBenchWeight = intent.getIntExtra("BENCH_PRESS_WEIGHT", -1);

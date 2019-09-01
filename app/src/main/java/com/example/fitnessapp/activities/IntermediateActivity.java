@@ -38,19 +38,41 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
         workouts = new ArrayList<>();
         exercises = new ArrayList<>();
 
-        setContext(this);
         setRoutineID(2);
         setIncrement(5);
         setPercentage(1);
         setExerciseNames(exerciseNames);
         setExerciseWeights(exerciseWeights);
+        initializeExercises();
+        setExercises(exercises);
+        initializeWorkouts();
+        setWorkouts(workouts);
+        initializeRoutine("Intermediate");
+        initializeCurrentWorkout();
     }
 
     @Override
     protected void initializeExercises() {
         List<Integer> volumeDayGoalReps = new ArrayList<>(Arrays.asList(5, 5, 5, 5, 5));
+        List<Integer> squatLightReps = new ArrayList<>(Arrays.asList(5, 5));
+        List<Integer> lightDayGoalReps = new ArrayList<>(Arrays.asList(5, 5, 5));
+        List<Integer> intensityDayGoalReps = new ArrayList<>(Arrays.asList(5));
 
+        exercises.add(new Exercise("Bench Press", exerciseWeights[0], 5, 1, intensityDayGoalReps));
         exercises.add(new Exercise("Bench Press1", round(.9 * exerciseWeights[0]), 0, 1, volumeDayGoalReps));
+        exercises.add(new Exercise("Bench Press2", round(.81 * exerciseWeights[0]), 0, 1, lightDayGoalReps));
+
+        exercises.add(new Exercise("Overhead Press", exerciseWeights[1], 5, 1, intensityDayGoalReps));
+        exercises.add(new Exercise("Overhead Press1", round(.9 * exerciseWeights[1]), 0, 1, volumeDayGoalReps));
+        exercises.add(new Exercise("Overhead Press2", round(.81 * exerciseWeights[1]), 0, 1, lightDayGoalReps));
+
+        exercises.add(new Exercise("Squat", exerciseWeights[2], 5, 1, intensityDayGoalReps));
+        exercises.add(new Exercise("Squat1", round(.9 * exerciseWeights[2]), 0, 1, volumeDayGoalReps));
+        exercises.add(new Exercise("Squat2", round(.72 * exerciseWeights[2]), 0, 1, squatLightReps));
+
+        exercises.add(new Exercise("Deadlift", round(.9 * exerciseWeights[3]), 5, 1, intensityDayGoalReps));
+
+        exercises.add(new Exercise("Barbell Row", exerciseWeights[4], 5, 1, lightDayGoalReps));
     }
 
     @Override
@@ -65,8 +87,8 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
                 getExerciseByName("Overhead Press2"))));
 
         Workout workoutC = new Workout(new ArrayList<>(Arrays.asList(
-                getExerciseByName("Squat3"),
-                getExerciseByName("Bench Press3"),
+                getExerciseByName("Squat"),
+                getExerciseByName("Bench Press"),
                 getExerciseByName("Barbell Row"))));
 
         Workout workoutD = new Workout(new ArrayList<>(Arrays.asList(
@@ -79,8 +101,8 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
                 getExerciseByName("Bench Press2"))));
 
         Workout workoutF = new Workout(new ArrayList<>(Arrays.asList(
-                getExerciseByName("Squat3"),
-                getExerciseByName("Overhead Press3"),
+                getExerciseByName("Squat"),
+                getExerciseByName("Overhead Press"),
                 getExerciseByName("Barbell Row"))));
 
         workouts.add(workoutA);
