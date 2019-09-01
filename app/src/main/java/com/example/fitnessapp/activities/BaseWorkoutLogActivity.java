@@ -1,5 +1,6 @@
 package com.example.fitnessapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -43,7 +44,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     private List<Workout> workouts;
     private List<Exercise> exercises;
-    private List<Integer> goalReps;
 
     private Routine routine;
     private int routineID;
@@ -54,6 +54,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private long todaysTime;
 
     private Intent intent;
+    private Context context;
     private DatabaseHelper databaseHelper;
 
     @Override
@@ -62,7 +63,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base_workout_log);
 
         intent = getIntent();
-        databaseHelper = new DatabaseHelper(this);
+        databaseHelper = new DatabaseHelper(context);
 
         currentTime = intent.getLongExtra("TIME", new Date().getTime());
         todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
@@ -84,16 +85,16 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         //respond to menu item selection
         switch (item.getItemId()) {
             case R.id.calendar:
-                startActivity(new Intent(this, WorkoutCalendar.class));
+                startActivity(new Intent(context, WorkoutCalendar.class));
                 return true;
 //            case R.id.graphs:
-//                startActivity(new Intent(this, Graphs.class));
+//                startActivity(new Intent(context, Graphs.class));
 //                return true;
             case R.id.stopwatch:
-                startActivity(new Intent(this, Stopwatch.class));
+                startActivity(new Intent(context, Stopwatch.class));
                 return true;
             case R.id.exercise_tutorials:
-                startActivity(new Intent(this, ExerciseTutorials.class));
+                startActivity(new Intent(context, ExerciseTutorials.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -226,42 +227,8 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         }
     }
 
-    //Sets textView for the current date
-    private void setDateText() {
-        TextView dateView = findViewById(R.id.date);
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        String full = new SimpleDateFormat("EE, MMM d yyyy").format(date);
-        dateView.setText(full);
-    }
-
-    private void initializeArrays() {
-        //Getting weights and names from previous activity
-        exerciseWeights = intent.getDoubleArrayExtra("WEIGHTS");
-        exerciseNames = intent.getStringArrayExtra("NAMES");
-        exercises = new ArrayList<>();
-        workouts = new ArrayList<>();
-    }
-
-    protected abstract void initializeWorkouts();
-
-    protected abstract void initializeExercises();
-
-    protected void initializeRoutine(String name) {
-        routine = new Routine(name, workouts, this);
-    }
-
-    protected void initializeCurrentWorkout() {
-        //Setting current workout depending on last entries in database
-        currentWorkout = routine.getCurrentWorkout();
-    }
-
-    protected void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
-    }
-
-    protected void setWorkouts(List<Workout> workouts) {
-        this.workouts = workouts;
+    protected void setContext(Context context) {
+        this.context = context;
     }
 
     protected void setRoutineID(int id) {
@@ -274,6 +241,60 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     protected void setPercentage(int perc) {
         percentage = perc;
+    }
+
+    protected void setExerciseWeights(double[] weights) {
+        exerciseWeights = weights;
+    }
+
+    protected void setExerciseNames(String[] names) {
+        exerciseNames = names;
+    }
+
+    protected abstract void initializeExercises();
+
+    protected abstract void initializeWorkouts();
+
+    protected void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
+    }
+
+    protected void setWorkouts(List<Workout> workouts) {
+        this.workouts = workouts;
+    }
+
+    protected void initializeRoutine(String name) {
+        routine = new Routine(name, workouts, context);
+    }
+
+    protected void initializeCurrentWorkout() {
+        //Setting current workout depending on last entries in database
+        currentWorkout = routine.getCurrentWorkout();
+    }
+
+    protected Exercise getExerciseByName(String name) {
+        for (int i = 0; i < exercises.size(); i++) {
+            Exercise exercise = exercises.get(i);
+
+            if (exercise.getName().toLowerCase().equals(name.toLowerCase())) {
+                return exercise;
+            }
+        }
+        return null;
+    }
+
+    //Sets textView for the current date
+    private void setDateText() {
+        TextView dateView = findViewById(R.id.date);
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        String full = new SimpleDateFormat("EE, MMM d yyyy").format(date);
+        dateView.setText(full);
+    }
+
+    private void initializeArrays() {
+        exercises = new ArrayList<>();
+        workouts = new ArrayList<>();
     }
 
     //Sets the next EditTexts to visible, returns true if it works, false if not
@@ -297,17 +318,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     private boolean areWeightsAndRepsInvisible(EditText weight, EditText reps) {
         return !weight.isShown() && !reps.isShown();
-    }
-
-    private Exercise getExerciseByName(String name) {
-        for (int i = 0; i < exercises.size(); i++) {
-            Exercise exercise = exercises.get(i);
-
-            if (exercise.getName().toLowerCase().equals(name.toLowerCase())) {
-                return exercise;
-            }
-        }
-        return null;
     }
 
     private void addRepsDoneToExercise(Exercise exercise, double[] weights, int[] reps) {
