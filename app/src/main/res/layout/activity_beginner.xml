@@ -43,28 +43,28 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/exercise_one"
+                    android:id="@+id/exercise_1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_one_weight"
+                    android:id="@+id/exercise_1_weight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_one_set"
+                    android:id="@+id/exercise_1_set"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_one_reps"
+                    android:id="@+id/exercise_1_reps"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -229,28 +229,28 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/exercise_two"
+                    android:id="@+id/exercise_2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_two_weight"
+                    android:id="@+id/exercise_2_weight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_two_set"
+                    android:id="@+id/exercise_2_set"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_two_reps"
+                    android:id="@+id/exercise_2_reps"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -417,28 +417,28 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/exercise_three"
+                    android:id="@+id/exercise_3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_three_weight"
+                    android:id="@+id/exercise_3_weight"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_three_set"
+                    android:id="@+id/exercise_3_set"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/exercise_three_reps"
+                    android:id="@+id/exercise_3_reps"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
