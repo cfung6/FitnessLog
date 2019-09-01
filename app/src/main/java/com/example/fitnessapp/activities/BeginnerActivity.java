@@ -1,12 +1,17 @@
 package com.example.fitnessapp.activities;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -314,46 +319,46 @@ public class BeginnerActivity extends AppCompatActivity {
 
     private void setFirstExercise() {
         Exercise currentExercise = currentWorkout.getExercises().get(0);
-        TextView exerciseOneView = findViewById(R.id.exercise_one);
+        TextView exerciseOneView = findViewById(R.id.exercise_1);
         exerciseOneView.setText(currentExercise.getName());
 
-        TextView exerciseOneWeightView = findViewById(R.id.exercise_one_weight);
+        TextView exerciseOneWeightView = findViewById(R.id.exercise_1_weight);
         exerciseOneWeightView.setText("Weight: " + currentExercise.getGoalWeight());
 
-        TextView exerciseOneSetView = findViewById(R.id.exercise_one_set);
+        TextView exerciseOneSetView = findViewById(R.id.exercise_1_set);
         exerciseOneSetView.setText("Sets: " + currentExercise.getGoalReps().size());
 
-        TextView exerciseOneRepsView = findViewById(R.id.exercise_one_reps);
+        TextView exerciseOneRepsView = findViewById(R.id.exercise_1_reps);
         exerciseOneRepsView.setText("Reps: " + currentExercise.getGoalReps().get(0));
     }
 
     private void setSecondExercise() {
         Exercise currentExercise = currentWorkout.getExercises().get(1);
-        TextView exerciseTwoView = findViewById(R.id.exercise_two);
+        TextView exerciseTwoView = findViewById(R.id.exercise_2);
         exerciseTwoView.setText(currentExercise.getName());
 
-        TextView exerciseTwoWeightView = findViewById(R.id.exercise_two_weight);
+        TextView exerciseTwoWeightView = findViewById(R.id.exercise_2_weight);
         exerciseTwoWeightView.setText("Weight: " + currentExercise.getGoalWeight());
 
-        TextView exerciseTwoSetView = findViewById(R.id.exercise_two_set);
+        TextView exerciseTwoSetView = findViewById(R.id.exercise_2_set);
         exerciseTwoSetView.setText("Sets: " + currentExercise.getGoalReps().size());
 
-        TextView exerciseTwoRepsView = findViewById(R.id.exercise_two_reps);
+        TextView exerciseTwoRepsView = findViewById(R.id.exercise_2_reps);
         exerciseTwoRepsView.setText("Reps: " + currentExercise.getGoalReps().get(1));
     }
 
     private void setThirdExercise() {
         Exercise currentExercise = currentWorkout.getExercises().get(2);
-        TextView exerciseThreeView = findViewById(R.id.exercise_three);
+        TextView exerciseThreeView = findViewById(R.id.exercise_3);
         exerciseThreeView.setText(currentExercise.getName());
 
-        TextView exerciseThreeWeightView = findViewById(R.id.exercise_three_weight);
+        TextView exerciseThreeWeightView = findViewById(R.id.exercise_3_weight);
         exerciseThreeWeightView.setText("Weight: " + currentExercise.getGoalWeight());
 
-        TextView exerciseThreeSetView = findViewById(R.id.exercise_three_set);
+        TextView exerciseThreeSetView = findViewById(R.id.exercise_3_set);
         exerciseThreeSetView.setText("Sets: " + currentExercise.getGoalReps().size());
 
-        TextView exerciseThreeRepsView = findViewById(R.id.exercise_three_reps);
+        TextView exerciseThreeRepsView = findViewById(R.id.exercise_3_reps);
         exerciseThreeRepsView.setText("Reps: " + currentExercise.getGoalReps().get(2));
     }
 
@@ -361,5 +366,116 @@ public class BeginnerActivity extends AppCompatActivity {
         return areWeightsAndRepsFilled(weights[0], reps[0])
                 && areWeightsAndRepsFilled(weights[1], reps[1])
                 && areWeightsAndRepsFilled(weights[2], reps[2]);
+    }
+
+    private void createAbstractXML(Workout currentWorkout) {
+        int exerciseNum = 0;
+        for (Exercise exercise : currentWorkout.getExercises()) {
+            LinearLayout exerciseLayout = new LinearLayout(this);
+            exerciseLayout.setOrientation(LinearLayout.VERTICAL);
+
+            LinearLayout setsWeightsRepsContainer = new LinearLayout(this);
+            setsWeightsRepsContainer.setOrientation(LinearLayout.HORIZONTAL);
+
+            LinearLayout setsWeightReps = new LinearLayout(this);
+            setsWeightReps.setOrientation(LinearLayout.HORIZONTAL);
+            setsWeightReps.setLayoutParams(new TableLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT, 2));
+
+            Button submitButton = new Button(this);
+            submitButton.setText("Submit");
+            submitButton.setLayoutParams(new TableLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT, 1));
+            submitButton.setGravity(Gravity.CENTER_VERTICAL);
+            submitButton.setTag("" + exerciseNum);
+
+            setsWeightsRepsContainer.addView(setsWeightReps);
+            setsWeightsRepsContainer.addView(submitButton);
+
+            exerciseLayout.addView(generateExerciseGoals(exercise));
+            setsWeightReps.addView(generateSets(exercise));
+            setsWeightReps.addView(generateWeight(exercise, exerciseNum));
+            setsWeightReps.addView(generateReps(exercise, exerciseNum));
+
+            exerciseLayout.addView(setsWeightsRepsContainer);
+
+            exerciseNum++;
+        }
+
+    }
+
+    // EFFECTS: returns a horizontal linear layout that has the exercises name, weight, sets and reps
+    private LinearLayout generateExerciseGoals(Exercise exercise) {
+        LinearLayout currentExercise = new LinearLayout(this);
+        currentExercise.setOrientation(LinearLayout.HORIZONTAL);
+        TextView name = new TextView(this);
+        TextView weight = new TextView(this);
+        TextView sets = new TextView(this);
+        TextView reps = new TextView(this);
+
+        name.setText(exercise.getName());
+        weight.setText("Weight: " + exercise.getGoalWeight());
+        sets.setText("Sets: " + exercise.getGoalReps().size());
+        reps.setText("Reps: " + exercise.getGoalReps().get(0));
+
+        name.setLayoutParams(new TableLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT, 1));
+        weight.setLayoutParams(new TableLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT, 1));
+        sets.setLayoutParams(new TableLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT, 1));
+        reps.setLayoutParams(new TableLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT, 1));
+
+        currentExercise.addView(name);
+        currentExercise.addView(weight);
+        currentExercise.addView(sets);
+        currentExercise.addView(reps);
+
+        return currentExercise;
+    }
+
+    // EFFECTS: returns a vertical linear layout that has textviews for Sets and number of sets
+    private LinearLayout generateSets(Exercise exercise) {
+        LinearLayout setsColumn = new LinearLayout(this);
+        setsColumn.setOrientation(LinearLayout.VERTICAL);
+        TextView sets = new TextView(this);
+        sets.setText("Sets");
+
+        for (int i = 1; i < exercise.getGoalReps().size() + 1; i++) {
+            TextView tv = new TextView(this);
+            tv.setText(i + "");
+            setsColumn.addView(tv);
+        }
+
+        return setsColumn;
+    }
+
+    // EFFECTS: returns a vertical linear layout that has a textview for weight and edittexts for
+    //          user input
+    private LinearLayout generateWeight(Exercise exercise, int exerciseNum) {
+        LinearLayout weightsColumn = new LinearLayout(this);
+        weightsColumn.setOrientation(LinearLayout.VERTICAL);
+        TextView weights = new TextView(this);
+        weights.setText("Weight");
+
+        for (int i = 0; i < exercise.getGoalReps().size(); i++) {
+            EditText editText = new EditText(this);
+            editText.setTag("weight" + i + "ex" + exerciseNum);
+            weightsColumn.addView(editText);
+        }
+
+        return weightsColumn;
+    }
+
+    // EFFECTS: returns a vertical linear layout that has a textview for reps and edittexts for
+    //          user input
+    private LinearLayout generateReps(Exercise exercise, int exerciseNum) {
+        LinearLayout repsColumn = new LinearLayout(this);
+        repsColumn.setOrientation(LinearLayout.VERTICAL);
+        TextView reps = new TextView(this);
+        reps.setText("Reps");
+
+        for (int i = 0; i < exercise.getGoalReps().size(); i++) {
+            EditText editText = new EditText(this);
+            editText.setTag("sets" + i + "ex" + exerciseNum);
+            repsColumn.addView(editText);
+        }
+
+        return repsColumn;
     }
 }
