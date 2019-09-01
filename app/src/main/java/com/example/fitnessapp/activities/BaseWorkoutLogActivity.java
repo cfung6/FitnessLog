@@ -36,7 +36,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         BARBELL ROW
      */
 
-    private double[] exerciseWeights;
+    private int[] exerciseWeights;
     private String[] exerciseNames;
 
     private int increment;
@@ -153,11 +153,11 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             //Checking to see if all EditTexts are filled
             if (areAllFilled(weightsInput, repsInput)) {
                 try {
-                    double[] weights = new double[currentWorkout.getExercises().size()];
+                    int[] weights = new int[currentWorkout.getExercises().size()];
                     int[] reps = new int[currentWorkout.getExercises().size()];
 
                     for (int i = 0; i < weights.length; i++) {
-                        weights[i] = Double.parseDouble(weightsInput[i]);
+                        weights[i] = Integer.parseInt(weightsInput[i]);
                         reps[i] = Integer.parseInt(repsInput[i]);
                     }
 
@@ -197,11 +197,11 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                     }
 
                     //Gets new goal weight
-                    double capableWeight = exercise.getCapableWeight();
+                    int capableWeight = exercise.getCapableWeight();
 
                     //Checks if database contains any entries with the current time of today and workoutExerciseID
                     if (databaseHelper.haveEntriesBeenEntered(todaysTime, workoutExerciseID)) {
-                        List<Double> weightsForDataTable = new ArrayList<>();
+                        List<Integer> weightsForDataTable = new ArrayList<>();
                         List<Integer> repsForDataTable = new ArrayList<>();
 
                         for (int i = 0; i < currentWorkout.getExercises().size(); i++) {
@@ -243,7 +243,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         percentage = perc;
     }
 
-    protected void setExerciseWeights(double[] weights) {
+    protected void setExerciseWeights(int[] weights) {
         exerciseWeights = weights;
     }
 
@@ -283,6 +283,11 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         return null;
     }
 
+    //Rounds exercise weight to nearest multiple of 5
+    protected int round(double weight) {
+        return 5 * Math.round((int) (weight / 5));
+    }
+
     //Sets textView for the current date
     private void setDateText() {
         TextView dateView = findViewById(R.id.date);
@@ -320,7 +325,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         return !weight.isShown() && !reps.isShown();
     }
 
-    private void addRepsDoneToExercise(Exercise exercise, double[] weights, int[] reps) {
+    private void addRepsDoneToExercise(Exercise exercise, int[] weights, int[] reps) {
         for (int i = 0; i < weights.length; i++) {
             exercise.addRepsDone(weights[i], reps[i]);
         }

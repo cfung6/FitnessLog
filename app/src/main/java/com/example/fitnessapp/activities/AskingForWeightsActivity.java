@@ -35,8 +35,8 @@ public class AskingForWeightsActivity extends AppCompatActivity {
      */
 
     private EditText[] exerciseEditTexts;
-    private double[] rawWeightInputs;
-    private List<Double> finalWeightInputs;
+    private int[] rawWeightInputs;
+    private List<Integer> finalWeightInputs;
     private String[] exerciseStrings;
     private boolean[] exerciseChecked;
     private String[] exerciseNames;
@@ -100,7 +100,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
                 //Checking if any of the EditTexts are empty if the checkbox is checked
                 if (!areEditTextsEmpty()) {
                     try {
-                        convertStringsToDoubles();
+                        convertStringsToIntegers();
                         passWeightsAndNames();
                     } catch (IllegalArgumentException e) {
                         Snackbar mySnackbar = Snackbar.make(view, "Invalid input(s)", Snackbar.LENGTH_SHORT);
@@ -135,8 +135,8 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             addExerciseInput(i);
         }
 
-        //Converting List<Double> to double[]
-        double[] weightInputs = new double[finalWeightInputs.size()];
+        //Converting List<Integer> to int[]
+        int[] weightInputs = new int[finalWeightInputs.size()];
         for (int i = 0; i < weightInputs.length; i++) {
             weightInputs[i] = finalWeightInputs.get(i);
         }
@@ -167,11 +167,11 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         }
     }
 
-    //Converts strings to doubles only if EditTexts are filled
-    private void convertStringsToDoubles() {
+    //Converts strings to ints only if EditTexts are filled
+    private void convertStringsToIntegers() {
         for (int i = 0; i < numOfExercises; i++) {
             if (!exerciseStrings[i].isEmpty() && !exerciseStrings[i].equals(".") && exerciseChecked[i]) {
-                rawWeightInputs[i] = Double.parseDouble(exerciseStrings[i]);
+                rawWeightInputs[i] = Integer.parseInt(exerciseStrings[i]);
             } else {
                 rawWeightInputs[i] = -1;
             }
@@ -236,7 +236,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     private void initializeArrays() {
-        rawWeightInputs = new double[numOfExercises];
+        rawWeightInputs = new int[numOfExercises];
         finalWeightInputs = new ArrayList<>();
         exerciseStrings = new String[numOfExercises];
         exerciseEditTexts = new EditText[numOfExercises];
@@ -261,10 +261,10 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         }
     }
 
-    //Limiting EditText inputs to only numbers and decimal
+    //Limiting EditText inputs to only numbers
     private void limitEditTextsInput() {
         for (int i = 0; i < numOfExercises; i++) {
-            exerciseEditTexts[i].setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            exerciseEditTexts[i].setInputType(InputType.TYPE_CLASS_NUMBER);
         }
     }
 

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         BARBELL ROW
      */
 
-    private double[] exerciseCapableWeights;
+    private int[] exerciseCapableWeights;
     private String[] exerciseNames;
 
     @Override
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 "Deadlift",
                 "Barbell Row"));
 
-        exerciseCapableWeights = new double[exerciseNameList.size()];
+        exerciseCapableWeights = new int[exerciseNameList.size()];
         exerciseNames = new String[exerciseNameList.size()];
 
         //Turning String List to String[]

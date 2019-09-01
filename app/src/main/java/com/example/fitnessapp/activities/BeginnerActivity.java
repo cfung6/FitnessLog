@@ -36,7 +36,7 @@ public class BeginnerActivity extends AppCompatActivity {
         BARBELL ROW
      */
 
-    private double[] exerciseWeights;
+    private int[] exerciseWeights;
     private String[] exerciseNames;
 
     private int increment;
@@ -161,11 +161,11 @@ public class BeginnerActivity extends AppCompatActivity {
             //Checking to see if all EditTexts are filled
             if (areAllFilled(weightsInput, repsInput)) {
                 try {
-                    double[] weights = new double[currentWorkout.getExercises().size()];
+                    int[] weights = new int[currentWorkout.getExercises().size()];
                     int[] reps = new int[currentWorkout.getExercises().size()];
 
                     for (int i = 0; i < weights.length; i++) {
-                        weights[i] = Double.parseDouble(weightsInput[i]);
+                        weights[i] = Integer.parseInt(weightsInput[i]);
                         reps[i] = Integer.parseInt(repsInput[i]);
                     }
 
@@ -198,11 +198,11 @@ public class BeginnerActivity extends AppCompatActivity {
                     //Finds workoutExerciseID corresponding to the current workout and exercise
                     int workoutExerciseID = databaseHelper.selectWorkoutExerciseID("BeginnerTable", workoutIndex, exerciseName);
                     //Gets new goal weight
-                    double capableWeight = exercise.getCapableWeight();
+                    int capableWeight = exercise.getCapableWeight();
 
                     //Checks if database contains any entries with the current time of today and workoutExerciseID
                     if (databaseHelper.haveEntriesBeenEntered(todaysTime, workoutExerciseID)) {
-                        List<Double> weightsForDataTable = new ArrayList<>();
+                        List<Integer> weightsForDataTable = new ArrayList<>();
                         List<Integer> repsForDataTable = new ArrayList<>();
 
                         for (int i = 0; i < currentWorkout.getExercises().size(); i++) {
@@ -254,7 +254,7 @@ public class BeginnerActivity extends AppCompatActivity {
 
     private void initializeArrays() {
         //Getting weights and names from previous activity
-        exerciseWeights = intent.getDoubleArrayExtra("WEIGHTS");
+        exerciseWeights = intent.getIntArrayExtra("WEIGHTS");
         exerciseNames = intent.getStringArrayExtra("NAMES");
         exercises = new ArrayList<>();
         workouts = new ArrayList<>();
@@ -306,7 +306,7 @@ public class BeginnerActivity extends AppCompatActivity {
         return null;
     }
 
-    private void addRepsDoneToExercise(Exercise exercise, double[] weights, int[] reps) {
+    private void addRepsDoneToExercise(Exercise exercise, int[] weights, int[] reps) {
         for (int i = 0; i < weights.length; i++) {
             exercise.addRepsDone(weights[i], reps[i]);
         }

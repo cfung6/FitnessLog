@@ -21,7 +21,7 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
         BARBELL ROW
      */
 
-    private double[] exerciseWeights;
+    private int[] exerciseWeights;
     private String[] exerciseNames;
     List<Workout> workouts;
     List<Exercise> exercises;
@@ -32,7 +32,7 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
         Intent intent = getIntent();
 
         //Getting weights and names from previous activity
-        exerciseWeights = intent.getDoubleArrayExtra("WEIGHTS");
+        exerciseWeights = intent.getIntArrayExtra("WEIGHTS");
         exerciseNames = intent.getStringArrayExtra("NAMES");
 
         workouts = new ArrayList<>();
@@ -50,7 +50,7 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
     protected void initializeExercises() {
         List<Integer> volumeDayGoalReps = new ArrayList<>(Arrays.asList(5, 5, 5, 5, 5));
 
-        exercises.add(new Exercise("Bench Press1", .9 * exerciseWeights[0], 0, 1, volumeDayGoalReps));
+        exercises.add(new Exercise("Bench Press1", round(.9 * exerciseWeights[0]), 0, 1, volumeDayGoalReps));
     }
 
     @Override

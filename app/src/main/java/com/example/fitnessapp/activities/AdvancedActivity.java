@@ -9,11 +9,11 @@ import com.example.fitnessapp.R;
 
 public class AdvancedActivity extends AppCompatActivity {
 
-    private double startingBenchWeight;
-    private double startingOverheadWeight;
-    private double startingSquatWeight;
-    private double startingDeadliftWeight;
-    private double startingBarbellRowWeight;
+    private int startingBenchWeight;
+    private int startingOverheadWeight;
+    private int startingSquatWeight;
+    private int startingDeadliftWeight;
+    private int startingBarbellRowWeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +21,11 @@ public class AdvancedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_advanced);
 
         Intent intent = getIntent();
-        startingBenchWeight = intent.getDoubleExtra("BENCH_PRESS_WEIGHT", -1);
-        startingOverheadWeight = intent.getDoubleExtra("OVERHEAD_PRESS_WEIGHT", -1);
-        startingSquatWeight = intent.getDoubleExtra("SQUAT_WEIGHT", -1);
-        startingDeadliftWeight = intent.getDoubleExtra("DEADLIFT_WEIGHT", -1);
-        startingBarbellRowWeight = intent.getDoubleExtra("BARBELL_ROW_WEIGHT", -1);
+        startingBenchWeight = intent.getIntExtra("BENCH_PRESS_WEIGHT", -1);
+        startingOverheadWeight = intent.getIntExtra("OVERHEAD_PRESS_WEIGHT", -1);
+        startingSquatWeight = intent.getIntExtra("SQUAT_WEIGHT", -1);
+        startingDeadliftWeight = intent.getIntExtra("DEADLIFT_WEIGHT", -1);
+        startingBarbellRowWeight = intent.getIntExtra("BARBELL_ROW_WEIGHT", -1);
 
     }
 }

@@ -10,17 +10,17 @@ public class Exercise {
 
     private List<Integer> actualRepsDone;
     private List<Integer> goalReps;
-    private List<Double> actualWeightList;
+    private List<Integer> actualWeightList;
 
-    private double goalWeight;
+    private int goalWeight;
 
     private int increment;
-    private double percentage;
+    private int percentage;
 
     private boolean pass;
     private boolean weightIncreased;
 
-    public Exercise(String name, double weight, int increment, double percentage, List<Integer> reps) {
+    public Exercise(String name, int weight, int increment, int percentage, List<Integer> reps) {
         this.name = name;
         this.increment = increment;
         this.percentage = percentage;
@@ -35,7 +35,7 @@ public class Exercise {
     // EFFECTS: called when submit button is pressed
     //          if the weight completed by the user is less than the goal weight,
     //          pass is set to fail
-    public void addRepsDone(double weight, int reps) {
+    public void addRepsDone(int weight, int reps) {
         if (weight < goalWeight) {
             pass = false;
         }
@@ -76,21 +76,21 @@ public class Exercise {
     }
 
     // EFFECTS: sets the weight that the user is capable of lifting and sets the goal weight
-    private void setActualAndGoalWeight(double weight) {
+    private void setActualAndGoalWeight(int weight) {
         goalWeight = weight * percentage + increment;
     }
 
     // EFFECTS: returns the lowest weight completed by the user in the current workout
-    private double getNewCapableWeight() {
+    private int getNewCapableWeight() {
         Collections.sort(actualWeightList);
         return actualWeightList.get(0);
     }
 
-    public double getGoalWeight() {
+    public int getGoalWeight() {
         return goalWeight;
     }
 
-    public void setGoalWeight(double d) {
+    public void setGoalWeight(int d) {
         goalWeight = d;
     }
 
@@ -106,7 +106,7 @@ public class Exercise {
         return increment;
     }
 
-    public double getPercentage() {
+    public int getPercentage() {
         return percentage;
     }
 
@@ -123,7 +123,7 @@ public class Exercise {
     }
 
     // EFFECTS: returns the capable weight that was used to determine the goal weight
-    public double getCapableWeight() {
+    public int getCapableWeight() {
         return (goalWeight - increment) / percentage;
     }
 }
