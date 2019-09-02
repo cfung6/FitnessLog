@@ -49,6 +49,7 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
         setWorkouts(workouts);
         initializeRoutine("Intermediate");
         initializeCurrentWorkout();
+        createAbstractXML(currentWorkout);
     }
 
     @Override
