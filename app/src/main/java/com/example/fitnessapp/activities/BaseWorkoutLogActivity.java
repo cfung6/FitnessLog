@@ -284,7 +284,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     //Rounds exercise weight to nearest multiple of 5
     protected double round(double weight) {
-        return 5 * Math.round((int) (weight / 5));
+        return 5 * Math.round(weight / 5);
     }
 
     //Sets textView for the current date
@@ -445,5 +445,14 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         }
 
         return repsColumn;
+    }
+
+    private String changeNameForXML(String name) {
+        for (String exerciseName : exerciseNames) {
+            if (name.equals(exerciseName)) {
+                return name;
+            }
+        }
+        return name + "\b";
     }
 }
