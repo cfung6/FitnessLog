@@ -338,9 +338,12 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     }
 
     private boolean areAllFilled(String[] weights, String[] reps) {
-        return areWeightsAndRepsFilled(weights[0], reps[0])
-                && areWeightsAndRepsFilled(weights[1], reps[1])
-                && areWeightsAndRepsFilled(weights[2], reps[2]);
+        for (int i = 0; i < weights.length; i++) {
+            if (!areWeightsAndRepsFilled(weights[i], reps[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     //EFFECTS: creates the XML based on the exercises from the current workout
