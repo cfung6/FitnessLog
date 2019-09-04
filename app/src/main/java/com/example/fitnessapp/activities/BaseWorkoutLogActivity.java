@@ -163,10 +163,10 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             //Checking to see if all EditTexts are filled
             if (areAllFilled(weightsInput, setsInput)) {
                 try {
-                    double[] weights = new double[currentWorkout.getExercises().size()];
-                    int[] reps = new int[currentWorkout.getExercises().size()];
+                    double[] weights = new double[numOfSets];
+                    int[] reps = new int[numOfSets];
 
-                    for (int i = 0; i < weights.length; i++) {
+                    for (int i = 0; i < numOfSets; i++) {
                         weights[i] = Double.parseDouble(weightsInput[i]);
                         reps[i] = Integer.parseInt(setsInput[i]);
                     }
@@ -214,7 +214,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                         List<Double> weightsForDataTable = new ArrayList<>();
                         List<Integer> repsForDataTable = new ArrayList<>();
 
-                        for (int i = 0; i < currentWorkout.getExercises().size(); i++) {
+                        for (int i = 0; i < numOfSets; i++) {
                             weightsForDataTable.add(weights[i]);
                             repsForDataTable.add(reps[i]);
                         }
@@ -222,7 +222,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                         databaseHelper.updateEntries(currentTime, todaysTime, routineID, workoutExerciseID,
                                 weightsForDataTable, repsForDataTable, capableWeight);
                     } else {
-                        for (int i = 0; i < currentWorkout.getExercises().size(); i++) {
+                        for (int i = 0; i < numOfSets; i++) {
                             databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, weights[i], reps[i], capableWeight);
                         }
                     }
