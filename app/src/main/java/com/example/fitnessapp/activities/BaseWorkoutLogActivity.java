@@ -173,7 +173,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
                     //Set textview based on pass or fail
                     //int textViewid = getResources().getIdentifier("message" + currentExerciseNum, "id", getPackageName());
-                    TextView tv = passFailMessages.get(exercise.getExerciseID());
+                    TextView tv = passFailMessages.get(currentExerciseNum);
 
                     //After all lines are visible, submit button removes all weights and reps so all can be added at once
                     exercise.removeRepsDone();
@@ -402,7 +402,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             exerciseLayout.addView(passFailMessage);
             passFailMessages.put(exerciseNum, passFailMessage);
 
-            exercise.setExerciseID(exerciseNum);
             exerciseNum++;
             parentLinearLayout.addView(exerciseLayout);
         }

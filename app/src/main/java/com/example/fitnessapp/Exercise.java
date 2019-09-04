@@ -19,7 +19,6 @@ public class Exercise {
 
     private boolean pass;
     private boolean weightIncreased;
-    private int exerciseID;
 
     public Exercise(String name, double weight, int increment, double percentage, List<Integer> reps) {
         this.name = name;
@@ -31,7 +30,6 @@ public class Exercise {
         goalReps = reps;
         pass = true;
         weightIncreased = false;
-        exerciseID = 0;
     }
 
     // EFFECTS: called when submit button is pressed
@@ -122,14 +120,6 @@ public class Exercise {
 
     public void setWeightIncreased(boolean b) {
         weightIncreased = b;
-    }
-
-    public void setExerciseID(int i) {
-        exerciseID = i;
-    }
-
-    public int getExerciseID() {
-        return exerciseID;
     }
 
     // EFFECTS: returns the capable weight that was used to determine the goal weight
