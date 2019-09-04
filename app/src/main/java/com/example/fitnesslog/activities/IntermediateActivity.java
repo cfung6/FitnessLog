@@ -1,7 +1,10 @@
 package com.example.fitnesslog.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.fitnesslog.Exercise;
 import com.example.fitnesslog.Workout;
@@ -26,6 +29,7 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
     List<Workout> workouts;
     List<Exercise> exercises;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

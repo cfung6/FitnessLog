@@ -25,6 +25,12 @@ public class DefaultWeights {
     public static final double DEADLIFT_ADVANCED = 350;
     public static final double BARBELL_ROW_ADVANCED = 185;
 
+    public static final double BARBELL_CURL = 45;
+    public static final double HAMMER_CURL = 25;
+    public static final double ROPE_PULLDOWN = 45;
+    public static final double OVERHEAD_TRICEP_EXTENSION = 25;
+    public static final double LATERAL_RAISE = 15;
+
     public static final List<Double> defaultWeights = new ArrayList<>(Arrays.asList(
             BENCH_PRESS_BEGINNER,
             OVERHEAD_PRESS_BEGINNER,
@@ -42,6 +48,12 @@ public class DefaultWeights {
             OVERHEAD_PRESS_ADVANCED,
             SQUAT_ADVANCED,
             DEADLIFT_ADVANCED,
-            BARBELL_ROW_ADVANCED
+            BARBELL_ROW_ADVANCED,
+
+            BARBELL_CURL,
+            HAMMER_CURL,
+            ROPE_PULLDOWN,
+            OVERHEAD_TRICEP_EXTENSION,
+            LATERAL_RAISE
     ));
 }

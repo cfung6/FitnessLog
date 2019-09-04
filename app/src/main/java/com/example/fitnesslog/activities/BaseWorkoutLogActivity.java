@@ -25,12 +25,11 @@ import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.Exercise;
 import com.example.fitnesslog.R;
 import com.example.fitnesslog.Routine;
+import com.example.fitnesslog.TodaysTime;
 import com.example.fitnesslog.Workout;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -76,12 +75,11 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base_workout_log);
 
         Intent intent = getIntent();
+        TodaysTime today = new TodaysTime();
         databaseHelper = new DatabaseHelper(this);
 
         currentTime = intent.getLongExtra("TIME", new Date().getTime());
-
-        ZoneId z = ZoneId.of(ZoneId.systemDefault().toString());
-        todaysTime = ZonedDateTime.now(z).toLocalDate().atStartOfDay(z).toEpochSecond() * 1000;
+        todaysTime = today.getTodaysTime();
 
         Log.d("myTag", "" + todaysTime);
 

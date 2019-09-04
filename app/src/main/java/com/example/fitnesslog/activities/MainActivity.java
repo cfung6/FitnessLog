@@ -11,10 +11,10 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
+import com.example.fitnesslog.ExerciseNames;
 import com.example.fitnesslog.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,21 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        List<String> exerciseNameList = new ArrayList<>(Arrays.asList(
-                "Bench Press",
-                "Overhead Press",
-                "Squat",
-                "Deadlift",
-                "Barbell Row"));
-
-        exerciseCapableWeights = new double[exerciseNameList.size()];
-        exerciseNames = new String[exerciseNameList.size()];
-
-        //Turning String List to String[]
-        for (int i = 0; i < exerciseNames.length; i++) {
-            exerciseNames[i] = exerciseNameList.get(i);
-        }
     }
 
     @Override
@@ -91,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     public void continueProgramClicked(View view) {
         Intent intent;
         databaseHelper = new DatabaseHelper(this);
+        List<String> exerciseNameList = new ArrayList<>();
         boolean isEmpty = databaseHelper.isEmpty();
 
         //If database is empty, defaults to new program
@@ -104,12 +90,18 @@ public class MainActivity extends AppCompatActivity {
         try {
             if (routineID == 1) {
                 intent = new Intent(this, BeginnerActivity.class);
+                exerciseNameList = ExerciseNames.BEGINNER_NAMES_LIST;
+                exerciseNames = getStringArray(exerciseNameList);
                 initializeWeight("BeginnerTable");
             } else if (routineID == 2) {
                 intent = new Intent(this, IntermediateActivity.class);
+                exerciseNameList = ExerciseNames.INTERMEDIATE_NAMES_LIST;
+                exerciseNames = getStringArray(exerciseNameList);
                 initializeWeight("IntermediateTable");
             } else if (routineID == 3) {
                 intent = new Intent(this, AdvancedActivity.class);
+                exerciseNameList = ExerciseNames.ADVANCED_NAMES_LIST;
+                exerciseNames = getStringArray(exerciseNameList);
                 initializeWeight("AdvancedTable");
             } else {
                 throw new IllegalArgumentException();
@@ -125,15 +117,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void aboutClicked(View view) {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
+
     // EFFECTS: initializes the capable weight of all the exercises
     private void initializeWeight(String table) {
+        exerciseCapableWeights = new double[exerciseNames.length];
         for (int i = 0; i < exerciseNames.length; i++) {
             exerciseCapableWeights[i] = databaseHelper.getExerciseCapableWeight(table, exerciseNames[i]);
         }
     }
 
-    public void aboutClicked(View view) {
-        Intent intent = new Intent(this, AboutActivity.class);
-        startActivity(intent);
+    //Turning String List to String[]
+    private String[] getStringArray(List<String> exerciseNameList) {
+        exerciseNames = new String[exerciseNameList.size()];
+        for (int i = 0; i < exerciseNames.length; i++) {
+            exerciseNames[i] = exerciseNameList.get(i);
+        }
+        return exerciseNames;
     }
 }

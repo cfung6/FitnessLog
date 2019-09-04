@@ -14,14 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.DefaultWeights;
+import com.example.fitnesslog.ExerciseNames;
 import com.example.fitnesslog.Levels;
 import com.example.fitnesslog.R;
+import com.example.fitnesslog.TodaysTime;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -42,27 +41,52 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private String[] exerciseStrings;
     private boolean[] exerciseChecked;
     private String[] exerciseNames;
+    private List<String> exerciseNameList;
 
     private DatabaseHelper databaseHelper;
     private int workoutNum;
     private int numOfExercises;
     private Levels levelChosen;
     private Button submitButton;
+    private Intent intent;
+    private String tableName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_asking_for_weights);
 
-        Intent intent = getIntent();
+        intent = getIntent();
         //Assigns variable to the level that the user picked
         levelChosen = (Levels) intent.getSerializableExtra("LEVEL_CHOSEN");
         submitButton = findViewById(R.id.submit_weight_button);
         databaseHelper = new DatabaseHelper(this);
         workoutNum = -1;
+
+        if (levelChosen == Levels.BEGINNER) {
+            intent = new Intent(this, BeginnerActivity.class);
+            exerciseNameList = ExerciseNames.BEGINNER_NAMES_LIST;
+            tableName = "BeginnerTable";
+        } else if (levelChosen == Levels.INTERMEDIATE) {
+            intent = new Intent(this, IntermediateActivity.class);
+            exerciseNameList = ExerciseNames.INTERMEDIATE_NAMES_LIST;
+            tableName = "IntermediateTable";
+        } else {
+            intent = new Intent(this, AdvancedActivity.class);
+            exerciseNameList = ExerciseNames.ADVANCED_NAMES_LIST;
+            tableName = "AdvancedTable";
+        }
+
+        //Even though advanced names list has more exercises, only 5 are asked for
         numOfExercises = 5;
 
         initializeArrays();
+
+        //Turning List<String> into String[]
+        for (int i = 0; i < exerciseNames.length; i++) {
+            exerciseNames[i] = exerciseNameList.get(i);
+        }
+
         initializeEditTexts();
         limitEditTextsInput();
         initializeBooleans();
@@ -121,29 +145,19 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     //Passing weights and names for each exercise to next activity
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void passWeightsAndNames() {
-        Intent intent;
-        String tableName;
-
-        if (levelChosen == Levels.BEGINNER) {
-            intent = new Intent(this, BeginnerActivity.class);
-            tableName = "BeginnerTable";
-        } else if (levelChosen == Levels.INTERMEDIATE) {
-            intent = new Intent(this, IntermediateActivity.class);
-            tableName = "IntermediateTable";
-        } else {
-            intent = new Intent(this, AdvancedActivity.class);
-            tableName = "AdvancedTable";
-        }
-
         //Adds input to array if EditTexts are filled, else adds default weight if checkboxes are unchecked
         for (int i = 0; i < numOfExercises; i++) {
             addExerciseInput(i);
         }
 
         //Converting List<Double> to double[]
-        double[] weightInputs = new double[finalWeightInputs.size()];
-        for (int i = 0; i < weightInputs.length; i++) {
+        double[] weightInputs = new double[exerciseNameList.size()];
+        for (int i = 0; i < finalWeightInputs.size(); i++) {
             weightInputs[i] = finalWeightInputs.get(i);
+        }
+
+        for (int i = finalWeightInputs.size(); i < exerciseNameList.size(); i++) {
+            weightInputs[i] = DefaultWeights.defaultWeights.get(10 + i);
         }
 
         intent.putExtra("WEIGHTS", weightInputs);
@@ -189,10 +203,10 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private void insertDataToSQL(String tableName) {
         int workoutExerciseID;
         int routineID;
+        TodaysTime today = new TodaysTime();
 
         long currentTime = new Date().getTime();
-        ZoneId z = ZoneId.of(ZoneId.systemDefault().toString());
-        long todaysTime = ZonedDateTime.now(z).toLocalDate().atStartOfDay(z).toEpochSecond() * 1000;
+        long todaysTime = today.getTodaysTime();
 
         if (tableName.equals("BeginnerTable")) {
             addDataToBeginner(exerciseNames);
@@ -247,18 +261,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         exerciseStrings = new String[numOfExercises];
         exerciseEditTexts = new EditText[numOfExercises];
         exerciseChecked = new boolean[numOfExercises];
-        exerciseNames = new String[numOfExercises];
-        List<String> exerciseNameList = new ArrayList<>(Arrays.asList(
-                "Bench Press",
-                "Overhead Press",
-                "Squat",
-                "Deadlift",
-                "Barbell Row"));
-
-        //Turning List<String> into String[]
-        for (int i = 0; i < exerciseNames.length; i++) {
-            exerciseNames[i] = exerciseNameList.get(i);
-        }
+        exerciseNames = new String[exerciseNameList.size()];
     }
 
     private void initializeBooleans() {
