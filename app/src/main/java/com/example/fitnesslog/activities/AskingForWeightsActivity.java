@@ -1,6 +1,7 @@
 package com.example.fitnesslog.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
@@ -16,6 +18,8 @@ import com.example.fitnesslog.Levels;
 import com.example.fitnesslog.R;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -92,6 +96,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     private void onSubmitButtonClick() {
         submitButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 initializeStringInputs();
@@ -114,6 +119,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     //Passing weights and names for each exercise to next activity
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void passWeightsAndNames() {
         Intent intent;
         String tableName;
@@ -179,13 +185,14 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     // EFFECTS: inserts each exercise into the given data table (name) then inserts the capableWeight
     //          into DATA_TABLE
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void insertDataToSQL(String tableName) {
         int workoutExerciseID;
         int routineID;
 
         long currentTime = new Date().getTime();
-        long todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
-
+        ZoneId z = ZoneId.of(ZoneId.systemDefault().toString());
+        long todaysTime = ZonedDateTime.now(z).toLocalDate().atStartOfDay(z).toEpochSecond() * 1000;
 
         if (tableName.equals("BeginnerTable")) {
             addDataToBeginner(exerciseNames);

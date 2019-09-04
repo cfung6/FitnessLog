@@ -2,8 +2,10 @@ package com.example.fitnesslog.activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
@@ -26,6 +29,8 @@ import com.example.fitnesslog.Workout;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,6 +69,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private SparseArray<TextView> passFailMessages;
     private SparseArray<List<TextView>> setNumbers;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +79,11 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
 
         currentTime = intent.getLongExtra("TIME", new Date().getTime());
-        todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
+
+        ZoneId z = ZoneId.of(ZoneId.systemDefault().toString());
+        todaysTime = ZonedDateTime.now(z).toLocalDate().atStartOfDay(z).toEpochSecond() * 1000;
+
+        Log.d("myTag", "" + todaysTime);
 
         setDateText();
         initializeListsAndMaps();

@@ -252,12 +252,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Long> returnAllDistinctTimes() {
         db = this.getWritableDatabase();
         List<Long> times = new ArrayList<>();
-        String query = "SELECT DISTINCT " + CURRENT_TIME_COL + " FROM " + DATA_TABLE;
+        String query = "SELECT DISTINCT " + TODAYS_TIME_COL + " FROM " + DATA_TABLE;
         cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
-                long time = cursor.getLong(cursor.getColumnIndex(CURRENT_TIME_COL));
+                long time = cursor.getLong(cursor.getColumnIndex(TODAYS_TIME_COL));
 
                 times.add(time);
             } while (cursor.moveToNext());

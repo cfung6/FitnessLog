@@ -48,7 +48,7 @@ public class WorkoutCalendar extends AppCompatActivity {
                 for (Event event : events) {
                     if (dateClicked.getTime() == event.getTimeInMillis()) {
                         //Go to workout that corresponds to event.getTimeInMillis()
-                        Intent intent = new Intent(getApplicationContext(), BeginnerActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), Stopwatch.class);
                         startActivity(intent);
                     }
                 }
@@ -69,11 +69,7 @@ public class WorkoutCalendar extends AppCompatActivity {
     }
 
     private void createEvent(long time) {
-        Date date = new Date(time);
-        List<Event> events = compactCalendar.getEvents(date);
-        if (events.isEmpty()) {
-            Event ev1 = new Event(Color.BLUE, time, "Workout");
-            compactCalendar.addEvent(ev1);
-        }
+        Event ev1 = new Event(Color.BLUE, time, "Workout");
+        compactCalendar.addEvent(ev1);
     }
 }
