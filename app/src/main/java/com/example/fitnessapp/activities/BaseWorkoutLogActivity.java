@@ -3,6 +3,7 @@ package com.example.fitnessapp.activities;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -357,6 +358,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             LinearLayout.LayoutParams paramsEL = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             paramsEL.leftMargin = 30;
             paramsEL.rightMargin = 30;
+            paramsEL.bottomMargin = 15;
             exerciseLayout.setLayoutParams(paramsEL);
 
             LinearLayout setsWeightsRepsContainer = new LinearLayout(this);
@@ -401,7 +403,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             tv.setLayoutParams(paramTV);
 
             TextView passFailMessage = new TextView(this);
-            passFailMessage.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
+            passFailMessage.setLayoutParams(paramTV);
             exerciseLayout.addView(passFailMessage);
             passFailMessages.put(exerciseNum, passFailMessage);
 
@@ -488,6 +490,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         for (int i = 0; i < exercise.getGoalReps().size(); i++) {
             EditText editText = new EditText(this);
             editText.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             editTextNames.put("weight" + i + "ex" + exerciseNum, editText);
             weightsColumn.addView(editText);
             if (i > 0) {
@@ -512,6 +515,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         for (int i = 0; i < exercise.getGoalReps().size(); i++) {
             EditText editText = new EditText(this);
             editText.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             editTextNames.put("sets" + i + "ex" + exerciseNum, editText);
             repsColumn.addView(editText);
             if (i > 0) {
