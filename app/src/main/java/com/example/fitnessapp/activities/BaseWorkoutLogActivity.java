@@ -2,14 +2,12 @@ package com.example.fitnessapp.activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,12 +23,13 @@ import com.example.fitnessapp.Routine;
 import com.example.fitnessapp.Workout;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
@@ -63,6 +62,9 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private Intent intent;
     private DatabaseHelper databaseHelper;
 
+    private Map<String, EditText> editTextNames;
+    private Map<Integer, List<TextView>> setNumbers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,9 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
         currentTime = intent.getLongExtra("TIME", new Date().getTime());
         todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
+
+        editTextNames = new HashMap<>();
+        setNumbers = new HashMap<>();
 
         setDateText();
         initializeArrays();
@@ -133,38 +138,35 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
 
         EditText[] weightsET = new EditText[numOfSets];
-        EditText[] repsET = new EditText[numOfSets];
+        EditText[] setsET = new EditText[numOfSets];
         String[] weightsInput = new String[numOfSets];
-        String[] repsInput = new String[numOfSets];
+        String[] setsInput = new String[numOfSets];
 
         //Assigns variables in the four arrays depending on which set and exercise the user is on
         for (int currentSetNum = 0; currentSetNum < numOfSets; currentSetNum++) {
             String weightsETName = "weight" + currentSetNum + "ex" + currentExerciseNum;
-            String repsETName = "reps" + currentSetNum + "ex" + currentExerciseNum;
+            String setsETName = "sets" + currentSetNum + "ex" + currentExerciseNum;
 
             //Finds the correct EditText depending on the current exercise and set
-            int weightsETid = getResources().getIdentifier(weightsETName, "id", getPackageName());
-            int repsETid = getResources().getIdentifier(repsETName, "id", getPackageName());
-
-            weightsET[currentSetNum] = findViewById(weightsETid);
-            repsET[currentSetNum] = findViewById(repsETid);
+            weightsET[currentSetNum] = editTextNames.get(weightsETName);
+            setsET[currentSetNum] = editTextNames.get(setsETName);
 
             weightsInput[currentSetNum] = weightsET[currentSetNum].getText().toString();
-            repsInput[currentSetNum] = repsET[currentSetNum].getText().toString();
+            setsInput[currentSetNum] = setsET[currentSetNum].getText().toString();
         }
 
         //Sets the next EditTexts to visible
-        if (!setNextToVisible(numOfSets, weightsInput, repsInput, weightsET, repsET)) {
+        if (!setNextToVisible(currentExerciseNum, numOfSets, weightsInput, setsInput, weightsET, setsET)) {
             int workoutExerciseID;
             //Checking to see if all EditTexts are filled
-            if (areAllFilled(weightsInput, repsInput)) {
+            if (areAllFilled(weightsInput, setsInput)) {
                 try {
                     double[] weights = new double[currentWorkout.getExercises().size()];
                     int[] reps = new int[currentWorkout.getExercises().size()];
 
                     for (int i = 0; i < weights.length; i++) {
                         weights[i] = Double.parseDouble(weightsInput[i]);
-                        reps[i] = Integer.parseInt(repsInput[i]);
+                        reps[i] = Integer.parseInt(setsInput[i]);
                     }
 
                     //Set textview based on pass or fail
@@ -305,14 +307,14 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     }
 
     //Sets the next EditTexts to visible, returns true if it works, false if not
-    private boolean setNextToVisible(int numOfSets, String[] weightsInput, String[] repsInput, EditText[] weightsET, EditText[] repsET) {
+    private boolean setNextToVisible(int exerciseNum, int numOfSets, String[] weightsInput, String[] repsInput, EditText[] weightsET, EditText[] repsET) {
         for (int i = 0; i < numOfSets - 1; i++) {
             if (areWeightsAndRepsFilled(weightsInput[i], repsInput[i])
                     && areWeightsAndRepsInvisible(weightsET[i + 1], repsET[i + 1])) {
 
                 weightsET[i + 1].setVisibility(View.VISIBLE);
                 repsET[i + 1].setVisibility(View.VISIBLE);
-
+                setNumbers.get(exerciseNum).get(i + 1).setVisibility(View.VISIBLE);
                 return true;
             }
         }
@@ -372,12 +374,17 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             //submitButton.setLayoutParams(new TableLayout.LayoutParams(20, ActionBar.LayoutParams.WRAP_CONTENT, 1.0f));
 
             submitButton.setTag("" + exerciseNum);
+            submitButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    submitOnClick(v);
+                }
+            });
 
             setsWeightsRepsContainer.addView(setsWeightReps);
             setsWeightsRepsContainer.addView(submitButton);
 
             exerciseLayout.addView(generateExerciseGoals(exercise));
-            setsWeightReps.addView(generateSets(exercise));
+            setsWeightReps.addView(generateSets(exercise, exerciseNum));
             setsWeightReps.addView(generateWeight(exercise, exerciseNum));
             setsWeightReps.addView(generateReps(exercise, exerciseNum));
 
@@ -401,7 +408,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         TextView sets = new TextView(this);
         TextView reps = new TextView(this);
 
-        name.setText(exercise.getName());
+        name.setText(changeNameForXML(exercise.getName()));
         weight.setText("Weight: " + exercise.getGoalWeight());
         sets.setText("Sets: " + exercise.getGoalReps().size());
         reps.setText("Reps: " + exercise.getGoalReps().get(0));
@@ -425,7 +432,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     }
 
     // EFFECTS: returns a vertical linear layout that has textviews for Sets and number of sets
-    private LinearLayout generateSets(Exercise exercise) {
+    private LinearLayout generateSets(Exercise exercise, int exerciseNum) {
         LinearLayout setsColumn = new LinearLayout(this);
         LinearLayout.LayoutParams paramsSets = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT);
         paramsSets.weight = 1f;
@@ -436,13 +443,19 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         sets.setText("Sets");
         sets.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
         setsColumn.addView(sets);
+        List<TextView> setTextViews = new ArrayList<>();
+        setNumbers.put(exerciseNum, setTextViews);
         for (int i = 1; i < exercise.getGoalReps().size() + 1; i++) {
             TextView tv = new TextView(this);
             LinearLayout.LayoutParams paramsTV = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
             paramsTV.weight = 1f;
             tv.setLayoutParams(paramsTV);
             tv.setText(i + "");
+            setNumbers.get(exerciseNum).add(tv);
             setsColumn.addView(tv);
+            if (i > 1) {
+                tv.setVisibility(View.GONE);
+            }
         }
 
 
@@ -464,12 +477,12 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         for (int i = 0; i < exercise.getGoalReps().size(); i++) {
             EditText editText = new EditText(this);
             editText.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
-            editText.setTag("weight" + i + "ex" + exerciseNum);
+            editTextNames.put("weight" + i + "ex" + exerciseNum, editText);
             weightsColumn.addView(editText);
+            if (i > 0) {
+                editText.setVisibility(View.GONE);
+            }
         }
-
-
-
         return weightsColumn;
     }
 
@@ -488,20 +501,22 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         for (int i = 0; i < exercise.getGoalReps().size(); i++) {
             EditText editText = new EditText(this);
             editText.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
-            editText.setTag("sets" + i + "ex" + exerciseNum);
+            editTextNames.put("sets" + i + "ex" + exerciseNum, editText);
             repsColumn.addView(editText);
+            if (i > 0) {
+                editText.setVisibility(View.GONE);
+            }
         }
-
-
         return repsColumn;
     }
 
+    //Changes exercise name to the correct one for XML
     private String changeNameForXML(String name) {
         for (String exerciseName : exerciseNames) {
             if (name.equals(exerciseName)) {
                 return name;
             }
         }
-        return name + "\b";
+        return name.substring(0, name.length() - 1);
     }
 }
