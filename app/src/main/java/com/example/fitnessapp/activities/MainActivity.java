@@ -99,4 +99,9 @@ public class MainActivity extends AppCompatActivity {
             exerciseCapableWeights[i] = databaseHelper.getExerciseCapableWeight(table, exerciseNames[i]);
         }
     }
+
+    public void aboutClicked(View view) {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
 }

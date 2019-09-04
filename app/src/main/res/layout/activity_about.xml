@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="How it Works"
+        android:textSize="40sp"
+        android:background="@drawable/layout_shadow"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fitness App is an application that generates and tracks workouts. First, you select
+                      a level (beginner, intermediate, or advanced) based on your experience in the gym as
+                      well as your availability to go to the gym. Next, you will be prompted for the weight
+                      that you are able to lift for certain exercises. Workouts will then be generated for you
+                      that target major muscle groups of the body setting a goal for you to lift, as well as
+                      the number of sets and reps that you should try to attempt. Your following workouts will
+                      be determined based on how you did in the current workout. Workouts will be stored in our
+                      calendar tool, where you can check and track your progress! "
+        android:layout_margin="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Beginner Level"
+        android:textSize="40sp"
+        android:background="@drawable/layout_shadow"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Intermediate Level"
+        android:textSize="40sp"
+        android:background="@drawable/layout_shadow"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Advanced Level"
+        android:textSize="40sp"
+        android:background="@drawable/layout_shadow"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"/>
+
+</LinearLayout>

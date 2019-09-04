@@ -397,13 +397,17 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
             exerciseLayout.addView(setsWeightsRepsContainer);
 
-            TextView tv = new TextView(this);
-            LinearLayout.LayoutParams paramTV = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            paramTV.gravity = Gravity.CENTER;
-            tv.setLayoutParams(paramTV);
+//            TextView tv = new TextView(this);
+//            LinearLayout.LayoutParams paramTV = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//            paramTV.gravity = Gravity.CENTER;
+//            tv.setLayoutParams(paramTV);
 
             TextView passFailMessage = new TextView(this);
-            passFailMessage.setLayoutParams(paramTV);
+            TableLayout.LayoutParams paramMSG = new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+//            LinearLayout.LayoutParams paramMSG = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//            paramMSG.gravity = Gravity.CENTER;
+            passFailMessage.setLayoutParams(paramMSG);
+            passFailMessage.setGravity(Gravity.CENTER_HORIZONTAL);
             exerciseLayout.addView(passFailMessage);
             passFailMessages.put(exerciseNum, passFailMessage);
 
