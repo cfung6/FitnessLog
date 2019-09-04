@@ -211,7 +211,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                     double capableWeight = exercise.getCapableWeight();
 
                     //Checks if database contains any entries with the current time of today and workoutExerciseID
-                    if (databaseHelper.haveEntriesBeenEntered(todaysTime, workoutExerciseID)) {
+                    if (databaseHelper.haveEntriesBeenEntered(todaysTime, routineID, workoutExerciseID)) {
                         List<Double> weightsForDataTable = new ArrayList<>();
                         List<Integer> repsForDataTable = new ArrayList<>();
 

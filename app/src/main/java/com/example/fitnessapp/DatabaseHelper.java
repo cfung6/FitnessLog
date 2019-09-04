@@ -162,10 +162,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Checks if database contains any entries with the current time of today and workoutExerciseID
-    public boolean haveEntriesBeenEntered(long time, int workoutExerciseID) {
+    public boolean haveEntriesBeenEntered(long time, int routineID, int workoutExerciseID) {
         int count;
         db = this.getWritableDatabase();
-        selection = TODAYS_TIME_COL + " = " + time + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        selection = TODAYS_TIME_COL + " = " + time + " AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
@@ -177,7 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void updateEntries(long time, long todaysTime, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
         db = this.getWritableDatabase();
         List<Integer> ids = new ArrayList<>();
-        selection = TODAYS_TIME_COL + " = " + todaysTime + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        selection = TODAYS_TIME_COL + " = " + todaysTime + " AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, null);
 
         //Finds all entries with the matching time and workoutExerciseID and puts the primary key of those entries into an array
