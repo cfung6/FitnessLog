@@ -63,6 +63,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
 
     private Map<String, EditText> editTextNames;
+    private Map<Integer, TextView> passFailMessages;
     private Map<Integer, List<TextView>> setNumbers;
 
     @Override
@@ -77,6 +78,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
 
         editTextNames = new HashMap<>();
+        passFailMessages = new HashMap<>();
         setNumbers = new HashMap<>();
 
         setDateText();
@@ -170,8 +172,8 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                     }
 
                     //Set textview based on pass or fail
-                    int textViewid = getResources().getIdentifier("message" + currentExerciseNum, "id", getPackageName());
-                    TextView tv = findViewById(textViewid);
+                    //int textViewid = getResources().getIdentifier("message" + currentExerciseNum, "id", getPackageName());
+                    TextView tv = passFailMessages.get(exercise.getExerciseID());
 
                     //After all lines are visible, submit button removes all weights and reps so all can be added at once
                     exercise.removeRepsDone();
@@ -343,8 +345,8 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     //EFFECTS: creates the XML based on the exercises from the current workout
     protected void createAbstractXML(Workout currentWorkout) {
-        LinearLayout parentLinearLayout = findViewById(R.id.parent_linear_layout);
         int exerciseNum = 0;
+        LinearLayout parentLinearLayout = findViewById(R.id.parent_linear_layout);
         for (Exercise exercise : currentWorkout.getExercises()) {
             LinearLayout exerciseLayout = new LinearLayout(this);
             exerciseLayout.setOrientation(LinearLayout.VERTICAL);
@@ -394,6 +396,13 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             LinearLayout.LayoutParams paramTV = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             paramTV.gravity = Gravity.CENTER;
             tv.setLayoutParams(paramTV);
+
+            TextView passFailMessage = new TextView(this);
+            passFailMessage.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
+            exerciseLayout.addView(passFailMessage);
+            passFailMessages.put(exerciseNum, passFailMessage);
+
+            exercise.setExerciseID(exerciseNum);
             exerciseNum++;
             parentLinearLayout.addView(exerciseLayout);
         }
