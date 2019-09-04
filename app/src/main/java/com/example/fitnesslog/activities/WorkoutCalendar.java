@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.R;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -18,21 +19,27 @@ import java.util.Locale;
 
 public class WorkoutCalendar extends AppCompatActivity {
 
-    CompactCalendarView compactCalendar;
-    private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM - yyyy", Locale.getDefault());
+    private CompactCalendarView compactCalendar;
+    private SimpleDateFormat dateFormatMonth;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
+        databaseHelper = new DatabaseHelper(this);
+        dateFormatMonth = new SimpleDateFormat("MMMM - yyyy", Locale.getDefault());
         final ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
+
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(null);
 
         compactCalendar = findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
+
+        fillOutDates();
 
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -54,10 +61,17 @@ public class WorkoutCalendar extends AppCompatActivity {
         });
     }
 
-    public void createEvent(Date date) {
+    private void fillOutDates() {
+        List<Long> times = databaseHelper.returnAllDistinctTimes();
+        for (long time : times) {
+            createEvent(time);
+        }
+    }
+
+    private void createEvent(long time) {
+        Date date = new Date(time);
         List<Event> events = compactCalendar.getEvents(date);
         if (events.isEmpty()) {
-            long time = date.getTime();
             Event ev1 = new Event(Color.BLUE, time, "Workout");
             compactCalendar.addEvent(ev1);
         }

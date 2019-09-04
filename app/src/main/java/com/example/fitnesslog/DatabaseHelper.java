@@ -231,7 +231,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-
     // EFFECTS: given beg/int/adv table and an exercise name, returns a double representing the
     //          weight that the user is capable of lifting
     public double getExerciseCapableWeight(String table, String exerciseName) {
@@ -248,6 +247,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return weight;
+    }
+
+    public List<Long> returnAllDistinctTimes() {
+        db = this.getWritableDatabase();
+        List<Long> times = new ArrayList<>();
+        String query = "SELECT DISTINCT " + CURRENT_TIME_COL + " FROM " + DATA_TABLE;
+        cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long time = cursor.getLong(cursor.getColumnIndex(CURRENT_TIME_COL));
+
+                times.add(time);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return times;
     }
 
     //Gets the latest workout number from beg/int/adv tables using the latest workoutExerciseID
