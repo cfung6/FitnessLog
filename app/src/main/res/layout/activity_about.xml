@@ -13,16 +13,9 @@
         android:layout_margin="20dp"/>
 
     <TextView
+        android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fitness App is an application that generates and tracks workouts. First, you select
-                      a level (beginner, intermediate, or advanced) based on your experience in the gym as
-                      well as your availability to go to the gym. Next, you will be prompted for the weight
-                      that you are able to lift for certain exercises. Workouts will then be generated for you
-                      that target major muscle groups of the body setting a goal for you to lift, as well as
-                      the number of sets and reps that you should try to attempt. Your following workouts will
-                      be determined based on how you did in the current workout. Workouts will be stored in our
-                      calendar tool, where you can check and track your progress! "
         android:layout_margin="20dp"/>
 
     <TextView
@@ -35,6 +28,12 @@
         android:layout_margin="20dp"/>
 
     <TextView
+        android:id="@+id/beginner_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Intermediate Level"
@@ -44,6 +43,12 @@
         android:layout_margin="20dp"/>
 
     <TextView
+        android:id="@+id/intermediate_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Advanced Level"
@@ -51,5 +56,11 @@
         android:background="@drawable/layout_shadow"
         android:layout_gravity="center_horizontal"
         android:layout_margin="20dp"/>
+
+    <TextView
+        android:id="@+id/advanced_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp" />
 
 </LinearLayout>

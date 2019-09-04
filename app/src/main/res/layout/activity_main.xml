@@ -7,13 +7,12 @@
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingBottom="40dp"
-        android:text="@string/it_s_gainz_day"
+        android:text="FitnessLog"
         android:textSize="30sp"
         tools:layout_editor_absoluteY="46dp" />
 
@@ -49,7 +48,5 @@
         android:padding="20dp"
         android:text="About"
         android:onClick="aboutClicked"/>
-
-
 
 </LinearLayout>

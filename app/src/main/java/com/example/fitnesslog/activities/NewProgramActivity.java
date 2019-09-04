@@ -1,4 +1,4 @@
-package com.example.fitnessapp.activities;
+package com.example.fitnesslog.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fitnessapp.Levels;
-import com.example.fitnessapp.R;
+import com.example.fitnesslog.Levels;
+import com.example.fitnesslog.R;
 
 public class NewProgramActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.fitnessapp.activities;
+package com.example.fitnesslog.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fitnessapp.DatabaseHelper;
-import com.example.fitnessapp.DefaultWeights;
-import com.example.fitnessapp.Levels;
-import com.example.fitnessapp.R;
+import com.example.fitnesslog.DatabaseHelper;
+import com.example.fitnesslog.DefaultWeights;
+import com.example.fitnesslog.Levels;
+import com.example.fitnesslog.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -22,8 +22,6 @@ import java.util.Date;
 import java.util.List;
 
 public class AskingForWeightsActivity extends AppCompatActivity {
-
-    private Button submitButton;
 
     /*
     ALL ARRAYS ARE IN THE FOLLOWING ORDER:
@@ -45,6 +43,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private int workoutNum;
     private int numOfExercises;
     private Levels levelChosen;
+    private Button submitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,20 +205,20 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     private void addDataToBeginner(String[] exercises) {
-        for (int i = 0; i < exercises.length; i++) {
-            databaseHelper.insertBeginnerRoutineData(workoutNum, exercises[i]);
+        for (String exercise : exercises) {
+            databaseHelper.insertBeginnerRoutineData(workoutNum, exercise);
         }
     }
 
     private void addDataToIntermediate(String[] exercises) {
-        for (int i = 0; i < exercises.length; i++) {
-            databaseHelper.insertIntermediateRoutineData(workoutNum, exercises[i]);
+        for (String exercise : exercises) {
+            databaseHelper.insertIntermediateRoutineData(workoutNum, exercise);
         }
     }
 
     private void addDataToAdvanced(String[] exercises) {
-        for (int i = 0; i < exercises.length; i++) {
-            databaseHelper.insertAdvancedRoutineData(workoutNum, exercises[i]);
+        for (String exercise : exercises) {
+            databaseHelper.insertAdvancedRoutineData(workoutNum, exercise);
         }
     }
 

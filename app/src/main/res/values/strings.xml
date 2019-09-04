@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FitnessApp</string>
+    <string name="app_name">FitnessLog</string>
     <string name="beginner_text">
         <b>Beginnner</b>\n\n3x per week\n(0-1 years of experience)
     </string>

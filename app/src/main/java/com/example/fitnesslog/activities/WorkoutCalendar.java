@@ -1,4 +1,4 @@
-package com.example.fitnessapp.activities;
+package com.example.fitnesslog.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fitnessapp.R;
+import com.example.fitnesslog.R;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 

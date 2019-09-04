@@ -1,4 +1,4 @@
-package com.example.fitnessapp;
+package com.example.fitnesslog;
 
 import android.content.ContentValues;
 import android.content.Context;

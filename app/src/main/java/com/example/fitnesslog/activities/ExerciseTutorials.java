@@ -1,4 +1,4 @@
-package com.example.fitnessapp.activities;
+package com.example.fitnesslog.activities;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fitnessapp.R;
+import com.example.fitnesslog.R;
 
 public class ExerciseTutorials extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.fitnessapp;
+package com.example.fitnesslog;
 
 import java.io.Serializable;
 

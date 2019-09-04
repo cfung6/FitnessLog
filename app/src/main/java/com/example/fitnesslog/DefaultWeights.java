@@ -1,4 +1,4 @@
-package com.example.fitnessapp;
+package com.example.fitnesslog;
 
 import java.util.ArrayList;
 import java.util.Arrays;

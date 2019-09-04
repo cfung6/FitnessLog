@@ -1,10 +1,10 @@
-package com.example.fitnessapp.activities;
+package com.example.fitnesslog.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.fitnessapp.Exercise;
-import com.example.fitnessapp.Workout;
+import com.example.fitnesslog.Exercise;
+import com.example.fitnesslog.Workout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,8 +39,6 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
         exercises = new ArrayList<>();
 
         setRoutineID(2);
-        setIncrement(5);
-        setPercentage(1);
         setExerciseNames(exerciseNames);
         setExerciseWeights(exerciseWeights);
         initializeExercises();

@@ -1,9 +1,10 @@
-package com.example.fitnessapp.activities;
+package com.example.fitnesslog.activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,11 +18,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fitnessapp.DatabaseHelper;
-import com.example.fitnessapp.Exercise;
-import com.example.fitnessapp.R;
-import com.example.fitnessapp.Routine;
-import com.example.fitnessapp.Workout;
+import com.example.fitnesslog.DatabaseHelper;
+import com.example.fitnesslog.Exercise;
+import com.example.fitnesslog.R;
+import com.example.fitnesslog.Routine;
+import com.example.fitnesslog.Workout;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
@@ -46,9 +47,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private double[] exerciseWeights;
     private String[] exerciseNames;
 
-    private int increment;
-    private int percentage;
-
     private List<Workout> workouts;
     private List<Exercise> exercises;
 
@@ -60,30 +58,25 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private long currentTime;
     private long todaysTime;
 
-    private Intent intent;
     private DatabaseHelper databaseHelper;
 
     private Map<String, EditText> editTextNames;
-    private Map<Integer, TextView> passFailMessages;
-    private Map<Integer, List<TextView>> setNumbers;
+    private SparseArray<TextView> passFailMessages;
+    private SparseArray<List<TextView>> setNumbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_workout_log);
 
-        intent = getIntent();
+        Intent intent = getIntent();
         databaseHelper = new DatabaseHelper(this);
 
         currentTime = intent.getLongExtra("TIME", new Date().getTime());
         todaysTime = currentTime - currentTime % (24 * 60 * 60 * 1000);
 
-        editTextNames = new HashMap<>();
-        passFailMessages = new HashMap<>();
-        setNumbers = new HashMap<>();
-
         setDateText();
-        initializeArrays();
+        initializeListsAndMaps();
     }
 
     @Override
@@ -192,7 +185,11 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                         //Increases exercise goal weight
                         exercise.increaseWeight();
                         exercise.setWeightIncreased(true);
-                        tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
+                        if (exercise.getIncrement() == 0) {
+                            tv.setText("Congrats! Complete the rest of this week's workouts to achieve a new max.\n");
+                        } else {
+                            tv.setText("Congrats! Your next weight is " + exercise.getGoalWeight() + ".\n");
+                        }
                     } else {
                         tv.setText("Failure is inevitable! Stay at your current weight.\n");
                         exercise.setWeightIncreased(false);
@@ -240,14 +237,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     protected void setRoutineID(int id) {
         routineID = id;
-    }
-
-    protected void setIncrement(int incr) {
-        increment = incr;
-    }
-
-    protected void setPercentage(int perc) {
-        percentage = perc;
     }
 
     protected void setExerciseWeights(double[] weights) {
@@ -304,9 +293,12 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         dateView.setText(full);
     }
 
-    private void initializeArrays() {
+    private void initializeListsAndMaps() {
         exercises = new ArrayList<>();
         workouts = new ArrayList<>();
+        editTextNames = new HashMap<>();
+        passFailMessages = new SparseArray<>();
+        setNumbers = new SparseArray<>();
     }
 
     //Sets the next EditTexts to visible, returns true if it works, false if not

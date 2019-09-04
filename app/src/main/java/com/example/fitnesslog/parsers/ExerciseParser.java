@@ -1,6 +1,6 @@
-package com.example.fitnessapp.parsers;
+package com.example.fitnesslog.parsers;
 
-import com.example.fitnessapp.Exercise;
+import com.example.fitnesslog.Exercise;
 
 import org.json.JSONArray;
 import org.json.JSONException;

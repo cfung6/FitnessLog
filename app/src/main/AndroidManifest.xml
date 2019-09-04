@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fitnessapp">
+    package="com.example.fitnesslog">
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -8,16 +8,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.BaseWorkoutLogActivity"></activity>
-        <activity android:name=".activities.WorkoutCalendar" />
-        <activity android:name=".activities.AdvancedActivity" />
-        <activity android:name=".activities.Stopwatch" />
-        <activity android:name=".activities.ExerciseTutorials" />
-        <activity android:name=".activities.IntermediateActivity" />
-        <activity android:name=".activities.BeginnerActivity" />
-        <activity android:name=".activities.NewProgramActivity" />
-        <activity android:name=".activities.AskingForWeightsActivity" />
-        <activity android:name=".activities.MainActivity">
+        <activity android:name="com.example.fitnesslog.activities.BaseWorkoutLogActivity" />
+        <activity android:name="com.example.fitnesslog.activities.WorkoutCalendar" />
+        <activity
+            android:name="com.example.fitnesslog.activities.AdvancedActivity"
+            android:label="Advanced routine" />
+        <activity
+            android:name="com.example.fitnesslog.activities.Stopwatch"
+            android:label="Stopwatch" />
+        <activity
+            android:name="com.example.fitnesslog.activities.ExerciseTutorials"
+            android:label="Tutorials" />
+        <activity
+            android:name="com.example.fitnesslog.activities.IntermediateActivity"
+            android:label="Intermediate routine" />
+        <activity
+            android:name="com.example.fitnesslog.activities.BeginnerActivity"
+            android:label="Beginner routine" />
+        <activity android:name="com.example.fitnesslog.activities.NewProgramActivity" />
+        <activity android:name="com.example.fitnesslog.activities.AskingForWeightsActivity" />
+        <activity
+            android:name="com.example.fitnesslog.activities.AboutActivity"
+            android:label="About" />
+        <activity android:name="com.example.fitnesslog.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -26,5 +39,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

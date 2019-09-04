@@ -1,4 +1,4 @@
-package com.example.fitnessapp.activities;
+package com.example.fitnesslog.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +11,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fitnessapp.DatabaseHelper;
-import com.example.fitnessapp.Exercise;
-import com.example.fitnessapp.R;
-import com.example.fitnessapp.Routine;
-import com.example.fitnessapp.Workout;
+import com.example.fitnesslog.DatabaseHelper;
+import com.example.fitnesslog.Exercise;
+import com.example.fitnesslog.R;
+import com.example.fitnesslog.Routine;
+import com.example.fitnesslog.Workout;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
