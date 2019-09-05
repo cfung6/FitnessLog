@@ -14,9 +14,6 @@ import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.ExerciseNames;
 import com.example.fitnesslog.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper databaseHelper;
@@ -76,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     public void continueProgramClicked(View view) {
         Intent intent;
         databaseHelper = new DatabaseHelper(this);
-        List<String> exerciseNameList = new ArrayList<>();
         boolean isEmpty = databaseHelper.isEmpty();
 
         //If database is empty, defaults to new program

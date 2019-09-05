@@ -41,6 +41,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private String[] exerciseStrings;
     private boolean[] exerciseChecked;
     private String[] exerciseNames;
+    private double[] weightInputs;
 
     private DatabaseHelper databaseHelper;
     private int workoutNum;
@@ -76,7 +77,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             tableName = "AdvancedTable";
         }
 
-        numOfExercises = exerciseNames.length;
+        numOfExercises = 5;
         
         initializeArrays();
         initializeEditTexts();
@@ -142,12 +143,12 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         }
 
         //Converting List<Double> to double[]
-        double[] weightInputs = new double[numOfExercises];
-        for (int i = 0; i < finalWeightInputs.size(); i++) {
+        weightInputs = new double[exerciseNames.length];
+        for (int i = 0; i < numOfExercises; i++) {
             weightInputs[i] = finalWeightInputs.get(i);
         }
 
-        for (int i = finalWeightInputs.size(); i < numOfExercises; i++) {
+        for (int i = numOfExercises; i < exerciseNames.length; i++) {
             weightInputs[i] = DefaultWeights.defaultWeights.get(10 + i);
         }
 
@@ -207,11 +208,16 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         } else {
             addDataToAdvanced(exerciseNames);
             routineID = 3;
+
+            //Decreasing starting weights for advanced program
+            for (int i = 0; i < 5; i++) {
+                weightInputs[i] = weightInputs[i] * .88;
+            }
         }
 
-        for (int i = 0; i < numOfExercises; i++) {
+        for (int i = 0; i < exerciseNames.length; i++) {
             workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames[i]);
-            databaseHelper.insertData(currentTime, todaysDate, routineID, workoutExerciseID, workoutNum, 0, finalWeightInputs.get(i));
+            databaseHelper.insertData(currentTime, todaysDate, routineID, workoutExerciseID, workoutNum, 0, weightInputs[i]);
         }
     }
 

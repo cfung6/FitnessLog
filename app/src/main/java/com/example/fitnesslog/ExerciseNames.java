@@ -29,11 +29,14 @@ public class ExerciseNames {
             "Squat",
             "Deadlift",
             "Barbell Row",
+            "Incline Dumbbell Press",
+            "Lat Pulldown",
             "Barbell Curl",
             "Hammer Curl",
             "Rope Pulldown",
             "Overhead Tricep Extension",
-            "Lateral Raise"));
+            "Lateral Raise",
+            "Face Pulls"));
 
     public static final String[] ADVANCED_NAMES = getStringArray(ADVANCED_NAMES_LIST);
 
