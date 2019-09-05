@@ -17,7 +17,7 @@ import com.example.fitnesslog.DefaultWeights;
 import com.example.fitnesslog.ExerciseNames;
 import com.example.fitnesslog.Levels;
 import com.example.fitnesslog.R;
-import com.example.fitnesslog.TodaysTime;
+import com.example.fitnesslog.TodaysDate;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -143,7 +143,6 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     }
 
     //Passing weights and names for each exercise to next activity
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void passWeightsAndNames() {
         //Adds input to array if EditTexts are filled, else adds default weight if checkboxes are unchecked
         for (int i = 0; i < numOfExercises; i++) {
@@ -199,14 +198,13 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     // EFFECTS: inserts each exercise into the given data table (name) then inserts the capableWeight
     //          into DATA_TABLE
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void insertDataToSQL(String tableName) {
         int workoutExerciseID;
         int routineID;
-        TodaysTime today = new TodaysTime();
+        TodaysDate today = new TodaysDate();
 
         long currentTime = new Date().getTime();
-        long todaysTime = today.getTodaysTime();
+        String todaysDate = today.getDateString();
 
         if (tableName.equals("BeginnerTable")) {
             addDataToBeginner(exerciseNames);
@@ -221,7 +219,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         for (int i = 0; i < numOfExercises; i++) {
             workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames[i]);
-            databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, workoutNum, 0, finalWeightInputs.get(i));
+            databaseHelper.insertData(currentTime, todaysDate, routineID, workoutExerciseID, workoutNum, 0, finalWeightInputs.get(i));
         }
     }
 

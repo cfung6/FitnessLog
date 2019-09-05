@@ -2,7 +2,6 @@ package com.example.fitnesslog.activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -18,14 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.Exercise;
 import com.example.fitnesslog.R;
 import com.example.fitnesslog.Routine;
-import com.example.fitnesslog.TodaysTime;
+import com.example.fitnesslog.TodaysDate;
 import com.example.fitnesslog.Workout;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -60,7 +58,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     protected Workout currentWorkout;
 
     private long currentTime;
-    private long todaysTime;
+    private String todaysDate;
 
     private DatabaseHelper databaseHelper;
 
@@ -68,20 +66,19 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private SparseArray<TextView> passFailMessages;
     private SparseArray<List<TextView>> setNumbers;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_workout_log);
 
         Intent intent = getIntent();
-        TodaysTime today = new TodaysTime();
+        TodaysDate today = new TodaysDate();
         databaseHelper = new DatabaseHelper(this);
 
         currentTime = intent.getLongExtra("TIME", new Date().getTime());
-        todaysTime = today.getTodaysTime();
+        todaysDate = today.getDateString();
 
-        Log.d("myTag", "" + todaysTime);
+        Log.d("myTag", todaysDate);
 
         setDateText();
         initializeListsAndMaps();
@@ -215,8 +212,8 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                     //Gets new goal weight
                     double capableWeight = exercise.getCapableWeight();
 
-                    //Checks if database contains any entries with the current time of today and workoutExerciseID
-                    if (databaseHelper.haveEntriesBeenEntered(todaysTime, routineID, workoutExerciseID)) {
+                    //Checks if database contains any entries with the current date and workoutExerciseID
+                    if (databaseHelper.haveEntriesBeenEntered(todaysDate, routineID, workoutExerciseID)) {
                         List<Double> weightsForDataTable = new ArrayList<>();
                         List<Integer> repsForDataTable = new ArrayList<>();
 
@@ -225,11 +222,11 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                             repsForDataTable.add(reps[i]);
                         }
 
-                        databaseHelper.updateEntries(currentTime, todaysTime, routineID, workoutExerciseID,
+                        databaseHelper.updateEntries(currentTime, todaysDate, routineID, workoutExerciseID,
                                 weightsForDataTable, repsForDataTable, capableWeight);
                     } else {
                         for (int i = 0; i < numOfSets; i++) {
-                            databaseHelper.insertData(currentTime, todaysTime, routineID, workoutExerciseID, weights[i], reps[i], capableWeight);
+                            databaseHelper.insertData(currentTime, todaysDate, routineID, workoutExerciseID, weights[i], reps[i], capableWeight);
                         }
                     }
                 } catch (IllegalArgumentException e) {
