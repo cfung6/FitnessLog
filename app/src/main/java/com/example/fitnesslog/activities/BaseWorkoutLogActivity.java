@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -371,8 +372,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             LinearLayout setsWeightReps = new LinearLayout(this);
             setsWeightReps.setOrientation(LinearLayout.HORIZONTAL);
             setsWeightReps.setLayoutParams(paramsSWR);
-            //setsWeightReps.setLayoutParams(new TableLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT, 2.0f));
-
 
             Button submitButton = new Button(this);
             submitButton.setText("Submit");
@@ -380,7 +379,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             params.weight = 1f;
             params.gravity = Gravity.CENTER;
             submitButton.setLayoutParams(params);
-            //submitButton.setLayoutParams(new TableLayout.LayoutParams(20, ActionBar.LayoutParams.WRAP_CONTENT, 1.0f));
 
             submitButton.setTag("" + exerciseNum);
             submitButton.setOnClickListener(new View.OnClickListener() {
@@ -399,15 +397,10 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
             exerciseLayout.addView(setsWeightsRepsContainer);
 
-//            TextView tv = new TextView(this);
-//            LinearLayout.LayoutParams paramTV = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//            paramTV.gravity = Gravity.CENTER;
-//            tv.setLayoutParams(paramTV);
-
             TextView passFailMessage = new TextView(this);
             TableLayout.LayoutParams paramMSG = new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-//            LinearLayout.LayoutParams paramMSG = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//            paramMSG.gravity = Gravity.CENTER;
+            paramMSG.leftMargin = 15;
+            paramMSG.rightMargin = 15;
             passFailMessage.setLayoutParams(paramMSG);
             passFailMessage.setGravity(Gravity.CENTER_HORIZONTAL);
             exerciseLayout.addView(passFailMessage);
@@ -539,5 +532,25 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             }
         }
         return name.substring(0, name.length() - 1);
+    }
+
+    // EFFECTS: creates a workout consisting of exercises from the SQL table based on input
+    public Workout createWorkoutFromSQL(String date, int routineID) {
+        Workout workout;
+        HashMap<String, List<Integer>> namesAndReps;
+        List<Exercise> exercises = new ArrayList<>();
+        namesAndReps = databaseHelper.getExerciseRepsArray(routineID, date);
+
+        Iterator iterator = namesAndReps.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry mapElement = (Map.Entry) iterator.next();
+            String exerciseName = (String) mapElement.getKey();
+            List<Integer> reps = (List<Integer>) mapElement.getValue();
+
+            Exercise exercise = new Exercise(exerciseName)
+        }
+
+        return workout;
     }
 }

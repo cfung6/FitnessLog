@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -264,7 +265,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return weight;
     }
 
-    public double[] getExerciseWeightArray(int routineID) {
+    public double[] getExerciseWeightArray(int routineID, String todaysDate) {
         db = this.getWritableDatabase();
         String[] exerciseNames;
         double[] weights;
@@ -284,11 +285,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         weights = new double[exerciseNames.length];
 
         for (int i = 0; i < exerciseNames.length; i++) {
-            double weight = getExerciseCapableWeight(table, exerciseNames[i]);
-            weights[i] = weight;
+            weights[i] = getCapableWeightDate(table, exerciseNames[i], todaysDate);
         }
 
         return weights;
+    }
+
+    private double getCapableWeightDate(String table, String exerciseName, String todaysDate) {
+        db = this.getWritableDatabase();
+        String query = "SELECT CapableWeight FROM DataTable INNER JOIN " + table +
+                " ON DataTable.WorkoutExerciseID = " + table +
+                ".ID WHERE Exercise = " + "'" + exerciseName + "' AND TodaysDate = " + todaysDate
+                + " ORDER BY " + CURRENT_TIME_COL + " DESC";
+        cursor = db.rawQuery(query, null);
+        double weight = -1;
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            weight = cursor.getDouble(cursor.getColumnIndex(CAPABLE_WEIGHT_COL));
+            cursor.close();
+        }
+        return weight;
+    }
+
+    public HashMap<String, List<Integer>> getExerciseRepsArray(int routineID, String todaysDate) {
+        db = this.getWritableDatabase();
+        String[] exerciseNames;
+        HashMap<String, List<Integer>> reps = new HashMap<>();
+        String table;
+
+        if (routineID == 1) {
+            exerciseNames = ExerciseNames.BEGINNER_NAMES;
+            table = BEGINNER_TABLE;
+        } else if (routineID == 2) {
+            exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
+            table = INTERMEDIATE_TABLE;
+        } else {
+            exerciseNames = ExerciseNames.ADVANCED_NAMES;
+            table = ADVANCED_TABLE;
+        }
+
+        for (int i = 0; i <exerciseNames.length; i++) {
+            reps.put(exerciseNames[i], getReps(table, exerciseNames[i], todaysDate));
+        }
+
+        return reps;
+    }
+
+    // EFFECTS: returns a list of reps done for the given exercise on the given date
+    private List<Integer> getReps(String table, String exerciseName, String todaysDate) {
+        db = this.getWritableDatabase();
+        List<Integer> reps = new ArrayList<>();
+        String query = "SELECT Reps FROM DataTable INNER JOIN " + table +
+                " ON DataTable.WorkoutExerciseID = " + table + ".ID WHERE Exercise = " + "'" +
+                exerciseName + "' AND TodaysDate = " + todaysDate;
+        cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                int repsFromData = cursor.getInt(cursor.getColumnIndex(REPS_COL));
+                reps.add(repsFromData);
+                cursor.moveToNext();
+            }
+        }
+        return reps;
     }
 
     public List<String> returnAllDistinctDates() {
