@@ -1,66 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="How it Works"
-        android:textSize="40sp"
-        android:background="@drawable/layout_shadow"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:background="@drawable/layout_shadow"
+            android:text="How It Works"
+            android:textSize="30sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Beginner Level"
-        android:textSize="40sp"
-        android:background="@drawable/layout_shadow"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"/>
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp" />
 
-    <TextView
-        android:id="@+id/beginner_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:background="@drawable/layout_shadow"
+            android:text="Beginner Level"
+            android:textSize="30sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Intermediate Level"
-        android:textSize="40sp"
-        android:background="@drawable/layout_shadow"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"/>
+        <TextView
+            android:id="@+id/beginner_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp" />
 
-    <TextView
-        android:id="@+id/intermediate_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:background="@drawable/layout_shadow"
+            android:text="Intermediate Level"
+            android:textSize="30sp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Advanced Level"
-        android:textSize="40sp"
-        android:background="@drawable/layout_shadow"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="20dp"/>
+        <TextView
+            android:id="@+id/intermediate_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp" />
 
-    <TextView
-        android:id="@+id/advanced_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:background="@drawable/layout_shadow"
+            android:text="Advanced Level"
+            android:textSize="30sp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/advanced_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp" />
+
+    </LinearLayout>
+</ScrollView>
