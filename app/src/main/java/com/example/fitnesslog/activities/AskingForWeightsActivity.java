@@ -41,15 +41,14 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private String[] exerciseStrings;
     private boolean[] exerciseChecked;
     private String[] exerciseNames;
-    private List<String> exerciseNameList;
 
     private DatabaseHelper databaseHelper;
     private int workoutNum;
-    private int numOfExercises;
     private Levels levelChosen;
     private Button submitButton;
     private Intent intent;
     private String tableName;
+    private int numOfExercises;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,28 +64,21 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         if (levelChosen == Levels.BEGINNER) {
             intent = new Intent(this, BeginnerActivity.class);
-            exerciseNameList = ExerciseNames.BEGINNER_NAMES_LIST;
+            exerciseNames = ExerciseNames.BEGINNER_NAMES;
             tableName = "BeginnerTable";
         } else if (levelChosen == Levels.INTERMEDIATE) {
             intent = new Intent(this, IntermediateActivity.class);
-            exerciseNameList = ExerciseNames.INTERMEDIATE_NAMES_LIST;
+            exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
             tableName = "IntermediateTable";
         } else {
             intent = new Intent(this, AdvancedActivity.class);
-            exerciseNameList = ExerciseNames.ADVANCED_NAMES_LIST;
+            exerciseNames = ExerciseNames.ADVANCED_NAMES;
             tableName = "AdvancedTable";
         }
 
-        //Even though advanced names list has more exercises, only 5 are asked for
-        numOfExercises = 5;
-
+        numOfExercises = exerciseNames.length;
+        
         initializeArrays();
-
-        //Turning List<String> into String[]
-        for (int i = 0; i < exerciseNames.length; i++) {
-            exerciseNames[i] = exerciseNameList.get(i);
-        }
-
         initializeEditTexts();
         limitEditTextsInput();
         initializeBooleans();
@@ -150,12 +142,12 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         }
 
         //Converting List<Double> to double[]
-        double[] weightInputs = new double[exerciseNameList.size()];
+        double[] weightInputs = new double[numOfExercises];
         for (int i = 0; i < finalWeightInputs.size(); i++) {
             weightInputs[i] = finalWeightInputs.get(i);
         }
 
-        for (int i = finalWeightInputs.size(); i < exerciseNameList.size(); i++) {
+        for (int i = finalWeightInputs.size(); i < numOfExercises; i++) {
             weightInputs[i] = DefaultWeights.defaultWeights.get(10 + i);
         }
 
@@ -259,7 +251,6 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         exerciseStrings = new String[numOfExercises];
         exerciseEditTexts = new EditText[numOfExercises];
         exerciseChecked = new boolean[numOfExercises];
-        exerciseNames = new String[exerciseNameList.size()];
     }
 
     private void initializeBooleans() {

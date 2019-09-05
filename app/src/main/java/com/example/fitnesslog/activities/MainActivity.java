@@ -90,18 +90,15 @@ public class MainActivity extends AppCompatActivity {
         try {
             if (routineID == 1) {
                 intent = new Intent(this, BeginnerActivity.class);
-                exerciseNameList = ExerciseNames.BEGINNER_NAMES_LIST;
-                exerciseNames = getStringArray(exerciseNameList);
+                exerciseNames = ExerciseNames.BEGINNER_NAMES;
                 initializeWeight("BeginnerTable");
             } else if (routineID == 2) {
                 intent = new Intent(this, IntermediateActivity.class);
-                exerciseNameList = ExerciseNames.INTERMEDIATE_NAMES_LIST;
-                exerciseNames = getStringArray(exerciseNameList);
+                exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
                 initializeWeight("IntermediateTable");
             } else if (routineID == 3) {
                 intent = new Intent(this, AdvancedActivity.class);
-                exerciseNameList = ExerciseNames.ADVANCED_NAMES_LIST;
-                exerciseNames = getStringArray(exerciseNameList);
+                exerciseNames = ExerciseNames.ADVANCED_NAMES;
                 initializeWeight("AdvancedTable");
             } else {
                 throw new IllegalArgumentException();
@@ -128,14 +125,5 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < exerciseNames.length; i++) {
             exerciseCapableWeights[i] = databaseHelper.getExerciseCapableWeight(table, exerciseNames[i]);
         }
-    }
-
-    //Turning String List to String[]
-    private String[] getStringArray(List<String> exerciseNameList) {
-        exerciseNames = new String[exerciseNameList.size()];
-        for (int i = 0; i < exerciseNames.length; i++) {
-            exerciseNames[i] = exerciseNameList.get(i);
-        }
-        return exerciseNames;
     }
 }

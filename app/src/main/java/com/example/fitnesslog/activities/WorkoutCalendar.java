@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
+import com.example.fitnesslog.ExerciseNames;
 import com.example.fitnesslog.R;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -25,6 +26,9 @@ public class WorkoutCalendar extends AppCompatActivity {
     private SimpleDateFormat dateFormatMonth;
     private DatabaseHelper databaseHelper;
     private SimpleDateFormat sdf;
+
+    private double[] weights;
+    private String[] exerciseNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +53,33 @@ public class WorkoutCalendar extends AppCompatActivity {
             @Override
             public void onDayClick(Date dateClicked) {
                 List<Event> events = compactCalendar.getEvents(dateClicked);
+                Intent intent;
+
                 for (Event event : events) {
                     Log.d("myTag", "" + dateClicked.getTime());
                     Log.d("myTag", "" + event.getTimeInMillis());
                     if (dateClicked.getTime() == event.getTimeInMillis()) {
+                        int routineID = databaseHelper.getLatestRoutineByDate(sdf.format(dateClicked));
+
+                        if (routineID == 1) {
+                            exerciseNames = ExerciseNames.BEGINNER_NAMES;
+                            intent = new Intent(getApplicationContext(), BeginnerActivity.class);
+                        } else if (routineID == 2) {
+                            exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
+                            intent = new Intent(getApplicationContext(), IntermediateActivity.class);
+                        } else {
+                            exerciseNames = ExerciseNames.ADVANCED_NAMES;
+                            intent = new Intent(getApplicationContext(), AdvancedActivity.class);
+                        }
+
+                        weights = databaseHelper.getExerciseWeightArray(routineID);
+
+                        intent.putExtra("NAMES", exerciseNames);
+                        intent.putExtra("WEIGHTS", weights);
+                        intent.putExtra("DATE", sdf.format(dateClicked));
+                        intent.putExtra("TIME", dateClicked.getTime());
+
                         //Go to workout that corresponds to event.getTimeInMillis()
-                        Intent intent = new Intent(getApplicationContext(), Stopwatch.class);
                         startActivity(intent);
                     }
                 }

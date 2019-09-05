@@ -165,7 +165,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean haveEntriesBeenEntered(String todaysDate, int routineID, int workoutExerciseID) {
         int count;
         db = this.getWritableDatabase();
-        selection = TODAYS_DATE_COL + " = " + todaysDate + " AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        selection = TODAYS_DATE_COL + " = '" + todaysDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
@@ -177,7 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void updateEntries(long time, String todaysDate, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
         db = this.getWritableDatabase();
         List<Integer> ids = new ArrayList<>();
-        selection = TODAYS_DATE_COL + " = " + todaysDate + " AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        selection = TODAYS_DATE_COL + " = '" + todaysDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, null);
 
         //Finds all entries with the matching date and workoutExerciseID and puts the primary key of those entries into an array
@@ -231,6 +231,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    public int getLatestRoutineByDate(String todaysDate) {
+        db = this.getWritableDatabase();
+        orderBy = CURRENT_TIME_COL + " DESC";
+        selection = TODAYS_DATE_COL + " = '" + todaysDate + "' ";
+        cursor = db.query(DATA_TABLE, null, selection, null, null, null, orderBy);
+        int routineid = -1;
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            routineid = cursor.getInt(cursor.getColumnIndex(ROUTINE_ID));
+            cursor.close();
+        }
+        return routineid;
+    }
+
     // EFFECTS: given beg/int/adv table and an exercise name, returns a double representing the
     //          weight that the user is capable of lifting
     public double getExerciseCapableWeight(String table, String exerciseName) {
@@ -247,6 +262,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         return weight;
+    }
+
+    public double[] getExerciseWeightArray(int routineID) {
+        db = this.getWritableDatabase();
+        String[] exerciseNames;
+        double[] weights;
+        String table;
+
+        if (routineID == 1) {
+            exerciseNames = ExerciseNames.BEGINNER_NAMES;
+            table = BEGINNER_TABLE;
+        } else if (routineID == 2) {
+            exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
+            table = INTERMEDIATE_TABLE;
+        } else {
+            exerciseNames = ExerciseNames.ADVANCED_NAMES;
+            table = ADVANCED_TABLE;
+        }
+
+        weights = new double[exerciseNames.length];
+
+        for (int i = 0; i < exerciseNames.length; i++) {
+            double weight = getExerciseCapableWeight(table, exerciseNames[i]);
+            weights[i] = weight;
+        }
+
+        return weights;
     }
 
     public List<String> returnAllDistinctDates() {

@@ -75,8 +75,13 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         TodaysDate today = new TodaysDate();
         databaseHelper = new DatabaseHelper(this);
 
-        currentTime = intent.getLongExtra("TIME", new Date().getTime());
-        todaysDate = today.getDateString();
+        currentTime = intent.getLongExtra("TIME", Calendar.getInstance().getTimeInMillis());
+        todaysDate = intent.getStringExtra("DATE");
+
+        if (todaysDate == null || todaysDate.isEmpty()) {
+            todaysDate = today.getDateString();
+        }
+
 
         Log.d("myTag", todaysDate);
 

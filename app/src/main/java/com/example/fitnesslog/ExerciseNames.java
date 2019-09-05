@@ -11,12 +11,18 @@ public class ExerciseNames {
             "Squat",
             "Deadlift",
             "Barbell Row"));
+
+    public static final String[] BEGINNER_NAMES = getStringArray(BEGINNER_NAMES_LIST);
+
     public static final List<String> INTERMEDIATE_NAMES_LIST = new ArrayList<>(Arrays.asList(
             "Bench Press",
             "Overhead Press",
             "Squat",
             "Deadlift",
             "Barbell Row"));
+
+    public static final String[] INTERMEDIATE_NAMES = getStringArray(INTERMEDIATE_NAMES_LIST);
+
     public static final List<String> ADVANCED_NAMES_LIST = new ArrayList<>(Arrays.asList(
             "Bench Press",
             "Overhead Press",
@@ -28,4 +34,15 @@ public class ExerciseNames {
             "Rope Pulldown",
             "Overhead Tricep Extension",
             "Lateral Raise"));
+
+    public static final String[] ADVANCED_NAMES = getStringArray(ADVANCED_NAMES_LIST);
+
+    //Turning String List to String[]
+    private static String[] getStringArray(List<String> exerciseNameList) {
+        String[] exerciseNames = new String[exerciseNameList.size()];
+        for (int i = 0; i < exerciseNames.length; i++) {
+            exerciseNames[i] = exerciseNameList.get(i);
+        }
+        return exerciseNames;
+    }
 }
