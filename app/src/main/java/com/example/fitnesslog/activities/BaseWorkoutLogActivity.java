@@ -548,7 +548,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             String exerciseName = (String) mapElement.getKey();
             List<Integer> reps = (List<Integer>) mapElement.getValue();
 
-            Exercise exercise = new Exercise(exerciseName)
+            Exercise exercise = new Exercise(exerciseName);
         }
 
         return workout;
