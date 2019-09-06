@@ -421,7 +421,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         TextView reps = new TextView(this);
 
         name.setText(changeNameForXML(exercise.getName()));
-        weight.setText("Weight: " + exercise.getGoalWeight() + " lb");
+        weight.setText("Weight:\n" + exercise.getGoalWeight() + " lb");
         sets.setText("Sets: " + exercise.getGoalReps().size());
         reps.setText("Reps: " + exercise.getGoalReps().get(0));
         LinearLayout.LayoutParams exerciseGoalsParam = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
