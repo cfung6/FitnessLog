@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +66,8 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private SparseArray<TextView> passFailMessages;
     private SparseArray<List<TextView>> setNumbers;
 
+    private boolean notTodaysWorkout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,14 +76,15 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         Intent intent = getIntent();
         TodaysDate today = new TodaysDate();
         databaseHelper = new DatabaseHelper(this);
+        notTodaysWorkout = true;
 
         currentTime = intent.getLongExtra("TIME", Calendar.getInstance().getTimeInMillis());
         todaysDate = intent.getStringExtra("DATE");
 
         if (todaysDate == null || todaysDate.isEmpty()) {
             todaysDate = today.getDateString();
+            notTodaysWorkout = false;
         }
-
 
         Log.d("myTag", todaysDate);
 
@@ -145,35 +147,35 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
 
         EditText[] weightsET = new EditText[numOfSets];
-        EditText[] setsET = new EditText[numOfSets];
+        EditText[] repsET = new EditText[numOfSets];
         String[] weightsInput = new String[numOfSets];
-        String[] setsInput = new String[numOfSets];
+        String[] repsInput = new String[numOfSets];
 
         //Assigns variables in the four arrays depending on which set and exercise the user is on
         for (int currentSetNum = 0; currentSetNum < numOfSets; currentSetNum++) {
             String weightsETName = "weight" + currentSetNum + "ex" + currentExerciseNum;
-            String setsETName = "sets" + currentSetNum + "ex" + currentExerciseNum;
+            String repsETName = "reps" + currentSetNum + "ex" + currentExerciseNum;
 
             //Finds the correct EditText depending on the current exercise and set
             weightsET[currentSetNum] = editTextNames.get(weightsETName);
-            setsET[currentSetNum] = editTextNames.get(setsETName);
+            repsET[currentSetNum] = editTextNames.get(repsETName);
 
             weightsInput[currentSetNum] = weightsET[currentSetNum].getText().toString();
-            setsInput[currentSetNum] = setsET[currentSetNum].getText().toString();
+            repsInput[currentSetNum] = repsET[currentSetNum].getText().toString();
         }
 
         //Sets the next EditTexts to visible
-        if (!setNextToVisible(currentExerciseNum, numOfSets, weightsInput, setsInput, weightsET, setsET)) {
+        if (!setNextToVisible(currentExerciseNum, numOfSets, weightsInput, repsInput, weightsET, repsET)) {
             int workoutExerciseID;
             //Checking to see if all EditTexts are filled
-            if (areAllFilled(weightsInput, setsInput)) {
+            if (areAllFilled(weightsInput, repsInput)) {
                 try {
                     double[] weights = new double[numOfSets];
                     int[] reps = new int[numOfSets];
 
                     for (int i = 0; i < numOfSets; i++) {
                         weights[i] = Double.parseDouble(weightsInput[i]);
-                        reps[i] = Integer.parseInt(setsInput[i]);
+                        reps[i] = Integer.parseInt(repsInput[i]);
                     }
 
                     //Set textview based on pass or fail
@@ -274,9 +276,13 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         routine = new Routine(name, workouts, this);
     }
 
-    protected void initializeCurrentWorkout() {
+    protected void initializeCurrentWorkout(String date) {
         //Setting current workout depending on last entries in database
         currentWorkout = routine.getCurrentWorkout();
+        if (notTodaysWorkout) {
+            int workoutNum = databaseHelper.getWorkoutByDate(routine.getName() + "Table", date);
+            currentWorkout = routine.getWorkouts().get(workoutNum);
+        }
     }
 
     protected Exercise getExerciseByName(String name) {
@@ -295,6 +301,9 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         return 5 * Math.round(weight / 5);
     }
 
+    protected String getTodaysDate() {
+        return todaysDate;
+    }
     //Sets textView for the current date
     private void setDateText() {
         TextView dateView = findViewById(R.id.base_date);
@@ -396,6 +405,8 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             setsWeightReps.addView(generateReps(exercise, exerciseNum));
 
             exerciseLayout.addView(setsWeightsRepsContainer);
+
+            fillOutEditTexts(exerciseNum);
 
             TextView passFailMessage = new TextView(this);
             TableLayout.LayoutParams paramMSG = new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
@@ -515,7 +526,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
             EditText editText = new EditText(this);
             editText.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            editTextNames.put("sets" + i + "ex" + exerciseNum, editText);
+            editTextNames.put("reps" + i + "ex" + exerciseNum, editText);
             repsColumn.addView(editText);
             if (i > 0) {
                 editText.setVisibility(View.GONE);
@@ -534,23 +545,24 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         return name.substring(0, name.length() - 1);
     }
 
-    // EFFECTS: creates a workout consisting of exercises from the SQL table based on input
-    public Workout createWorkoutFromSQL(String date, int routineID) {
-        Workout workout;
-        HashMap<String, List<Integer>> namesAndReps;
-        List<Exercise> exercises = new ArrayList<>();
-        namesAndReps = databaseHelper.getExerciseRepsArray(routineID, date);
+    private void fillOutEditTexts(int exerciseNum) {
+        Exercise exercise = currentWorkout.getExerciseAtIndex(exerciseNum);
+        String table = routine.getName() + "Table";
+        if (databaseHelper.isThereDataInExercise(table, exercise, routineID, todaysDate)) {
+            List<Integer> repsList = databaseHelper.getRepsByExerciseAndDate(table, exercise, todaysDate);
+            List<Double> weightsList = databaseHelper.getWeightByExerciseAndDate(table, exercise, todaysDate);
 
-        Iterator iterator = namesAndReps.entrySet().iterator();
+            for (int i = 0; i < repsList.size(); i++) {
+                EditText et = editTextNames.get("reps" + i + "ex" + exerciseNum);
+                et.setText(repsList.get(i) + "");
+                et.setVisibility(View.VISIBLE);
+            }
 
-        while (iterator.hasNext()) {
-            Map.Entry mapElement = (Map.Entry) iterator.next();
-            String exerciseName = (String) mapElement.getKey();
-            List<Integer> reps = (List<Integer>) mapElement.getValue();
-
-            Exercise exercise = new Exercise(exerciseName);
+            for (int i = 0; i < weightsList.size(); i++) {
+                EditText et = editTextNames.get("weight" + i + "ex" + exerciseNum);
+                et.setText(weightsList.get(i) + "");
+                et.setVisibility(View.VISIBLE);
+            }
         }
-
-        return workout;
     }
 }

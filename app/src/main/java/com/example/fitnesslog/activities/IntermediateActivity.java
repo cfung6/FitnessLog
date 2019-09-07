@@ -46,7 +46,7 @@ public class IntermediateActivity extends BaseWorkoutLogActivity {
         initializeWorkouts();
         setWorkouts(workouts);
         initializeRoutine("Intermediate");
-        initializeCurrentWorkout();
+        initializeCurrentWorkout(getTodaysDate());
         createAbstractXML(currentWorkout);
     }
 

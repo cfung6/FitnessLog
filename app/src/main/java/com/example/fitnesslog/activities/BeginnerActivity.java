@@ -46,7 +46,7 @@ public class BeginnerActivity extends BaseWorkoutLogActivity {
         initializeWorkouts();
         setWorkouts(workouts);
         initializeRoutine("Beginner");
-        initializeCurrentWorkout();
+        initializeCurrentWorkout(getTodaysDate());
         createAbstractXML(currentWorkout);
     }
 

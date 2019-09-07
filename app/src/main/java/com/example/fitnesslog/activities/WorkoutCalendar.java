@@ -17,7 +17,6 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +28,6 @@ public class WorkoutCalendar extends AppCompatActivity {
     private SimpleDateFormat sdf;
 
     private double[] capableWeights;
-    private HashMap<String, List<Integer>> reps;
     private String[] exerciseNames;
 
     @Override
@@ -78,7 +76,6 @@ public class WorkoutCalendar extends AppCompatActivity {
                         }
 
                         capableWeights = databaseHelper.getExerciseWeightArray(routineID, String.valueOf(dateClicked.getTime()));
-                        reps = databaseHelper.getExerciseRepsArray(routineID, String.valueOf(dateClicked.getTime()));
 
                         intent.putExtra("NAMES", exerciseNames);
                         intent.putExtra("WEIGHTS", capableWeights);

@@ -54,7 +54,7 @@ public class AdvancedActivity extends BaseWorkoutLogActivity {
         initializeWorkouts();
         setWorkouts(workouts);
         initializeRoutine("Advanced");
-        initializeCurrentWorkout();
+        initializeCurrentWorkout(getTodaysDate());
         createAbstractXML(currentWorkout);
     }
 
