@@ -1,13 +1,13 @@
 # About FitnessLog
 FitnessLog is a mobile app for Android that generates workouts based on the level of experience the user picks. User input (i.e. weight
-and number of reps) is stored into a SQLite database. If an exercise is successfully completed, the weight is incremented and
+and number of reps) is stored into an SQLite database. If an exercise is completed successfully, as in finishing the sets with the required weight and reps, the weight for that exercise is incremented and
 the data is retrieved for the next workout. 
 
 # Features
-- Three different programs/routines
-- Workouts that give the exact exercises, weights, and reps that should be done
+- Three different programs/routines (i.e. Starting Strength, Texas Method, Coolcicada P/P/L)
+- Workouts that calculate and display the exact exercises, weights, and reps that should be done
 - Exercise tutorials
-- Calendar for progress tracking
+- Calendar for accessing and editting old workouts, as well as for progress tracking
 - Stopwatch
 
 # Android Version Targeting
