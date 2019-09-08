@@ -1,10 +1,13 @@
 package com.example.fitnesslog;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Exercise {
+public class Exercise implements Parcelable {
 
     private String name;
 
@@ -126,4 +129,77 @@ public class Exercise {
     public double getCapableWeight() {
         return (goalWeight - increment) / percentage;
     }
+
+    protected Exercise(Parcel in) {
+        name = in.readString();
+        if (in.readByte() == 0x01) {
+            actualRepsDone = new ArrayList<Integer>();
+            in.readList(actualRepsDone, Integer.class.getClassLoader());
+        } else {
+            actualRepsDone = null;
+        }
+        if (in.readByte() == 0x01) {
+            goalReps = new ArrayList<Integer>();
+            in.readList(goalReps, Integer.class.getClassLoader());
+        } else {
+            goalReps = null;
+        }
+        if (in.readByte() == 0x01) {
+            actualWeightList = new ArrayList<Double>();
+            in.readList(actualWeightList, Double.class.getClassLoader());
+        } else {
+            actualWeightList = null;
+        }
+        goalWeight = in.readDouble();
+        increment = in.readInt();
+        percentage = in.readDouble();
+        pass = in.readByte() != 0x00;
+        weightIncreased = in.readByte() != 0x00;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        if (actualRepsDone == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(actualRepsDone);
+        }
+        if (goalReps == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(goalReps);
+        }
+        if (actualWeightList == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(actualWeightList);
+        }
+        dest.writeDouble(goalWeight);
+        dest.writeInt(increment);
+        dest.writeDouble(percentage);
+        dest.writeByte((byte) (pass ? 0x01 : 0x00));
+        dest.writeByte((byte) (weightIncreased ? 0x01 : 0x00));
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Exercise> CREATOR = new Parcelable.Creator<Exercise>() {
+        @Override
+        public Exercise createFromParcel(Parcel in) {
+            return new Exercise(in);
+        }
+
+        @Override
+        public Exercise[] newArray(int size) {
+            return new Exercise[size];
+        }
+    };
 }

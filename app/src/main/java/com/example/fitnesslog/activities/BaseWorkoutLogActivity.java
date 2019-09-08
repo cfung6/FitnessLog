@@ -23,6 +23,7 @@ import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.Exercise;
 import com.example.fitnesslog.R;
 import com.example.fitnesslog.Routine;
+import com.example.fitnesslog.TodaysDate;
 import com.example.fitnesslog.Workout;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -34,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
+public class BaseWorkoutLogActivity extends AppCompatActivity {
 
     /*
     ALL ARRAYS ARE IN THE FOLLOWING ORDER:
@@ -44,12 +45,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         DEADLIFT
         BARBELL ROW
      */
-
-    private double[] exerciseWeights;
-    private String[] exerciseNames;
-
-    private List<Workout> workouts;
-    private List<Exercise> exercises;
 
     private Routine routine;
     private int routineID;
@@ -77,10 +72,25 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_workout_log);
 
+        Intent intent = getIntent();
+        TodaysDate today = new TodaysDate();
         databaseHelper = new DatabaseHelper(this);
+
+        routine = intent.getParcelableExtra("ROUTINE");
+        currentTime = intent.getLongExtra("TIME", Calendar.getInstance().getTimeInMillis());
+        todaysDate = intent.getStringExtra("DATE");
+        previousActivity = intent.getStringExtra("ACTIVITY");
+
+        routineID = routine.getRoutineID();
+
+        if (todaysDate == null || todaysDate.isEmpty()) {
+            todaysDate = today.getDateString();
+        }
 
         setDateText();
         initializeListsAndMaps();
+        initializeCurrentWorkout(getTodaysDate());
+        createAbstractXML(currentWorkout);
     }
 
     // EFFECTS: creates menu for calendar, stopwatch, and tutorials options
@@ -125,7 +135,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         //Sets current exercise depending on which submit button was pressed
         Exercise exercise = currentWorkout.getExerciseAtIndex(currentExerciseNum);
         int numOfSets = exercise.getGoalReps().size();
-        insertRoutineData(routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
+        routine.insertRoutineData(routine.getWorkouts().indexOf(currentWorkout), exercise.getName(), databaseHelper);
         instantiateETAndInputs(numOfSets);
         assignETNames(currentExerciseNum, numOfSets);
 
@@ -133,18 +143,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         if (!setNextToVisible(currentExerciseNum, numOfSets, weightsInput, repsInput, weightsET, repsET)) {
             //Checking to see if all EditTexts are filled
             setPassFailMessages(numOfSets, exercise, currentExerciseNum, view);
-        }
-    }
-
-    // EFFECTS: Inserts exercise name and associated workout number into table if it does not
-    //          already exist
-    private void insertRoutineData(int workoutIndex, String exerciseName) {
-        if (routineID == 1) {
-            databaseHelper.insertBeginnerRoutineData(workoutIndex, exerciseName);
-        } else if (routineID == 2) {
-            databaseHelper.insertIntermediateRoutineData(workoutIndex, exerciseName);
-        } else {
-            databaseHelper.insertAdvancedRoutineData(workoutIndex, exerciseName);
         }
     }
 
@@ -263,49 +261,9 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         }
     }
 
-    protected void setRoutineID(int id) {
-        routineID = id;
-    }
-
-    protected void setExerciseWeights(double[] weights) {
-        exerciseWeights = weights;
-    }
-
-    protected void setExerciseNames(String[] names) {
-        exerciseNames = names;
-    }
-
-    protected abstract void initializeExercises();
-
-    protected abstract void initializeWorkouts();
-
-    protected void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
-    }
-
-    protected void setWorkouts(List<Workout> workouts) {
-        this.workouts = workouts;
-    }
-
-    protected void initializeRoutine(String name) {
-        routine = new Routine(name, workouts, this);
-    }
-
-    protected void setTodaysDate(String date) {
-        todaysDate = date;
-    }
-
-    protected void setCurrentTime(long time) {
-        currentTime = time;
-    }
-
-    protected void setPreviousActivity(String activity) {
-        previousActivity = activity;
-    }
-
     protected void initializeCurrentWorkout(String date) {
         //Setting current workout depending on last entries in database
-        currentWorkout = routine.getCurrentWorkout();
+        currentWorkout = routine.getCurrentWorkout(databaseHelper);
         if (databaseHelper.isThereDataFromToday(date, routineID) && previousActivity == null) {
             int workoutNum = databaseHelper.getWorkoutByDate(routine.getName() + "Table", date);
 
@@ -317,25 +275,10 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         }
     }
 
-    protected Exercise getExerciseByName(String name) {
-        for (int i = 0; i < exercises.size(); i++) {
-            Exercise exercise = exercises.get(i);
-
-            if (exercise.getName().toLowerCase().equals(name.toLowerCase())) {
-                return exercise;
-            }
-        }
-        return null;
-    }
-
-    //Rounds exercise weight to nearest multiple of 5
-    protected double round(double weight) {
-        return 5 * Math.round(weight / 5);
-    }
-
     protected String getTodaysDate() {
         return todaysDate;
     }
+
     //Sets textView for the current date
     private void setDateText() {
         TextView dateView = findViewById(R.id.base_date);
@@ -346,8 +289,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     }
 
     private void initializeListsAndMaps() {
-        exercises = new ArrayList<>();
-        workouts = new ArrayList<>();
         editTextNames = new HashMap<>();
         passFailMessages = new SparseArray<>();
         setNumbers = new SparseArray<>();
@@ -569,7 +510,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     //Changes exercise name to the correct one for XML
     private String changeNameForXML(String name) {
-        for (String exerciseName : exerciseNames) {
+        for (String exerciseName : routine.getExerciseNames()) {
             if (name.equals(exerciseName)) {
                 return name;
             }

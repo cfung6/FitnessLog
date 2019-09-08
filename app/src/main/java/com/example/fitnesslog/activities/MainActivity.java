@@ -11,8 +11,8 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
-import com.example.fitnesslog.ExerciseNames;
 import com.example.fitnesslog.R;
+import com.example.fitnesslog.Routine;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
         DEADLIFT
         BARBELL ROW
      */
-
-    private double[] exerciseCapableWeights;
-    private String[] exerciseNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,27 +79,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         int routineID = databaseHelper.getLatestRoutineID();
+        Routine routine = new Routine(routineID);
 
         try {
-            if (routineID == 1) {
-                intent = new Intent(this, BeginnerActivity.class);
-                exerciseNames = ExerciseNames.BEGINNER_NAMES;
-                initializeWeight("BeginnerTable");
-            } else if (routineID == 2) {
-                intent = new Intent(this, IntermediateActivity.class);
-                exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
-                initializeWeight("IntermediateTable");
-            } else if (routineID == 3) {
-                intent = new Intent(this, AdvancedActivity.class);
-                exerciseNames = ExerciseNames.ADVANCED_NAMES;
-                initializeWeight("AdvancedTable");
-            } else {
-                throw new IllegalArgumentException();
-            }
+            intent = new Intent(this, BaseWorkoutLogActivity.class);
 
-            //Passing the capable weights and names to Beg/Int/Adv activities
-            intent.putExtra("WEIGHTS", exerciseCapableWeights);
-            intent.putExtra("NAMES", exerciseNames);
+            routine.initializeCapableWeight(databaseHelper);
+
+            intent.putExtra("ROUTINE", routine);
 
             startActivity(intent);
         } catch (IllegalArgumentException e) {
@@ -113,13 +97,5 @@ public class MainActivity extends AppCompatActivity {
     public void aboutClicked(View view) {
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
-    }
-
-    // EFFECTS: initializes the capable weight of all the exercises
-    private void initializeWeight(String table) {
-        exerciseCapableWeights = new double[exerciseNames.length];
-        for (int i = 0; i < exerciseNames.length; i++) {
-            exerciseCapableWeights[i] = databaseHelper.getExerciseCapableWeight(table, exerciseNames[i]);
-        }
     }
 }

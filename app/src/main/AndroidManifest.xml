@@ -11,20 +11,11 @@
         <activity android:name="com.example.fitnesslog.activities.BaseWorkoutLogActivity" />
         <activity android:name="com.example.fitnesslog.activities.WorkoutCalendar" />
         <activity
-            android:name="com.example.fitnesslog.activities.AdvancedActivity"
-            android:label="Advanced routine" />
-        <activity
             android:name="com.example.fitnesslog.activities.Stopwatch"
             android:label="Stopwatch" />
         <activity
             android:name="com.example.fitnesslog.activities.ExerciseTutorials"
             android:label="Tutorials" />
-        <activity
-            android:name="com.example.fitnesslog.activities.IntermediateActivity"
-            android:label="Intermediate routine" />
-        <activity
-            android:name="com.example.fitnesslog.activities.BeginnerActivity"
-            android:label="Beginner routine" />
         <activity android:name="com.example.fitnesslog.activities.NewProgramActivity" />
         <activity android:name="com.example.fitnesslog.activities.AskingForWeightsActivity" />
         <activity

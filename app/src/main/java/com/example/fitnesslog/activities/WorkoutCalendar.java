@@ -9,8 +9,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
-import com.example.fitnesslog.ExerciseNames;
 import com.example.fitnesslog.R;
+import com.example.fitnesslog.Routine;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
@@ -61,22 +61,13 @@ public class WorkoutCalendar extends AppCompatActivity {
                 for (Event event : events) {
                     if (dateClicked.getTime() == event.getTimeInMillis()) {
                         int routineID = databaseHelper.getLatestRoutineByDate(sdf.format(dateClicked));
-
-                        if (routineID == 1) {
-                            exerciseNames = ExerciseNames.BEGINNER_NAMES;
-                            intent = new Intent(getApplicationContext(), BeginnerActivity.class);
-                        } else if (routineID == 2) {
-                            exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
-                            intent = new Intent(getApplicationContext(), IntermediateActivity.class);
-                        } else {
-                            exerciseNames = ExerciseNames.ADVANCED_NAMES;
-                            intent = new Intent(getApplicationContext(), AdvancedActivity.class);
-                        }
+                        Routine routine = new Routine(routineID);
+                        intent = new Intent(getApplicationContext(), BaseWorkoutLogActivity.class);
 
                         capableWeights = databaseHelper.getExerciseWeightArray(routineID, sdf.format(dateClicked));
+                        routine.setExerciseWeights(capableWeights);
 
-                        intent.putExtra("NAMES", exerciseNames);
-                        intent.putExtra("WEIGHTS", capableWeights);
+                        intent.putExtra("ROUTINE", routine);
                         intent.putExtra("DATE", sdf.format(dateClicked));
                         intent.putExtra("TIME", dateClicked.getTime());
 

@@ -1,19 +1,47 @@
 package com.example.fitnesslog;
 
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.RequiresApi;
 
 import java.util.List;
 import java.util.Objects;
 
-public class Workout {
+public class Workout implements Parcelable {
 
     private List<Exercise> exercises;
 
     public Workout(List<Exercise> exercises) {
         this.exercises = exercises;
     }
+
+    protected Workout(Parcel in) {
+        exercises = in.createTypedArrayList(Exercise.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(exercises);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Workout> CREATOR = new Creator<Workout>() {
+        @Override
+        public Workout createFromParcel(Parcel in) {
+            return new Workout(in);
+        }
+
+        @Override
+        public Workout[] newArray(int size) {
+            return new Workout[size];
+        }
+    };
 
     public List<Exercise> getExercises() {
         return exercises;
