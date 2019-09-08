@@ -20,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String WORKOUT_COL = "Workout";
     private static final String DATA_TABLE = "DataTable";
     private static final String CURRENT_TIME_COL = "CurrentTime";
-    private static final String TODAYS_DATE_COL = "TodaysDate";
+    private static final String CURRENT_DATE_COL = "CurrentDate";
     private static final String WEIGHT_COL = "Weight";
     private static final String REPS_COL = "Reps";
     private static final String ROUTINE_ID = "RoutineID";
@@ -57,7 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + DATA_TABLE
                 + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + CURRENT_TIME_COL + " INTEGER, "
-                + TODAYS_DATE_COL + " TEXT, "
+                + CURRENT_DATE_COL + " TEXT, "
                 + ROUTINE_ID + " INTEGER, "
                 + WORKOUT_EXERCISE_ID + " INTEGER, "
                 + WEIGHT_COL + " REAL, "
@@ -75,12 +75,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Inserting data into data table
-    public boolean insertData(long currentTime, String todaysDate, int routineID, int workoutExerciseID, double weight, int reps, double capableWeight) {
+    public boolean insertData(long currentTime, String currentDate, int routineID, int workoutExerciseID, double weight, int reps, double capableWeight) {
         db = this.getWritableDatabase();
         contentValues = new ContentValues();
 
         contentValues.put(CURRENT_TIME_COL, currentTime);
-        contentValues.put(TODAYS_DATE_COL, todaysDate);
+        contentValues.put(CURRENT_DATE_COL, currentDate);
         contentValues.put(ROUTINE_ID, routineID);
         contentValues.put(WORKOUT_EXERCISE_ID, workoutExerciseID);
         contentValues.put(WEIGHT_COL, weight);
@@ -161,10 +161,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public void updateEntries(long time, String todaysDate, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
+    public void updateEntries(long time, String currentDate, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
         db = this.getWritableDatabase();
         List<Integer> ids = new ArrayList<>();
-        selection = TODAYS_DATE_COL + " = '" + todaysDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        selection = CURRENT_DATE_COL + " = '" + currentDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, null);
 
         //Finds all entries with the matching date and workoutExerciseID and puts the primary key of those entries into an array
@@ -182,7 +182,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues = new ContentValues();
 
             contentValues.put(CURRENT_TIME_COL, time);
-            contentValues.put(TODAYS_DATE_COL, todaysDate);
+            contentValues.put(CURRENT_DATE_COL, currentDate);
             contentValues.put(ROUTINE_ID, routineID);
             contentValues.put(WEIGHT_COL, weights.get(i));
             contentValues.put(REPS_COL, reps.get(i));
@@ -218,10 +218,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public int getLatestRoutineByDate(String todaysDate) {
+    public int getLatestRoutineByDate(String currentDate) {
         db = this.getWritableDatabase();
         orderBy = CURRENT_TIME_COL + " DESC";
-        selection = TODAYS_DATE_COL + " = '" + todaysDate + "' ";
+        selection = CURRENT_DATE_COL + " = '" + currentDate + "' ";
         cursor = db.query(DATA_TABLE, null, selection, null, null, null, orderBy);
         int routineid = -1;
 
@@ -233,8 +233,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return routineid;
     }
 
-    public int getWorkoutByDate(String table, String todaysDate) {
-        int workoutExerciseID = getWorkoutExerciseIDByDate(todaysDate);
+    public int getWorkoutByDate(String table, String currentDate) {
+        int workoutExerciseID = getWorkoutExerciseIDByDate(currentDate);
         db = this.getWritableDatabase();
         selection = "ID = " + workoutExerciseID;
         cursor = db.query(table, null, selection, null, null, null, null);
@@ -248,10 +248,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return workoutNum;
     }
 
-    private int getWorkoutExerciseIDByDate(String todaysDate) {
+    private int getWorkoutExerciseIDByDate(String currentDate) {
         db = this.getWritableDatabase();
         orderBy = CURRENT_TIME_COL + " DESC";
-        selection = TODAYS_DATE_COL + " = '" + todaysDate + "'";
+        selection = CURRENT_DATE_COL + " = '" + currentDate + "'";
         cursor = db.query(DATA_TABLE, null, selection, null, null, null, orderBy);
         int workoutExerciseID = -1;
 
@@ -263,7 +263,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return workoutExerciseID;
     }
 
-    public double[] getExerciseWeightArray(int routineID, String todaysDate) {
+    public double[] getExerciseWeightArray(int routineID, String currentDate) {
         db = this.getWritableDatabase();
         String[] exerciseNames;
         double[] weights;
@@ -283,7 +283,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         weights = new double[exerciseNames.length];
 
         for (int i = 0; i < exerciseNames.length; i++) {
-            weights[i] = getCapableWeightByDate(table, exerciseNames[i], todaysDate);
+            weights[i] = getCapableWeightByDate(table, exerciseNames[i], currentDate);
         }
 
         return weights;
@@ -307,12 +307,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return weight;
     }
 
-    private double getCapableWeightByDate(String table, String exerciseName, String todaysDate) {
+    private double getCapableWeightByDate(String table, String exerciseName, String currentDate) {
         db = this.getWritableDatabase();
         String query = "SELECT CapableWeight FROM DataTable INNER JOIN " + table +
                 " ON DataTable.WorkoutExerciseID = " + table +
                 ".ID WHERE Exercise LIKE '" + exerciseName
-                + "' AND TodaysDate LIKE '" + todaysDate
+                + "' AND TodaysDate LIKE '" + currentDate
                 + "' ORDER BY " + CURRENT_TIME_COL + " DESC";
         cursor = db.rawQuery(query, null);
         double weight = -1;
@@ -344,10 +344,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Checks if database contains any entries with the current date and workoutExerciseID
-    public boolean haveEntriesBeenEntered(String todaysDate, int routineID, int workoutExerciseID) {
+    public boolean haveEntriesBeenEntered(String currentDate, int routineID, int workoutExerciseID) {
         int count;
         db = this.getWritableDatabase();
-        selection = TODAYS_DATE_COL + " = '" + todaysDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
+        selection = CURRENT_DATE_COL + " = '" + currentDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
@@ -356,10 +356,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count != 0;
     }
 
-    public boolean isThereDataFromToday(String todaysDate, int routineID) {
+    public boolean isThereDataFromToday(String currentDate, int routineID) {
         int count;
         db = this.getWritableDatabase();
-        selection = TODAYS_DATE_COL + " = '" + todaysDate + "' AND " + ROUTINE_ID + " = " + routineID;
+        selection = CURRENT_DATE_COL + " = '" + currentDate + "' AND " + ROUTINE_ID + " = " + routineID;
         cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
@@ -373,7 +373,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int workoutExerciseID = getWorkoutExerciseID(table, exerciseName, workoutNum);
         String query = "SELECT * FROM " + DATA_TABLE + " WHERE "
                 + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID
-                + " AND " + TODAYS_DATE_COL + " LIKE '" + date
+                + " AND " + CURRENT_DATE_COL + " LIKE '" + date
                 + "' AND " + ROUTINE_ID + " = " + routineID;
 
         cursor = db.rawQuery(query, null);
@@ -385,13 +385,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // EFFECTS: returns a list of reps done for the given exercise on the given date
-    public List<Integer> getRepsByExerciseAndDate(String table, String exerciseName, int workoutNum, int routineID, String todaysDate) {
+    public List<Integer> getRepsByExerciseAndDate(String table, String exerciseName, int workoutNum, int routineID, String currentDate) {
         db = this.getWritableDatabase();
         int workoutExerciseID = getWorkoutExerciseID(table, exerciseName, workoutNum);
         List<Integer> reps = new ArrayList<>();
         String query = "SELECT " + REPS_COL + " FROM " + DATA_TABLE + " WHERE "
                 + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID
-                + " AND " + TODAYS_DATE_COL + " LIKE '" + todaysDate
+                + " AND " + CURRENT_DATE_COL + " LIKE '" + currentDate
                 + "' AND " + ROUTINE_ID + " = " + routineID
                 + " ORDER BY " + CURRENT_TIME_COL + " DESC";
         cursor = db.rawQuery(query, null);
@@ -407,13 +407,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // EFFECTS: returns a list of weights done for the given exercise on the given date
-    public List<Double> getWeightByExerciseAndDate(String table, String exerciseName, int workoutNum, int routineID, String todaysDate) {
+    public List<Double> getWeightByExerciseAndDate(String table, String exerciseName, int workoutNum, int routineID, String currentDate) {
         db = this.getWritableDatabase();
         int workoutExerciseID = getWorkoutExerciseID(table, exerciseName, workoutNum);
         List<Double> weights = new ArrayList<>();
         String query = "SELECT " + WEIGHT_COL + " FROM " + DATA_TABLE + " WHERE "
                 + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID
-                + " AND " + TODAYS_DATE_COL + " LIKE '" + todaysDate
+                + " AND " + CURRENT_DATE_COL + " LIKE '" + currentDate
                 + "' AND " + ROUTINE_ID + " = " + routineID
                 + " ORDER BY " + CURRENT_TIME_COL + " DESC";
         cursor = db.rawQuery(query, null);
@@ -431,14 +431,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<String> returnAllDistinctDates() {
         db = this.getWritableDatabase();
         List<String> dates = new ArrayList<>();
-        String query = "SELECT DISTINCT " + TODAYS_DATE_COL + " FROM " + DATA_TABLE;
+        String query = "SELECT DISTINCT " + CURRENT_DATE_COL + " FROM " + DATA_TABLE;
         cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
-                String todaysDate = cursor.getString(cursor.getColumnIndex(TODAYS_DATE_COL));
+                String currentDate = cursor.getString(cursor.getColumnIndex(CURRENT_DATE_COL));
 
-                dates.add(todaysDate);
+                dates.add(currentDate);
             } while (cursor.moveToNext());
         }
         cursor.close();

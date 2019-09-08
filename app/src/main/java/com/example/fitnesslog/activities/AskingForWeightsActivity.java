@@ -12,11 +12,11 @@ import android.widget.EditText;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitnesslog.CurrentDate;
 import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.DefaultWeights;
 import com.example.fitnesslog.R;
 import com.example.fitnesslog.Routine;
-import com.example.fitnesslog.TodaysDate;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -182,10 +182,10 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private void insertDataToSQL(String tableName) {
         int workoutExerciseID;
         int routineID = routine.getRoutineID();
-        TodaysDate today = new TodaysDate();
+        CurrentDate today = new CurrentDate();
 
         long currentTime = new Date().getTime();
-        String todaysDate = today.getDateString();
+        String currentDate = today.getDateString();
 
         addDatatoTable(exerciseNames);
 
@@ -200,7 +200,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         for (int i = 0; i < routine.getExerciseNames().length; i++) {
             workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames[i]);
-            databaseHelper.insertData(currentTime, todaysDate, routineID, workoutExerciseID, workoutNum, 0, weightInputs[i]);
+            databaseHelper.insertData(currentTime, currentDate, routineID, workoutExerciseID, workoutNum, 0, weightInputs[i]);
         }
     }
 

@@ -90,9 +90,9 @@ public class WorkoutCalendar extends AppCompatActivity {
         }
     }
 
-    private void createEvent(String todaysTime) {
+    private void createEvent(String currentDate) {
         try {
-            Date date = sdf.parse(todaysTime);
+            Date date = sdf.parse(currentDate);
             assert date != null;
             Event ev1 = new Event(Color.BLUE, date.getTime(), "Workout");
             compactCalendar.addEvent(ev1);

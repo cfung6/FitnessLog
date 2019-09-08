@@ -19,11 +19,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitnesslog.CurrentDate;
 import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.Exercise;
 import com.example.fitnesslog.R;
 import com.example.fitnesslog.Routine;
-import com.example.fitnesslog.TodaysDate;
 import com.example.fitnesslog.Workout;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -52,7 +52,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
     protected Workout currentWorkout;
 
     private long currentTime;
-    private String todaysDate;
+    private String currentDate;
 
     private DatabaseHelper databaseHelper;
 
@@ -71,28 +71,30 @@ public class WorkoutLogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_workout_log);
-        ;
 
         Intent intent = getIntent();
-        TodaysDate today = new TodaysDate();
+        CurrentDate today = new CurrentDate();
         databaseHelper = new DatabaseHelper(this);
 
+        //Getting routine from previous activity
         routine = intent.getParcelableExtra("ROUTINE");
         assert routine != null;
         setTitle(routine.getName());
         routineID = routine.getRoutineID();
 
+        //Get current time from calendar activity, else use current time in millis if another activity
         currentTime = intent.getLongExtra("TIME", Calendar.getInstance().getTimeInMillis());
-        todaysDate = intent.getStringExtra("DATE");
+        currentDate = intent.getStringExtra("DATE");
         previousActivity = intent.getStringExtra("ACTIVITY");
 
-        if (todaysDate == null || todaysDate.isEmpty()) {
-            todaysDate = today.getDateString();
+        //currentDate defaults to today if not coming from calendar
+        if (currentDate == null || currentDate.isEmpty()) {
+            currentDate = today.getDateString();
         }
 
         setDateText();
         initializeListsAndMaps();
-        initializeCurrentWorkout(getTodaysDate());
+        initializeCurrentWorkout(getCurrentDate());
         createAbstractXML(currentWorkout);
     }
 
@@ -245,7 +247,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
     // EFFECTS: if database contains any entries with the current date and workoutExerciseID, then
     //          update the entry. Otherwise, insert the entry
     private void insertData(int numOfSets, double[] weights, int[] reps, Exercise exercise, double capableWeight) {
-        if (databaseHelper.haveEntriesBeenEntered(todaysDate, routineID, getWorkoutExerciseID(exercise))) {
+        if (databaseHelper.haveEntriesBeenEntered(currentDate, routineID, getWorkoutExerciseID(exercise))) {
             List<Double> weightsForDataTable = new ArrayList<>();
             List<Integer> repsForDataTable = new ArrayList<>();
 
@@ -254,11 +256,11 @@ public class WorkoutLogActivity extends AppCompatActivity {
                 repsForDataTable.add(reps[i]);
             }
 
-            databaseHelper.updateEntries(currentTime, todaysDate, routineID, getWorkoutExerciseID(exercise),
+            databaseHelper.updateEntries(currentTime, currentDate, routineID, getWorkoutExerciseID(exercise),
                     weightsForDataTable, repsForDataTable, capableWeight);
         } else {
             for (int i = 0; i < numOfSets; i++) {
-                databaseHelper.insertData(currentTime, todaysDate, routineID, getWorkoutExerciseID(exercise),
+                databaseHelper.insertData(currentTime, currentDate, routineID, getWorkoutExerciseID(exercise),
                         weights[i], reps[i], capableWeight);
             }
         }
@@ -278,8 +280,8 @@ public class WorkoutLogActivity extends AppCompatActivity {
         }
     }
 
-    protected String getTodaysDate() {
-        return todaysDate;
+    protected String getCurrentDate() {
+        return currentDate;
     }
 
     //Sets textView for the current date
@@ -528,12 +530,12 @@ public class WorkoutLogActivity extends AppCompatActivity {
         String table = routine.getName() + "Table";
         String exerciseName = exercise.getName();
 
-        if (databaseHelper.isThereDataInExercise(table, exerciseName, currentWorkoutNum, routineID, todaysDate)
+        if (databaseHelper.isThereDataInExercise(table, exerciseName, currentWorkoutNum, routineID, currentDate)
                 && previousActivity == null && !databaseHelper.wasExerciseReset(table, changeNameForXML(exerciseName))) {
             List<Integer> repsList =
-                    databaseHelper.getRepsByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, todaysDate);
+                    databaseHelper.getRepsByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, currentDate);
             List<Double> weightsList =
-                    databaseHelper.getWeightByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, todaysDate);
+                    databaseHelper.getWeightByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, currentDate);
 
             for (int i = 0; i < repsList.size(); i++) {
                 EditText et = editTextNames.get("reps" + i + "ex" + exerciseNum);
