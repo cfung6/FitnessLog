@@ -1,7 +1,6 @@
 package com.example.fitnesslog;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.List;
 
@@ -35,9 +34,6 @@ public class Routine {
     private int getCurrentWorkoutNum() {
         String tableName = this.name + "Table";
         int lastWorkout = databaseHelper.getLatestWorkout(tableName);
-        Log.d("TAG", "Lastworkout " + lastWorkout);
-        int currentWorkout = (lastWorkout + 1) % this.workouts.size();
-        Log.d("TAG", "currentworkout " + currentWorkout);
-        return currentWorkout;
+        return (lastWorkout + 1) % this.workouts.size();
     }
 }

@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.fitnesslog.Exercise;
+import com.example.fitnesslog.TodaysDate;
 import com.example.fitnesslog.Workout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class BeginnerActivity extends BaseWorkoutLogActivity {
@@ -30,15 +32,27 @@ public class BeginnerActivity extends BaseWorkoutLogActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        TodaysDate today = new TodaysDate();
 
         //Getting weights and names from previous activity
         exerciseWeights = intent.getDoubleArrayExtra("WEIGHTS");
         exerciseNames = intent.getStringArrayExtra("NAMES");
 
+        long currentTime = intent.getLongExtra("TIME", Calendar.getInstance().getTimeInMillis());
+        String todaysDate = intent.getStringExtra("DATE");
+        String previousActivity = intent.getStringExtra("ACTIVITY");
+
+        if (todaysDate == null || todaysDate.isEmpty()) {
+            todaysDate = today.getDateString();
+        }
+
         workouts = new ArrayList<>();
         exercises = new ArrayList<>();
 
         setRoutineID(1);
+        setCurrentTime(currentTime);
+        setTodaysDate(todaysDate);
+        setPreviousActivity(previousActivity);
         setExerciseNames(exerciseNames);
         setExerciseWeights(exerciseWeights);
         initializeExercises();

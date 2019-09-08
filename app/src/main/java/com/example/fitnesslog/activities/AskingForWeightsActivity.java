@@ -50,6 +50,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     private Intent intent;
     private String tableName;
     private int numOfExercises;
+    private int routineID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             intent = new Intent(this, BeginnerActivity.class);
             exerciseNames = ExerciseNames.BEGINNER_NAMES;
             tableName = "BeginnerTable";
+            routineID = 1;
         } else if (levelChosen == Levels.INTERMEDIATE) {
             intent = new Intent(this, IntermediateActivity.class);
             exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
@@ -154,6 +156,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         intent.putExtra("WEIGHTS", weightInputs);
         intent.putExtra("NAMES", exerciseNames);
+        intent.putExtra("ACTIVITY", "activity");
 
         insertDataToSQL(tableName);
         startActivity(intent);

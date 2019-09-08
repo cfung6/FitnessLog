@@ -59,8 +59,6 @@ public class WorkoutCalendar extends AppCompatActivity {
                 Intent intent;
 
                 for (Event event : events) {
-                    Log.d("myTag", "" + dateClicked.getTime());
-                    Log.d("myTag", "" + event.getTimeInMillis());
                     if (dateClicked.getTime() == event.getTimeInMillis()) {
                         int routineID = databaseHelper.getLatestRoutineByDate(sdf.format(dateClicked));
 
@@ -75,7 +73,7 @@ public class WorkoutCalendar extends AppCompatActivity {
                             intent = new Intent(getApplicationContext(), AdvancedActivity.class);
                         }
 
-                        capableWeights = databaseHelper.getExerciseWeightArray(routineID, String.valueOf(dateClicked.getTime()));
+                        capableWeights = databaseHelper.getExerciseWeightArray(routineID, sdf.format(dateClicked));
 
                         intent.putExtra("NAMES", exerciseNames);
                         intent.putExtra("WEIGHTS", capableWeights);
