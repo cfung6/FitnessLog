@@ -18,8 +18,6 @@ public class Routine implements Parcelable {
     private String[] exerciseNames;
     private List<Workout> workouts;
 
-    // EFFECTS: constructs a routine that has a name, a list of workouts, and sets the week of
-    //          the routine to 1
     public Routine(int routineID) {
         this.routineID = routineID;
         workouts = new ArrayList<>();
@@ -103,21 +101,14 @@ public class Routine implements Parcelable {
         return exerciseNames;
     }
 
-    public List<Exercise> getExercises() {
-        return exercises;
-    }
-
     public List<Workout> getWorkouts() {
         return workouts;
     }
 
+    //Sets the capable weights array
     public void setExerciseWeights(double[] weights) {
         exerciseWeights = weights;
         initializeExAndWork();
-    }
-
-    public double[] getExerciseWeights() {
-        return exerciseWeights;
     }
 
     public Workout getCurrentWorkout(DatabaseHelper databaseHelper) {
@@ -155,6 +146,7 @@ public class Routine implements Parcelable {
         return (lastWorkout + 1) % this.workouts.size();
     }
 
+    //Initializes names of exercises and routine
     private void initializeNames() {
         if (routineID == 1) {
             exerciseNames = ExerciseNames.BEGINNER_NAMES;
@@ -169,6 +161,7 @@ public class Routine implements Parcelable {
         tableName = name + "Table";
     }
 
+    //Initializes exercises and workouts with the exercise weights
     private void initializeExAndWork() {
         if (routineID == 1) {
             initializeBegEx();
@@ -183,10 +176,8 @@ public class Routine implements Parcelable {
     }
 
     private void initializeBegEx() {
-        //Making sure that ArrayList of weights cannot be bigger than num of exercises
-        if (exercises.size() >= exerciseNames.length) {
-            exercises.clear();
-        }
+        limitExerciseSize();
+
         List<Integer> goalReps = new ArrayList<>(Arrays.asList(5, 5, 5));
         List<Integer> deadliftGoal = new ArrayList<>(Arrays.asList(5));
         int incr = 5;
@@ -200,9 +191,8 @@ public class Routine implements Parcelable {
     }
 
     private void initializeIntEx() {
-        if (exercises.size() >= exerciseNames.length) {
-            exercises.clear();
-        }
+        limitExerciseSize();
+
         List<Integer> volumeDayGoalReps = new ArrayList<>(Arrays.asList(5, 5, 5, 5, 5));
         List<Integer> squatLightReps = new ArrayList<>(Arrays.asList(5, 5));
         List<Integer> lightDayGoalReps = new ArrayList<>(Arrays.asList(5, 5, 5));
@@ -226,9 +216,8 @@ public class Routine implements Parcelable {
     }
 
     private void initializeAdvEx() {
-        if (exercises.size() >= exerciseNames.length) {
-            exercises.clear();
-        }
+        limitExerciseSize();
+
         List<Integer> sevenReps = new ArrayList<>(Arrays.asList(7, 7, 7));
         List<Integer> tenReps = new ArrayList<>(Arrays.asList(10, 10, 10));
         List<Integer> twelveReps = new ArrayList<>(Arrays.asList(12, 12, 12));
@@ -257,9 +246,8 @@ public class Routine implements Parcelable {
     }
 
     private void initializeBegWorkouts() {
-        if (workouts.size() >= 2) {
-            workouts.clear();
-        }
+        limitWorkoutSize(2);
+
         Workout workoutA = new Workout(new ArrayList<>(Arrays.asList(
                 getExerciseByName("Squat"),
                 getExerciseByName("Bench Press"),
@@ -275,9 +263,8 @@ public class Routine implements Parcelable {
     }
 
     private void initializeIntWorkouts() {
-        if (workouts.size() >= 6) {
-            workouts.clear();
-        }
+        limitWorkoutSize(6);
+
         Workout workoutA = new Workout(new ArrayList<>(Arrays.asList(
                 getExerciseByName("Squat1"),
                 getExerciseByName("Bench Press1"),
@@ -315,9 +302,8 @@ public class Routine implements Parcelable {
     }
 
     private void initializeAdvWorkouts() {
-        if (workouts.size() >= 3) {
-            workouts.clear();
-        }
+        limitWorkoutSize(3);
+
         Workout workoutA = new Workout(new ArrayList<>(Arrays.asList(
                 getExerciseByName("Bench Press"),
                 getExerciseByName("Overhead Press"),
@@ -353,4 +339,17 @@ public class Routine implements Parcelable {
         return null;
     }
 
+    //Making sure that ArrayList of exercises cannot be bigger than num of exercises
+    private void limitExerciseSize() {
+        if (exercises.size() >= exerciseNames.length) {
+            exercises.clear();
+        }
+    }
+
+    //Making sure that ArrayList of workouts cannot be bigger than max num of workouts
+    private void limitWorkoutSize(int maxSize) {
+        if (workouts.size() >= maxSize) {
+            workouts.clear();
+        }
+    }
 }

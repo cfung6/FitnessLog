@@ -59,10 +59,8 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         routine = intent.getParcelableExtra("ROUTINE");
         submitButton = findViewById(R.id.submit_weight_button);
         databaseHelper = new DatabaseHelper(this);
+
         workoutNum = -1;
-
-        intent = new Intent(this, BaseWorkoutLogActivity.class);
-
         numOfExercises = 5;
 
         initializeArrays();
@@ -74,7 +72,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     //Button goes to ExerciseTutorial Activity
     public void onExerciseTutorialClick(View view) {
-        Intent intent = new Intent(this, ExerciseTutorials.class);
+        intent = new Intent(this, ExerciseTutorials.class);
         startActivity(intent);
     }
 
@@ -142,6 +140,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         insertDataToSQL(routine.getTable());
 
+        intent = new Intent(this, WorkoutLogActivity.class);
         intent.putExtra("ROUTINE", routine);
         intent.putExtra("ACTIVITY", "activity");
 

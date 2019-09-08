@@ -4,7 +4,7 @@
     android:id="@+id/abstract_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.BaseWorkoutLogActivity">
+    tools:context=".activities.WorkoutLogActivity">
 
     <LinearLayout
         android:id="@+id/parent_linear_layout"

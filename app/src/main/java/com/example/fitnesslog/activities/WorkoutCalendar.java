@@ -28,7 +28,6 @@ public class WorkoutCalendar extends AppCompatActivity {
     private SimpleDateFormat sdf;
 
     private double[] capableWeights;
-    private String[] exerciseNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class WorkoutCalendar extends AppCompatActivity {
                     if (dateClicked.getTime() == event.getTimeInMillis()) {
                         int routineID = databaseHelper.getLatestRoutineByDate(sdf.format(dateClicked));
                         Routine routine = new Routine(routineID);
-                        intent = new Intent(getApplicationContext(), BaseWorkoutLogActivity.class);
+                        intent = new Intent(getApplicationContext(), WorkoutLogActivity.class);
 
                         capableWeights = databaseHelper.getExerciseWeightArray(routineID, sdf.format(dateClicked));
                         routine.setExerciseWeights(capableWeights);
@@ -94,6 +93,7 @@ public class WorkoutCalendar extends AppCompatActivity {
     private void createEvent(String todaysTime) {
         try {
             Date date = sdf.parse(todaysTime);
+            assert date != null;
             Event ev1 = new Event(Color.BLUE, date.getTime(), "Workout");
             compactCalendar.addEvent(ev1);
         } catch (ParseException e) {

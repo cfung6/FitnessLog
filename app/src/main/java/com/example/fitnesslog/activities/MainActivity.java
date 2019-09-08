@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         Routine routine = new Routine(routineID);
 
         try {
-            intent = new Intent(this, BaseWorkoutLogActivity.class);
+            intent = new Intent(this, WorkoutLogActivity.class);
 
             routine.initializeCapableWeight(databaseHelper);
 

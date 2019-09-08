@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BaseWorkoutLogActivity extends AppCompatActivity {
+public class WorkoutLogActivity extends AppCompatActivity {
 
     /*
     ALL ARRAYS ARE IN THE FOLLOWING ORDER:
@@ -71,17 +71,20 @@ public class BaseWorkoutLogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_workout_log);
+        ;
 
         Intent intent = getIntent();
         TodaysDate today = new TodaysDate();
         databaseHelper = new DatabaseHelper(this);
 
         routine = intent.getParcelableExtra("ROUTINE");
+        assert routine != null;
+        setTitle(routine.getName());
+        routineID = routine.getRoutineID();
+
         currentTime = intent.getLongExtra("TIME", Calendar.getInstance().getTimeInMillis());
         todaysDate = intent.getStringExtra("DATE");
         previousActivity = intent.getStringExtra("ACTIVITY");
-
-        routineID = routine.getRoutineID();
 
         if (todaysDate == null || todaysDate.isEmpty()) {
             todaysDate = today.getDateString();
@@ -518,6 +521,7 @@ public class BaseWorkoutLogActivity extends AppCompatActivity {
         return name.substring(0, name.length() - 1);
     }
 
+    //Fills out EditTexts with existing data from the current date
     private void fillOutEditTexts(int exerciseNum) {
         Exercise exercise = currentWorkout.getExerciseAtIndex(exerciseNum);
         int currentWorkoutNum = routine.getWorkouts().indexOf(currentWorkout);
@@ -533,17 +537,24 @@ public class BaseWorkoutLogActivity extends AppCompatActivity {
 
             for (int i = 0; i < repsList.size(); i++) {
                 EditText et = editTextNames.get("reps" + i + "ex" + exerciseNum);
-                Log.d("mytag", "" + (et == null));
-                Log.d("mytag", "" + routineID);
-                Log.d("mytag", "" + currentWorkoutNum);
-                et.setText(repsList.get(i) + "");
-                et.setVisibility(View.VISIBLE);
+                assert et != null;
+                try {
+                    et.setText(repsList.get(i) + "");
+                    et.setVisibility(View.VISIBLE);
+                } catch (NullPointerException e) {
+                    Log.d("myTag", "no such edittext");
+                }
             }
 
             for (int i = 0; i < weightsList.size(); i++) {
                 EditText et = editTextNames.get("weight" + i + "ex" + exerciseNum);
-                et.setText(weightsList.get(i) + "");
-                et.setVisibility(View.VISIBLE);
+                assert et != null;
+                try {
+                    et.setText(weightsList.get(i) + "");
+                    et.setVisibility(View.VISIBLE);
+                } catch (NullPointerException e) {
+                    Log.d("myTag", "no such edittext");
+                }
             }
         }
     }
