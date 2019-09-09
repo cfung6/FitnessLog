@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivity(intent);
             } catch (IllegalArgumentException e) {
-                Log.d("TAG", "Invalid Routine ID found in SQL data table");
+                Log.d("myTag", "Invalid Routine ID found in SQL data table");
             }
         }
     }

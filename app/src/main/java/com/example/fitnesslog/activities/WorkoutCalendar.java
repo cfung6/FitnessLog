@@ -96,7 +96,7 @@ public class WorkoutCalendar extends AppCompatActivity {
             Event ev1 = new Event(Color.BLUE, date.getTime(), "Workout");
             compactCalendar.addEvent(ev1);
         } catch (ParseException e) {
-            Log.d("Exception", "Invalid date");
+            Log.d("myTag", "Invalid date");
         }
     }
 }
