@@ -74,23 +74,22 @@ public class MainActivity extends AppCompatActivity {
 
         //If database is empty, defaults to new program
         if (isEmpty) {
-            intent = new Intent(this, NewProgramActivity.class);
-            startActivity(intent);
-        }
+            newProgramClicked(view);
+        } else {
+            int routineID = databaseHelper.getLatestRoutineID();
+            Routine routine = new Routine(routineID);
 
-        int routineID = databaseHelper.getLatestRoutineID();
-        Routine routine = new Routine(routineID);
+            try {
+                intent = new Intent(this, WorkoutLogActivity.class);
 
-        try {
-            intent = new Intent(this, WorkoutLogActivity.class);
+                routine.initializeCapableWeight(databaseHelper);
 
-            routine.initializeCapableWeight(databaseHelper);
+                intent.putExtra("ROUTINE", routine);
 
-            intent.putExtra("ROUTINE", routine);
-
-            startActivity(intent);
-        } catch (IllegalArgumentException e) {
-            Log.d("TAG", "Invalid Routine ID found in SQL data table");
+                startActivity(intent);
+            } catch (IllegalArgumentException e) {
+                Log.d("TAG", "Invalid Routine ID found in SQL data table");
+            }
         }
     }
 

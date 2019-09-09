@@ -121,8 +121,10 @@ public class Routine implements Parcelable {
             databaseHelper.insertBeginnerRoutineData(workoutIndex, exerciseName);
         } else if (routineID == 2) {
             databaseHelper.insertIntermediateRoutineData(workoutIndex, exerciseName);
-        } else {
+        } else if (routineID == 3) {
             databaseHelper.insertAdvancedRoutineData(workoutIndex, exerciseName);
+        } else {
+            throw new NullPointerException();
         }
     }
 
@@ -154,9 +156,11 @@ public class Routine implements Parcelable {
         } else if (routineID == 2) {
             exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
             name = "Intermediate";
-        } else {
+        } else if (routineID == 3) {
             exerciseNames = ExerciseNames.ADVANCED_NAMES;
             name = "Advanced";
+        } else {
+            throw new NullPointerException();
         }
         tableName = name + "Table";
     }
@@ -169,9 +173,11 @@ public class Routine implements Parcelable {
         } else if (routineID == 2) {
             initializeIntEx();
             initializeIntWorkouts();
-        } else {
+        } else if (routineID == 3) {
             initializeAdvEx();
             initializeAdvWorkouts();
+        } else {
+            throw new NullPointerException();
         }
     }
 

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -161,8 +162,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public void updateEntries(long time, String currentDate, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
+    public void updateEntries(boolean isItToday, String currentDate, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
         db = this.getWritableDatabase();
+        long time;
         List<Integer> ids = new ArrayList<>();
         selection = CURRENT_DATE_COL + " = '" + currentDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
         cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, null);
@@ -179,6 +181,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Updates database entries with the new corresponding weights and reps value
         for (int i = 0; i < ids.size() || i < weights.size(); i++) {
+            //not updating currentTime if the workout is done in the past
+            if (isItToday) {
+                time = Calendar.getInstance().getTimeInMillis();
+            } else {
+                time = getCurrentTimeFromID(ids.get(i));
+            }
+
             contentValues = new ContentValues();
 
             contentValues.put(CURRENT_TIME_COL, time);
@@ -248,6 +257,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return workoutNum;
     }
 
+    private long getCurrentTimeFromID(int id) {
+        db = this.getWritableDatabase();
+        String query = "SELECT " + CURRENT_TIME_COL + " FROM " + DATA_TABLE + " WHERE ID = " + id;
+        cursor = db.rawQuery(query, null);
+        long time = -1;
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            time = cursor.getLong(cursor.getColumnIndex(CURRENT_TIME_COL));
+            cursor.close();
+        }
+
+        if (time == -1) {
+            throw new AssertionError();
+        }
+
+        return time;
+    }
+
     private int getWorkoutExerciseIDByDate(String currentDate) {
         db = this.getWritableDatabase();
         orderBy = CURRENT_TIME_COL + " DESC";
@@ -265,20 +293,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public double[] getExerciseWeightArray(int routineID, String currentDate) {
         db = this.getWritableDatabase();
-        String[] exerciseNames;
+        Routine routine = new Routine(routineID);
+        String[] exerciseNames = routine.getExerciseNames();
+        String table = routine.getTable();
         double[] weights;
-        String table;
-
-        if (routineID == 1) {
-            exerciseNames = ExerciseNames.BEGINNER_NAMES;
-            table = BEGINNER_TABLE;
-        } else if (routineID == 2) {
-            exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
-            table = INTERMEDIATE_TABLE;
-        } else {
-            exerciseNames = ExerciseNames.ADVANCED_NAMES;
-            table = ADVANCED_TABLE;
-        }
 
         weights = new double[exerciseNames.length];
 
@@ -312,7 +330,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "SELECT CapableWeight FROM DataTable INNER JOIN " + table +
                 " ON DataTable.WorkoutExerciseID = " + table +
                 ".ID WHERE Exercise LIKE '" + exerciseName
-                + "' AND TodaysDate LIKE '" + currentDate
+                + "' AND " + CURRENT_DATE_COL + " LIKE '" + currentDate
                 + "' ORDER BY " + CURRENT_TIME_COL + " DESC";
         cursor = db.rawQuery(query, null);
         double weight = -1;

@@ -51,7 +51,6 @@ public class WorkoutLogActivity extends AppCompatActivity {
 
     protected Workout currentWorkout;
 
-    private long currentTime;
     private String currentDate;
 
     private DatabaseHelper databaseHelper;
@@ -61,6 +60,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
     private SparseArray<List<TextView>> setNumbers;
 
     private String previousActivity;
+    private boolean isItToday;
 
     protected EditText[] weightsET;
     protected EditText[] repsET;
@@ -73,7 +73,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base_workout_log);
 
         Intent intent = getIntent();
-        CurrentDate today = new CurrentDate();
+        CurrentDate date = new CurrentDate();
         databaseHelper = new DatabaseHelper(this);
 
         //Getting routine from previous activity
@@ -82,15 +82,16 @@ public class WorkoutLogActivity extends AppCompatActivity {
         setTitle(routine.getName());
         routineID = routine.getRoutineID();
 
-        //Get current time from calendar activity, else use current time in millis if another activity
-        currentTime = intent.getLongExtra("TIME", Calendar.getInstance().getTimeInMillis());
         currentDate = intent.getStringExtra("DATE");
         previousActivity = intent.getStringExtra("ACTIVITY");
 
         //currentDate defaults to today if not coming from calendar
         if (currentDate == null || currentDate.isEmpty()) {
-            currentDate = today.getDateString();
+            currentDate = date.getDateString();
         }
+
+        //Determining if the current workout being viewed is from the past
+        isItToday = currentDate.equals(date.getDateString());
 
         setDateText();
         initializeListsAndMaps();
@@ -235,13 +236,8 @@ public class WorkoutLogActivity extends AppCompatActivity {
 
     // EFFECTS: returns workoutExerciseID corresponding to the current workout and exercise
     private int getWorkoutExerciseID(Exercise exercise) {
-        if (routineID == 1) {
-            return databaseHelper.selectWorkoutExerciseID("BeginnerTable", routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
-        } else if (routineID == 2) {
-            return databaseHelper.selectWorkoutExerciseID("IntermediateTable", routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
-        } else {
-            return databaseHelper.selectWorkoutExerciseID("AdvancedTable", routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
-        }
+        return databaseHelper.selectWorkoutExerciseID(routine.getTable(), routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
+
     }
 
     // EFFECTS: if database contains any entries with the current date and workoutExerciseID, then
@@ -256,9 +252,10 @@ public class WorkoutLogActivity extends AppCompatActivity {
                 repsForDataTable.add(reps[i]);
             }
 
-            databaseHelper.updateEntries(currentTime, currentDate, routineID, getWorkoutExerciseID(exercise),
+            databaseHelper.updateEntries(isItToday, currentDate, routineID, getWorkoutExerciseID(exercise),
                     weightsForDataTable, repsForDataTable, capableWeight);
         } else {
+            long currentTime = Calendar.getInstance().getTimeInMillis();
             for (int i = 0; i < numOfSets; i++) {
                 databaseHelper.insertData(currentTime, currentDate, routineID, getWorkoutExerciseID(exercise),
                         weights[i], reps[i], capableWeight);

@@ -68,7 +68,6 @@ public class WorkoutCalendar extends AppCompatActivity {
 
                         intent.putExtra("ROUTINE", routine);
                         intent.putExtra("DATE", sdf.format(dateClicked));
-                        intent.putExtra("TIME", dateClicked.getTime());
 
                         //Go to workout that corresponds to event.getTimeInMillis()
                         startActivity(intent);
