@@ -30,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -547,11 +548,15 @@ public class WorkoutLogActivity extends AppCompatActivity {
         String exerciseName = exercise.getName();
 
         if (databaseHelper.isThereDataInExercise(table, exerciseName, currentWorkoutNum, routineID, currentDate)
-                && previousActivity == null && !databaseHelper.wasExerciseReset(table, changeNameForXML(exerciseName))) {
+                && previousActivity == null && !databaseHelper.wasExerciseReset(table, exerciseName)) {
             List<Integer> repsList =
                     databaseHelper.getRepsByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, currentDate);
             List<Double> weightsList =
                     databaseHelper.getWeightByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, currentDate);
+
+            //Reverses the order of the lists to the correct one
+            Collections.reverse(repsList);
+            Collections.reverse(weightsList);
 
             for (int i = 0; i < repsList.size(); i++) {
                 EditText et = editTextNames.get("reps" + i + "ex" + exerciseNum);

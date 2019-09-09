@@ -343,9 +343,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean wasExerciseReset(String table, String exerciseName) {
         db = this.getWritableDatabase();
+        String shortenedName = exerciseName.substring(0, exerciseName.length() - 1);
         String query = "SELECT " + WEIGHT_COL + " FROM " + DATA_TABLE
                 + " INNER JOIN " + table + " ON DataTable.WorkoutExerciseID = " + table +
                 ".ID WHERE " + EXERCISE_COL + " LIKE '" + exerciseName
+                + "' OR " + EXERCISE_COL + " LIKE '" + shortenedName
                 + "' ORDER BY " + CURRENT_TIME_COL + " DESC";
         cursor = db.rawQuery(query, null);
         int weight = -1;
