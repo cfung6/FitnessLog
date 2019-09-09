@@ -28,14 +28,16 @@ public class AboutActivity extends AppCompatActivity {
         tv.setText(message);
 
         tv = findViewById(R.id.beginner_message);
-        message = "This program is a three times per week routine that focuses on linear progression" +
+        message = "Program name: Starting Strength \n\n" +
+                "This program is a three times per week routine that focuses on linear progression" +
                 " using the five main compound exercises. After successfully completing the necessary weight" +
                 " and reps for each exercise, increase the weight by 5 pounds the next time you have to do the" +
                 " exercise.";
         tv.setText(message);
 
         tv = findViewById(R.id.intermediate_message);
-        message = "This intermediate program is done three times per week. The first day of the week focuses on volume," +
+        message = "Program name: Texas Method \n\n" +
+                "This intermediate program is done three times per week. The first day of the week focuses on volume," +
                 " requiring 5 sets of 5 for squat and either bench or overhead press (using 90 percent of 5 rep max)." +
                 " The second workout, the light workout, contains squat and bench/overhead press (whichever one was not done" +
                 " in the first workout) using 81 percent of your 5 rep max. The last workout, the intensity day, is when" +
@@ -43,7 +45,8 @@ public class AboutActivity extends AppCompatActivity {
         tv.setText(message);
 
         tv = findViewById(R.id.advanced_message);
-        message = "This advanced program focuses on volume and hypertrophy and should be done four to six times a week." +
+        message = "Program name: Coolcicada P/P/L \n\n" +
+                "This advanced program focuses on volume and hypertrophy and should be done four to six times a week." +
                 " This routine contains more than triple the exercises of the other two routines." +
                 " After each exercise is completed successfully, five pounds is increased to that exercise.";
         tv.setText(message);
