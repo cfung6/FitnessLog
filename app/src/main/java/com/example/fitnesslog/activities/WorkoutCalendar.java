@@ -41,7 +41,7 @@ public class WorkoutCalendar extends AppCompatActivity {
         assert actionBar != null;
 
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(null);
+        actionBar.setTitle(dateFormatMonth.format(new Date()));
 
         compactCalendar = findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
