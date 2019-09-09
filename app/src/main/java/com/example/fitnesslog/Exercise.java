@@ -1,10 +1,13 @@
 package com.example.fitnesslog;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Exercise {
+public class Exercise implements Parcelable {
 
     private String name;
 
@@ -32,6 +35,79 @@ public class Exercise {
         weightIncreased = false;
     }
 
+    public Exercise(Parcel in) {
+        name = in.readString();
+        if (in.readByte() == 0x01) {
+            actualRepsDone = new ArrayList<Integer>();
+            in.readList(actualRepsDone, Integer.class.getClassLoader());
+        } else {
+            actualRepsDone = null;
+        }
+        if (in.readByte() == 0x01) {
+            goalReps = new ArrayList<Integer>();
+            in.readList(goalReps, Integer.class.getClassLoader());
+        } else {
+            goalReps = null;
+        }
+        if (in.readByte() == 0x01) {
+            actualWeightList = new ArrayList<Double>();
+            in.readList(actualWeightList, Double.class.getClassLoader());
+        } else {
+            actualWeightList = null;
+        }
+        goalWeight = in.readDouble();
+        increment = in.readInt();
+        percentage = in.readDouble();
+        pass = in.readByte() != 0x00;
+        weightIncreased = in.readByte() != 0x00;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        if (actualRepsDone == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(actualRepsDone);
+        }
+        if (goalReps == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(goalReps);
+        }
+        if (actualWeightList == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(actualWeightList);
+        }
+        dest.writeDouble(goalWeight);
+        dest.writeInt(increment);
+        dest.writeDouble(percentage);
+        dest.writeByte((byte) (pass ? 0x01 : 0x00));
+        dest.writeByte((byte) (weightIncreased ? 0x01 : 0x00));
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Exercise> CREATOR = new Parcelable.Creator<Exercise>() {
+        @Override
+        public Exercise createFromParcel(Parcel in) {
+            return new Exercise(in);
+        }
+
+        @Override
+        public Exercise[] newArray(int size) {
+            return new Exercise[size];
+        }
+    };
+
     // EFFECTS: called when submit button is pressed
     //          if the weight completed by the user is less than the goal weight,
     //          pass is set to fail
@@ -56,34 +132,6 @@ public class Exercise {
         if (passOrFail()) {
             setActualAndGoalWeight(getNewCapableWeight());
         }
-    }
-
-    // EFFECTS: Determines if an exercise is complete. Returns false if the required number of sets
-    //          is not done or if any of the reps done by the user is less than required. Otherwise,
-    //          returns true
-    private boolean completeExercise() {
-        if (actualRepsDone.size() < goalReps.size()) {
-            return false;
-        }
-        Collections.sort(actualRepsDone, Collections.<Integer>reverseOrder());
-        Collections.sort(goalReps, Collections.<Integer>reverseOrder());
-        for (int i = 0; i < goalReps.size(); i++) {
-            if (actualRepsDone.get(i) < goalReps.get(i)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // EFFECTS: sets the weight that the user is capable of lifting and sets the goal weight
-    private void setActualAndGoalWeight(double weight) {
-        goalWeight = weight * percentage + increment;
-    }
-
-    // EFFECTS: returns the lowest weight completed by the user in the current workout
-    private double getNewCapableWeight() {
-        Collections.sort(actualWeightList);
-        return actualWeightList.get(0);
     }
 
     public double getGoalWeight() {
@@ -125,5 +173,33 @@ public class Exercise {
     // EFFECTS: returns the capable weight that was used to determine the goal weight
     public double getCapableWeight() {
         return (goalWeight - increment) / percentage;
+    }
+
+    // EFFECTS: Determines if an exercise is complete. Returns false if the required number of sets
+    //          is not done or if any of the reps done by the user is less than required. Otherwise,
+    //          returns true
+    private boolean completeExercise() {
+        if (actualRepsDone.size() < goalReps.size()) {
+            return false;
+        }
+        Collections.sort(actualRepsDone, Collections.<Integer>reverseOrder());
+        Collections.sort(goalReps, Collections.<Integer>reverseOrder());
+        for (int i = 0; i < goalReps.size(); i++) {
+            if (actualRepsDone.get(i) < goalReps.get(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // EFFECTS: sets the weight that the user is capable of lifting and sets the goal weight
+    private void setActualAndGoalWeight(double weight) {
+        goalWeight = weight * percentage + increment;
+    }
+
+    // EFFECTS: returns the lowest weight completed by the user in the current workout
+    private double getNewCapableWeight() {
+        Collections.sort(actualWeightList);
+        return actualWeightList.get(0);
     }
 }

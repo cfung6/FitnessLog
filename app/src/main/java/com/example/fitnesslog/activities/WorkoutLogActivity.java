@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitnesslog.CurrentDate;
 import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.Exercise;
 import com.example.fitnesslog.R;
@@ -34,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
+public class WorkoutLogActivity extends AppCompatActivity {
 
     /*
     ALL ARRAYS ARE IN THE FOLLOWING ORDER:
@@ -45,19 +46,12 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         BARBELL ROW
      */
 
-    private double[] exerciseWeights;
-    private String[] exerciseNames;
-
-    private List<Workout> workouts;
-    private List<Exercise> exercises;
-
     private Routine routine;
     private int routineID;
 
     protected Workout currentWorkout;
 
-    private long currentTime;
-    private String todaysDate;
+    private String currentDate;
 
     private DatabaseHelper databaseHelper;
 
@@ -66,6 +60,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     private SparseArray<List<TextView>> setNumbers;
 
     private String previousActivity;
+    private boolean isItToday;
 
     protected EditText[] weightsET;
     protected EditText[] repsET;
@@ -77,10 +72,31 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_workout_log);
 
+        Intent intent = getIntent();
+        CurrentDate date = new CurrentDate();
         databaseHelper = new DatabaseHelper(this);
+
+        //Getting routine from previous activity
+        routine = intent.getParcelableExtra("ROUTINE");
+        assert routine != null;
+        setTitle(routine.getName());
+        routineID = routine.getRoutineID();
+
+        currentDate = intent.getStringExtra("DATE");
+        previousActivity = intent.getStringExtra("ACTIVITY");
+
+        //currentDate defaults to today if not coming from calendar
+        if (currentDate == null || currentDate.isEmpty()) {
+            currentDate = date.getDateString();
+        }
+
+        //Determining if the current workout being viewed is from the past
+        isItToday = currentDate.equals(date.getDateString());
 
         setDateText();
         initializeListsAndMaps();
+        initializeCurrentWorkout(getCurrentDate());
+        createAbstractXML(currentWorkout);
     }
 
     // EFFECTS: creates menu for calendar, stopwatch, and tutorials options
@@ -125,7 +141,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         //Sets current exercise depending on which submit button was pressed
         Exercise exercise = currentWorkout.getExerciseAtIndex(currentExerciseNum);
         int numOfSets = exercise.getGoalReps().size();
-        insertRoutineData(routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
+        routine.insertRoutineData(routine.getWorkouts().indexOf(currentWorkout), exercise.getName(), databaseHelper);
         instantiateETAndInputs(numOfSets);
         assignETNames(currentExerciseNum, numOfSets);
 
@@ -133,18 +149,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         if (!setNextToVisible(currentExerciseNum, numOfSets, weightsInput, repsInput, weightsET, repsET)) {
             //Checking to see if all EditTexts are filled
             setPassFailMessages(numOfSets, exercise, currentExerciseNum, view);
-        }
-    }
-
-    // EFFECTS: Inserts exercise name and associated workout number into table if it does not
-    //          already exist
-    private void insertRoutineData(int workoutIndex, String exerciseName) {
-        if (routineID == 1) {
-            databaseHelper.insertBeginnerRoutineData(workoutIndex, exerciseName);
-        } else if (routineID == 2) {
-            databaseHelper.insertIntermediateRoutineData(workoutIndex, exerciseName);
-        } else {
-            databaseHelper.insertAdvancedRoutineData(workoutIndex, exerciseName);
         }
     }
 
@@ -232,19 +236,14 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     // EFFECTS: returns workoutExerciseID corresponding to the current workout and exercise
     private int getWorkoutExerciseID(Exercise exercise) {
-        if (routineID == 1) {
-            return databaseHelper.selectWorkoutExerciseID("BeginnerTable", routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
-        } else if (routineID == 2) {
-            return databaseHelper.selectWorkoutExerciseID("IntermediateTable", routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
-        } else {
-            return databaseHelper.selectWorkoutExerciseID("AdvancedTable", routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
-        }
+        return databaseHelper.selectWorkoutExerciseID(routine.getTable(), routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
+
     }
 
     // EFFECTS: if database contains any entries with the current date and workoutExerciseID, then
     //          update the entry. Otherwise, insert the entry
     private void insertData(int numOfSets, double[] weights, int[] reps, Exercise exercise, double capableWeight) {
-        if (databaseHelper.haveEntriesBeenEntered(todaysDate, routineID, getWorkoutExerciseID(exercise))) {
+        if (databaseHelper.haveEntriesBeenEntered(currentDate, routineID, getWorkoutExerciseID(exercise))) {
             List<Double> weightsForDataTable = new ArrayList<>();
             List<Integer> repsForDataTable = new ArrayList<>();
 
@@ -253,59 +252,20 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
                 repsForDataTable.add(reps[i]);
             }
 
-            databaseHelper.updateEntries(currentTime, todaysDate, routineID, getWorkoutExerciseID(exercise),
+            databaseHelper.updateEntries(isItToday, currentDate, routineID, getWorkoutExerciseID(exercise),
                     weightsForDataTable, repsForDataTable, capableWeight);
         } else {
+            long currentTime = Calendar.getInstance().getTimeInMillis();
             for (int i = 0; i < numOfSets; i++) {
-                databaseHelper.insertData(currentTime, todaysDate, routineID, getWorkoutExerciseID(exercise),
+                databaseHelper.insertData(currentTime, currentDate, routineID, getWorkoutExerciseID(exercise),
                         weights[i], reps[i], capableWeight);
             }
         }
     }
 
-    protected void setRoutineID(int id) {
-        routineID = id;
-    }
-
-    protected void setExerciseWeights(double[] weights) {
-        exerciseWeights = weights;
-    }
-
-    protected void setExerciseNames(String[] names) {
-        exerciseNames = names;
-    }
-
-    protected abstract void initializeExercises();
-
-    protected abstract void initializeWorkouts();
-
-    protected void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
-    }
-
-    protected void setWorkouts(List<Workout> workouts) {
-        this.workouts = workouts;
-    }
-
-    protected void initializeRoutine(String name) {
-        routine = new Routine(name, workouts, this);
-    }
-
-    protected void setTodaysDate(String date) {
-        todaysDate = date;
-    }
-
-    protected void setCurrentTime(long time) {
-        currentTime = time;
-    }
-
-    protected void setPreviousActivity(String activity) {
-        previousActivity = activity;
-    }
-
     protected void initializeCurrentWorkout(String date) {
         //Setting current workout depending on last entries in database
-        currentWorkout = routine.getCurrentWorkout();
+        currentWorkout = routine.getCurrentWorkout(databaseHelper);
         if (databaseHelper.isThereDataFromToday(date, routineID) && previousActivity == null) {
             int workoutNum = databaseHelper.getWorkoutByDate(routine.getName() + "Table", date);
 
@@ -317,25 +277,10 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         }
     }
 
-    protected Exercise getExerciseByName(String name) {
-        for (int i = 0; i < exercises.size(); i++) {
-            Exercise exercise = exercises.get(i);
-
-            if (exercise.getName().toLowerCase().equals(name.toLowerCase())) {
-                return exercise;
-            }
-        }
-        return null;
+    protected String getCurrentDate() {
+        return currentDate;
     }
 
-    //Rounds exercise weight to nearest multiple of 5
-    protected double round(double weight) {
-        return 5 * Math.round(weight / 5);
-    }
-
-    protected String getTodaysDate() {
-        return todaysDate;
-    }
     //Sets textView for the current date
     private void setDateText() {
         TextView dateView = findViewById(R.id.base_date);
@@ -346,8 +291,6 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
     }
 
     private void initializeListsAndMaps() {
-        exercises = new ArrayList<>();
-        workouts = new ArrayList<>();
         editTextNames = new HashMap<>();
         passFailMessages = new SparseArray<>();
         setNumbers = new SparseArray<>();
@@ -569,7 +512,7 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
 
     //Changes exercise name to the correct one for XML
     private String changeNameForXML(String name) {
-        for (String exerciseName : exerciseNames) {
+        for (String exerciseName : routine.getExerciseNames()) {
             if (name.equals(exerciseName)) {
                 return name;
             }
@@ -577,32 +520,40 @@ public abstract class BaseWorkoutLogActivity extends AppCompatActivity {
         return name.substring(0, name.length() - 1);
     }
 
+    //Fills out EditTexts with existing data from the current date
     private void fillOutEditTexts(int exerciseNum) {
         Exercise exercise = currentWorkout.getExerciseAtIndex(exerciseNum);
         int currentWorkoutNum = routine.getWorkouts().indexOf(currentWorkout);
         String table = routine.getName() + "Table";
         String exerciseName = exercise.getName();
 
-        if (databaseHelper.isThereDataInExercise(table, exerciseName, currentWorkoutNum, routineID, todaysDate)
+        if (databaseHelper.isThereDataInExercise(table, exerciseName, currentWorkoutNum, routineID, currentDate)
                 && previousActivity == null && !databaseHelper.wasExerciseReset(table, changeNameForXML(exerciseName))) {
             List<Integer> repsList =
-                    databaseHelper.getRepsByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, todaysDate);
+                    databaseHelper.getRepsByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, currentDate);
             List<Double> weightsList =
-                    databaseHelper.getWeightByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, todaysDate);
+                    databaseHelper.getWeightByExerciseAndDate(table, exerciseName, currentWorkoutNum, routineID, currentDate);
 
             for (int i = 0; i < repsList.size(); i++) {
                 EditText et = editTextNames.get("reps" + i + "ex" + exerciseNum);
-                Log.d("mytag", "" + (et == null));
-                Log.d("mytag", "" + routineID);
-                Log.d("mytag", "" + currentWorkoutNum);
-                et.setText(repsList.get(i) + "");
-                et.setVisibility(View.VISIBLE);
+                assert et != null;
+                try {
+                    et.setText(repsList.get(i) + "");
+                    et.setVisibility(View.VISIBLE);
+                } catch (NullPointerException e) {
+                    Log.d("myTag", "no such edittext");
+                }
             }
 
             for (int i = 0; i < weightsList.size(); i++) {
                 EditText et = editTextNames.get("weight" + i + "ex" + exerciseNum);
-                et.setText(weightsList.get(i) + "");
-                et.setVisibility(View.VISIBLE);
+                assert et != null;
+                try {
+                    et.setText(weightsList.get(i) + "");
+                    et.setVisibility(View.VISIBLE);
+                } catch (NullPointerException e) {
+                    Log.d("myTag", "no such edittext");
+                }
             }
         }
     }

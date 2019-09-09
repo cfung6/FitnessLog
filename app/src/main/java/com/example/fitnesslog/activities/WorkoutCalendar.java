@@ -9,8 +9,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fitnesslog.DatabaseHelper;
-import com.example.fitnesslog.ExerciseNames;
 import com.example.fitnesslog.R;
+import com.example.fitnesslog.Routine;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
@@ -28,7 +28,6 @@ public class WorkoutCalendar extends AppCompatActivity {
     private SimpleDateFormat sdf;
 
     private double[] capableWeights;
-    private String[] exerciseNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +60,14 @@ public class WorkoutCalendar extends AppCompatActivity {
                 for (Event event : events) {
                     if (dateClicked.getTime() == event.getTimeInMillis()) {
                         int routineID = databaseHelper.getLatestRoutineByDate(sdf.format(dateClicked));
-
-                        if (routineID == 1) {
-                            exerciseNames = ExerciseNames.BEGINNER_NAMES;
-                            intent = new Intent(getApplicationContext(), BeginnerActivity.class);
-                        } else if (routineID == 2) {
-                            exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
-                            intent = new Intent(getApplicationContext(), IntermediateActivity.class);
-                        } else {
-                            exerciseNames = ExerciseNames.ADVANCED_NAMES;
-                            intent = new Intent(getApplicationContext(), AdvancedActivity.class);
-                        }
+                        Routine routine = new Routine(routineID);
+                        intent = new Intent(getApplicationContext(), WorkoutLogActivity.class);
 
                         capableWeights = databaseHelper.getExerciseWeightArray(routineID, sdf.format(dateClicked));
+                        routine.setExerciseWeights(capableWeights);
 
-                        intent.putExtra("NAMES", exerciseNames);
-                        intent.putExtra("WEIGHTS", capableWeights);
+                        intent.putExtra("ROUTINE", routine);
                         intent.putExtra("DATE", sdf.format(dateClicked));
-                        intent.putExtra("TIME", dateClicked.getTime());
 
                         //Go to workout that corresponds to event.getTimeInMillis()
                         startActivity(intent);
@@ -100,13 +89,14 @@ public class WorkoutCalendar extends AppCompatActivity {
         }
     }
 
-    private void createEvent(String todaysTime) {
+    private void createEvent(String currentDate) {
         try {
-            Date date = sdf.parse(todaysTime);
+            Date date = sdf.parse(currentDate);
+            assert date != null;
             Event ev1 = new Event(Color.BLUE, date.getTime(), "Workout");
             compactCalendar.addEvent(ev1);
         } catch (ParseException e) {
-            Log.d("Exception", "Invalid date");
+            Log.d("myTag", "Invalid date");
         }
     }
 }

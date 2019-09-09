@@ -12,12 +12,11 @@ import android.widget.EditText;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitnesslog.CurrentDate;
 import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.DefaultWeights;
-import com.example.fitnesslog.ExerciseNames;
-import com.example.fitnesslog.Levels;
 import com.example.fitnesslog.R;
-import com.example.fitnesslog.TodaysDate;
+import com.example.fitnesslog.Routine;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -45,12 +44,10 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     private DatabaseHelper databaseHelper;
     private int workoutNum;
-    private Levels levelChosen;
     private Button submitButton;
     private Intent intent;
-    private String tableName;
     private int numOfExercises;
-    private int routineID;
+    private Routine routine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,29 +55,14 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_asking_for_weights);
 
         intent = getIntent();
-        //Assigns variable to the level that the user picked
-        levelChosen = (Levels) intent.getSerializableExtra("LEVEL_CHOSEN");
+        //Assigns routine to the level that the user picked
+        routine = intent.getParcelableExtra("ROUTINE");
         submitButton = findViewById(R.id.submit_weight_button);
         databaseHelper = new DatabaseHelper(this);
+
         workoutNum = -1;
-
-        if (levelChosen == Levels.BEGINNER) {
-            intent = new Intent(this, BeginnerActivity.class);
-            exerciseNames = ExerciseNames.BEGINNER_NAMES;
-            tableName = "BeginnerTable";
-            routineID = 1;
-        } else if (levelChosen == Levels.INTERMEDIATE) {
-            intent = new Intent(this, IntermediateActivity.class);
-            exerciseNames = ExerciseNames.INTERMEDIATE_NAMES;
-            tableName = "IntermediateTable";
-        } else {
-            intent = new Intent(this, AdvancedActivity.class);
-            exerciseNames = ExerciseNames.ADVANCED_NAMES;
-            tableName = "AdvancedTable";
-        }
-
         numOfExercises = 5;
-        
+
         initializeArrays();
         initializeEditTexts();
         limitEditTextsInput();
@@ -90,7 +72,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
     //Button goes to ExerciseTutorial Activity
     public void onExerciseTutorialClick(View view) {
-        Intent intent = new Intent(this, ExerciseTutorials.class);
+        intent = new Intent(this, ExerciseTutorials.class);
         startActivity(intent);
     }
 
@@ -154,11 +136,14 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             weightInputs[i] = DefaultWeights.defaultWeights.get(10 + i);
         }
 
-        intent.putExtra("WEIGHTS", weightInputs);
-        intent.putExtra("NAMES", exerciseNames);
+        routine.setExerciseWeights(weightInputs);
+
+        insertDataToSQL(routine.getTable());
+
+        intent = new Intent(this, WorkoutLogActivity.class);
+        intent.putExtra("ROUTINE", routine);
         intent.putExtra("ACTIVITY", "activity");
 
-        insertDataToSQL(tableName);
         startActivity(intent);
     }
 
@@ -169,9 +154,9 @@ public class AskingForWeightsActivity extends AppCompatActivity {
             finalWeightInputs.clear();
         }
         if (rawWeightInputs[exerciseNum] == -1) {
-            if (levelChosen == Levels.BEGINNER) {
+            if (routine.getRoutineID() == 1) {
                 finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum));
-            } else if (levelChosen == Levels.INTERMEDIATE) {
+            } else if (routine.getRoutineID() == 2) {
                 finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum + numOfExercises));
             } else {
                 finalWeightInputs.add(DefaultWeights.defaultWeights.get(exerciseNum + (numOfExercises * 2)));
@@ -196,49 +181,32 @@ public class AskingForWeightsActivity extends AppCompatActivity {
     //          into DATA_TABLE
     private void insertDataToSQL(String tableName) {
         int workoutExerciseID;
-        int routineID;
-        TodaysDate today = new TodaysDate();
+        int routineID = routine.getRoutineID();
+        CurrentDate today = new CurrentDate();
 
         long currentTime = new Date().getTime();
-        String todaysDate = today.getDateString();
+        String currentDate = today.getDateString();
 
-        if (tableName.equals("BeginnerTable")) {
-            addDataToBeginner(exerciseNames);
-            routineID = 1;
-        } else if (tableName.equals("IntermediateTable")) {
-            addDataToIntermediate(exerciseNames);
-            routineID = 2;
-        } else {
-            addDataToAdvanced(exerciseNames);
-            routineID = 3;
+        addDatatoTable(exerciseNames);
 
-            //Decreasing starting weights for advanced program
+        //Decreasing starting weights for advanced program
+        if (routineID == 3) {
             for (int i = 0; i < 5; i++) {
-                weightInputs[i] = weightInputs[i] * .88;
+                weightInputs[i] = routine.round(weightInputs[i] * .88);
             }
         }
 
-        for (int i = 0; i < exerciseNames.length; i++) {
+        routine.setExerciseWeights(weightInputs);
+
+        for (int i = 0; i < routine.getExerciseNames().length; i++) {
             workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames[i]);
-            databaseHelper.insertData(currentTime, todaysDate, routineID, workoutExerciseID, workoutNum, 0, weightInputs[i]);
+            databaseHelper.insertData(currentTime, currentDate, routineID, workoutExerciseID, workoutNum, 0, weightInputs[i]);
         }
     }
 
-    private void addDataToBeginner(String[] exercises) {
+    private void addDatatoTable(String[] exercises) {
         for (String exercise : exercises) {
-            databaseHelper.insertBeginnerRoutineData(workoutNum, exercise);
-        }
-    }
-
-    private void addDataToIntermediate(String[] exercises) {
-        for (String exercise : exercises) {
-            databaseHelper.insertIntermediateRoutineData(workoutNum, exercise);
-        }
-    }
-
-    private void addDataToAdvanced(String[] exercises) {
-        for (String exercise : exercises) {
-            databaseHelper.insertAdvancedRoutineData(workoutNum, exercise);
+            routine.insertRoutineData(workoutNum, exercise, databaseHelper);
         }
     }
 
@@ -260,6 +228,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         exerciseStrings = new String[numOfExercises];
         exerciseEditTexts = new EditText[numOfExercises];
         exerciseChecked = new boolean[numOfExercises];
+        exerciseNames = routine.getExerciseNames();
     }
 
     private void initializeBooleans() {

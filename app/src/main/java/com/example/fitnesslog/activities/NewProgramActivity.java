@@ -6,8 +6,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fitnesslog.Levels;
 import com.example.fitnesslog.R;
+import com.example.fitnesslog.Routine;
 
 public class NewProgramActivity extends AppCompatActivity {
 
@@ -17,24 +17,24 @@ public class NewProgramActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_program);
     }
 
-    public void levelClicked(Levels level) {
+    public void levelClicked(Routine routine) {
         Intent intent = new Intent(this, AskingForWeightsActivity.class);
 
-        //Passing on the level chosen to next activity
-        intent.putExtra("LEVEL_CHOSEN", level);
+        //Passing on which routine was chosen to next activity
+        intent.putExtra("ROUTINE", routine);
         startActivity(intent);
     }
 
     public void beginnerLevelClicked(View view) {
-        levelClicked(Levels.BEGINNER);
+        levelClicked(new Routine(1));
     }
 
     public void intermediateLevelClicked(View view) {
-        levelClicked(Levels.INTERMEDIATE);
+        levelClicked(new Routine(2));
     }
 
     public void advancedLevelClicked(View view) {
-        levelClicked(Levels.ADVANCED);
+        levelClicked(new Routine(3));
     }
 
 }

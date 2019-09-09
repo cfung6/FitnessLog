@@ -3,11 +3,11 @@ package com.example.fitnesslog;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TodaysDate {
+public class CurrentDate {
 
     String date;
 
-    public TodaysDate() {
+    public CurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         date = sdf.format(new Date());
     }
