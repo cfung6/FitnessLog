@@ -267,9 +267,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
             time = cursor.getLong(cursor.getColumnIndex(CURRENT_TIME_COL));
             cursor.close();
-        }
-
-        if (time == -1) {
+        } else {
             throw new AssertionError();
         }
 

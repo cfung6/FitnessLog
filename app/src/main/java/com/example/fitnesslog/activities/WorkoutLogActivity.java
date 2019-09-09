@@ -340,61 +340,80 @@ public class WorkoutLogActivity extends AppCompatActivity {
         LinearLayout parentLinearLayout = findViewById(R.id.parent_linear_layout);
         for (Exercise exercise : currentWorkout.getExercises()) {
             LinearLayout exerciseLayout = new LinearLayout(this);
-            exerciseLayout.setOrientation(LinearLayout.VERTICAL);
-            exerciseLayout.setBackgroundResource(R.drawable.layout_bg);
-            LinearLayout.LayoutParams paramsEL = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            paramsEL.leftMargin = 30;
-            paramsEL.rightMargin = 30;
-            paramsEL.bottomMargin = 15;
-            exerciseLayout.setLayoutParams(paramsEL);
-
             LinearLayout setsWeightsRepsContainer = new LinearLayout(this);
+            LinearLayout setsWeightReps = new LinearLayout(this);
+            Button submitButton = new Button(this);
+
+            setExerciseLayoutAttribute(exerciseLayout, exercise);
             setsWeightsRepsContainer.setOrientation(LinearLayout.HORIZONTAL);
             setsWeightsRepsContainer.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
-            LinearLayout.LayoutParams paramsSWR = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
-            paramsSWR.weight = 2f;
-            LinearLayout setsWeightReps = new LinearLayout(this);
-            setsWeightReps.setOrientation(LinearLayout.HORIZONTAL);
-            setsWeightReps.setLayoutParams(paramsSWR);
+            setWeightsRepsAttribute(setsWeightReps, exercise, exerciseNum);
 
-            Button submitButton = new Button(this);
-            submitButton.setText("Submit");
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.weight = 1f;
-            params.gravity = Gravity.CENTER;
-            submitButton.setLayoutParams(params);
-
-            submitButton.setTag("" + exerciseNum);
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    submitOnClick(v);
-                }
-            });
-
+            setButtonAttribute(submitButton, exerciseNum);
             setsWeightsRepsContainer.addView(setsWeightReps);
             setsWeightsRepsContainer.addView(submitButton);
 
-            exerciseLayout.addView(generateExerciseGoals(exercise));
-            setsWeightReps.addView(generateSets(exercise, exerciseNum));
-            setsWeightReps.addView(generateWeight(exercise, exerciseNum));
-            setsWeightReps.addView(generateReps(exercise, exerciseNum));
-
             exerciseLayout.addView(setsWeightsRepsContainer);
-
             fillOutEditTexts(exerciseNum);
 
             TextView passFailMessage = new TextView(this);
-            TableLayout.LayoutParams paramMSG = new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
-            paramMSG.leftMargin = 15;
-            paramMSG.rightMargin = 15;
-            passFailMessage.setLayoutParams(paramMSG);
-            passFailMessage.setGravity(Gravity.CENTER_HORIZONTAL);
+            setPassFailAttributes(passFailMessage);
             exerciseLayout.addView(passFailMessage);
             passFailMessages.put(exerciseNum, passFailMessage);
 
             exerciseNum++;
             parentLinearLayout.addView(exerciseLayout);
         }
+    }
+
+    // EFFECTS: sets attributes for the TextView for the Pass Fail message
+    private void setPassFailAttributes(TextView passFailMessage) {
+        TableLayout.LayoutParams paramMSG = new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        paramMSG.leftMargin = 15;
+        paramMSG.rightMargin = 15;
+        passFailMessage.setLayoutParams(paramMSG);
+        passFailMessage.setGravity(Gravity.CENTER_HORIZONTAL);
+    }
+
+    // EFFECTS: sets the attributes for the layout the exercise layout
+    private void setExerciseLayoutAttribute(LinearLayout exerciseLayout, Exercise exercise) {
+        exerciseLayout.setOrientation(LinearLayout.VERTICAL);
+        exerciseLayout.setBackgroundResource(R.drawable.layout_bg);
+        LinearLayout.LayoutParams paramsEL = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        paramsEL.leftMargin = 30;
+        paramsEL.rightMargin = 30;
+        paramsEL.bottomMargin = 15;
+        exerciseLayout.setLayoutParams(paramsEL);
+
+        exerciseLayout.addView(generateExerciseGoals(exercise));
+    }
+
+    // EFFECTS: sets the attributes for the layout holding sets weights and reps
+    private void setWeightsRepsAttribute(LinearLayout setsWeightReps, Exercise exercise, int exerciseNum) {
+        LinearLayout.LayoutParams paramsSWR = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+        paramsSWR.weight = 2f;
+        setsWeightReps.setOrientation(LinearLayout.HORIZONTAL);
+        setsWeightReps.setLayoutParams(paramsSWR);
+
+        setsWeightReps.addView(generateSets(exercise, exerciseNum));
+        setsWeightReps.addView(generateWeight(exercise, exerciseNum));
+        setsWeightReps.addView(generateReps(exercise, exerciseNum));
+    }
+
+    // EFFECTS: set the attributes for the given submit button
+    private void setButtonAttribute(Button submitButton, int exerciseNum) {
+        submitButton.setText("Submit");
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.weight = 1f;
+        params.gravity = Gravity.CENTER;
+        submitButton.setLayoutParams(params);
+
+        submitButton.setTag("" + exerciseNum);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                submitOnClick(v);
+            }
+        });
     }
 
     // EFFECTS: returns a horizontal linear layout that has the exercises name, weight, sets and reps
