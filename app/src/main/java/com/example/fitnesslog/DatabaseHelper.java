@@ -227,6 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    //Returns the id of the latest routine done on the given date
     public int getLatestRoutineByDate(String currentDate) {
         db = this.getWritableDatabase();
         orderBy = CURRENT_TIME_COL + " DESC";
@@ -242,6 +243,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return routineid;
     }
 
+    //Returns the workout num done on the given date
     public int getWorkoutByDate(String table, String currentDate) {
         int workoutExerciseID = getWorkoutExerciseIDByDate(currentDate);
         db = this.getWritableDatabase();
@@ -257,38 +259,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return workoutNum;
     }
 
-    private long getCurrentTimeFromID(int id) {
-        db = this.getWritableDatabase();
-        String query = "SELECT " + CURRENT_TIME_COL + " FROM " + DATA_TABLE + " WHERE ID = " + id;
-        cursor = db.rawQuery(query, null);
-        long time = -1;
-
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            time = cursor.getLong(cursor.getColumnIndex(CURRENT_TIME_COL));
-            cursor.close();
-        } else {
-            throw new AssertionError();
-        }
-
-        return time;
-    }
-
-    private int getWorkoutExerciseIDByDate(String currentDate) {
-        db = this.getWritableDatabase();
-        orderBy = CURRENT_TIME_COL + " DESC";
-        selection = CURRENT_DATE_COL + " = '" + currentDate + "'";
-        cursor = db.query(DATA_TABLE, null, selection, null, null, null, orderBy);
-        int workoutExerciseID = -1;
-
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            workoutExerciseID = cursor.getInt(cursor.getColumnIndex(WORKOUT_EXERCISE_ID));
-            cursor.close();
-        }
-        return workoutExerciseID;
-    }
-
+    //Returns an array of capable exercise weights from the given date and routineID
     public double[] getExerciseWeightArray(int routineID, String currentDate) {
         db = this.getWritableDatabase();
         Routine routine = new Routine(routineID);
@@ -341,6 +312,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return weight;
     }
 
+    //Returns true if the most recent entry in DataTable for that exercise is -1
+    //since AskingForWeights puts -1 in DataTable as weight done
     public boolean wasExerciseReset(String table, String exerciseName) {
         db = this.getWritableDatabase();
         String shortenedName = exerciseName.substring(0, exerciseName.length() - 1);
@@ -374,6 +347,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count != 0;
     }
 
+    //Returns true if there are entries in DataTable containing the given date and routineID
     public boolean isThereDataFromToday(String currentDate, int routineID) {
         int count;
         db = this.getWritableDatabase();
@@ -386,6 +360,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count != 0;
     }
 
+    //Returns true if the exercise in that workout contains any entries in DataTable
     public boolean isThereDataInExercise(String table, String exerciseName, int workoutNum, int routineID, String date) {
         db = this.getWritableDatabase();
         int workoutExerciseID = getWorkoutExerciseID(table, exerciseName, workoutNum);
@@ -446,6 +421,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return weights;
     }
 
+    //Returns all unique date strings from DataTable
     public List<String> returnAllDistinctDates() {
         db = this.getWritableDatabase();
         List<String> dates = new ArrayList<>();
@@ -504,6 +480,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             workoutExerciseID = cursor.getInt(cursor.getColumnIndex("ID"));
+            cursor.close();
+        }
+        return workoutExerciseID;
+    }
+
+    private long getCurrentTimeFromID(int id) {
+        db = this.getWritableDatabase();
+        String query = "SELECT " + CURRENT_TIME_COL + " FROM " + DATA_TABLE + " WHERE ID = " + id;
+        cursor = db.rawQuery(query, null);
+        long time = -1;
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            time = cursor.getLong(cursor.getColumnIndex(CURRENT_TIME_COL));
+            cursor.close();
+        } else {
+            throw new AssertionError();
+        }
+
+        return time;
+    }
+
+    private int getWorkoutExerciseIDByDate(String currentDate) {
+        db = this.getWritableDatabase();
+        orderBy = CURRENT_TIME_COL + " DESC";
+        selection = CURRENT_DATE_COL + " = '" + currentDate + "'";
+        cursor = db.query(DATA_TABLE, null, selection, null, null, null, orderBy);
+        int workoutExerciseID = -1;
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            workoutExerciseID = cursor.getInt(cursor.getColumnIndex(WORKOUT_EXERCISE_ID));
             cursor.close();
         }
         return workoutExerciseID;
