@@ -41,6 +41,7 @@ public class WorkoutCalendar extends AppCompatActivity {
         assert actionBar != null;
 
         actionBar.setDisplayHomeAsUpEnabled(false);
+        //Displays month and year in the action bar
         actionBar.setTitle(dateFormatMonth.format(new Date()));
 
         compactCalendar = findViewById(R.id.compactcalendar_view);
@@ -50,7 +51,6 @@ public class WorkoutCalendar extends AppCompatActivity {
             fillOutDates();
         }
 
-
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -58,14 +58,18 @@ public class WorkoutCalendar extends AppCompatActivity {
                 Intent intent;
 
                 for (Event event : events) {
+                    //Checking if day clicked time matches with the date time of a workout
                     if (dateClicked.getTime() == event.getTimeInMillis()) {
+                        //Finding the most recent routine done on that day
                         int routineID = databaseHelper.getLatestRoutineByDate(sdf.format(dateClicked));
                         Routine routine = new Routine(routineID);
                         intent = new Intent(getApplicationContext(), WorkoutLogActivity.class);
 
+                        //Getting an array of capable weights from that day
                         capableWeights = databaseHelper.getExerciseWeightArray(routineID, sdf.format(dateClicked));
                         routine.setExerciseWeights(capableWeights);
 
+                        //Passing routine object and date to the next activity
                         intent.putExtra("ROUTINE", routine);
                         intent.putExtra("DATE", sdf.format(dateClicked));
 
@@ -82,6 +86,7 @@ public class WorkoutCalendar extends AppCompatActivity {
         });
     }
 
+    //Puts all the dates in which a workout was done in a List
     private void fillOutDates() {
         List<String> dates = databaseHelper.returnAllDistinctDates();
         for (String date : dates) {
@@ -89,11 +94,13 @@ public class WorkoutCalendar extends AppCompatActivity {
         }
     }
 
+    //Creating an event for each day a workout was done
     private void createEvent(String currentDate) {
         try {
             Date date = sdf.parse(currentDate);
             assert date != null;
             Event ev1 = new Event(Color.BLUE, date.getTime(), "Workout");
+
             compactCalendar.addEvent(ev1);
         } catch (ParseException e) {
             Log.d("myTag", "Invalid date");

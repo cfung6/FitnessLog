@@ -17,6 +17,7 @@ public class Workout implements Parcelable {
         this.exercises = exercises;
     }
 
+    //Making Workout class Parcelable
     public Workout(Parcel in) {
         exercises = in.createTypedArrayList(Exercise.CREATOR);
     }

@@ -35,6 +35,7 @@ public class Exercise implements Parcelable {
         weightIncreased = false;
     }
 
+    //Making Exercise class Parcelable
     public Exercise(Parcel in) {
         name = in.readString();
         if (in.readByte() == 0x01) {
