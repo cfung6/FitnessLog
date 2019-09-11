@@ -267,6 +267,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
     protected void initializeCurrentWorkout(String date) {
         //Setting current workout depending on last entries in database
         currentWorkout = routine.getCurrentWorkout(databaseHelper);
+        //Making sure data exists and the previous activity didn't come from AskingForWeights
         if (databaseHelper.isThereDataFromToday(date, routineID) && previousActivity == null) {
             int workoutNum = databaseHelper.getWorkoutByDate(routine.getName() + "Table", date);
 
@@ -326,6 +327,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
         }
     }
 
+    //Checking if all the edittexts are filled
     private boolean areAllFilled(String[] weights, String[] reps) {
         for (int i = 0; i < weights.length; i++) {
             if (!areWeightsAndRepsFilled(weights[i], reps[i])) {
@@ -355,8 +357,10 @@ public class WorkoutLogActivity extends AppCompatActivity {
             setsWeightsRepsContainer.addView(submitButton);
 
             exerciseLayout.addView(setsWeightsRepsContainer);
+            //FIlls out the EditTexts with existing data
             fillOutEditTexts(exerciseNum);
 
+            //Setting the pass/fail message
             TextView passFailMessage = new TextView(this);
             setPassFailAttributes(passFailMessage);
             exerciseLayout.addView(passFailMessage);
@@ -369,9 +373,12 @@ public class WorkoutLogActivity extends AppCompatActivity {
 
     // EFFECTS: sets attributes for the TextView for the Pass Fail message
     private void setPassFailAttributes(TextView passFailMessage) {
-        TableLayout.LayoutParams paramMSG = new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        TableLayout.LayoutParams paramMSG =
+                new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+
         paramMSG.leftMargin = 15;
         paramMSG.rightMargin = 15;
+
         passFailMessage.setLayoutParams(paramMSG);
         passFailMessage.setGravity(Gravity.CENTER_HORIZONTAL);
     }
@@ -380,19 +387,25 @@ public class WorkoutLogActivity extends AppCompatActivity {
     private void setExerciseLayoutAttribute(LinearLayout exerciseLayout, Exercise exercise) {
         exerciseLayout.setOrientation(LinearLayout.VERTICAL);
         exerciseLayout.setBackgroundResource(R.drawable.layout_bg);
-        LinearLayout.LayoutParams paramsEL = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        LinearLayout.LayoutParams paramsEL =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         paramsEL.leftMargin = 30;
         paramsEL.rightMargin = 30;
         paramsEL.bottomMargin = 15;
-        exerciseLayout.setLayoutParams(paramsEL);
 
+        exerciseLayout.setLayoutParams(paramsEL);
         exerciseLayout.addView(generateExerciseGoals(exercise));
     }
 
     // EFFECTS: sets the attributes for the layout holding sets weights and reps
     private void setWeightsRepsAttribute(LinearLayout setsWeightReps, Exercise exercise, int exerciseNum) {
-        LinearLayout.LayoutParams paramsSWR = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsSWR =
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         paramsSWR.weight = 2f;
+
         setsWeightReps.setOrientation(LinearLayout.HORIZONTAL);
         setsWeightReps.setLayoutParams(paramsSWR);
 
@@ -404,11 +417,13 @@ public class WorkoutLogActivity extends AppCompatActivity {
     // EFFECTS: set the attributes for the given submit button
     private void setButtonAttribute(Button submitButton, int exerciseNum) {
         submitButton.setText("Submit");
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         params.weight = 1f;
         params.gravity = Gravity.CENTER;
-        submitButton.setLayoutParams(params);
 
+        submitButton.setLayoutParams(params);
         submitButton.setTag("" + exerciseNum);
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -420,7 +435,9 @@ public class WorkoutLogActivity extends AppCompatActivity {
     // EFFECTS: returns a horizontal linear layout that has the exercises name, weight, sets and reps
     private LinearLayout generateExerciseGoals(Exercise exercise) {
         LinearLayout currentExercise = new LinearLayout(this);
+
         currentExercise.setOrientation(LinearLayout.HORIZONTAL);
+
         TextView name = new TextView(this);
         TextView weight = new TextView(this);
         TextView sets = new TextView(this);
@@ -430,7 +447,10 @@ public class WorkoutLogActivity extends AppCompatActivity {
         weight.setText("Weight:\n" + exercise.getGoalWeight() + " lb");
         sets.setText("Sets: " + exercise.getGoalReps().size());
         reps.setText("Reps: " + exercise.getGoalReps().get(0));
-        LinearLayout.LayoutParams exerciseGoalsParam = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        LinearLayout.LayoutParams exerciseGoalsParam =
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         exerciseGoalsParam.weight = 1f;
         exerciseGoalsParam.leftMargin = 25;
         exerciseGoalsParam.bottomMargin = 25;
@@ -453,24 +473,33 @@ public class WorkoutLogActivity extends AppCompatActivity {
     private LinearLayout generateSets(Exercise exercise, int exerciseNum) {
         LinearLayout setsColumn = new LinearLayout(this);
         LinearLayout.LayoutParams paramsSets = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT);
+
         paramsSets.weight = 1f;
         paramsSets.leftMargin = 30;
+
         setsColumn.setLayoutParams(paramsSets);
         setsColumn.setOrientation(LinearLayout.VERTICAL);
+
         TextView sets = new TextView(this);
         sets.setText("Sets");
         sets.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
         setsColumn.addView(sets);
+
         List<TextView> setTextViews = new ArrayList<>();
         setNumbers.put(exerciseNum, setTextViews);
+
+        //Setting the TextViews with the set numbers
         for (int i = 1; i < exercise.getGoalReps().size() + 1; i++) {
             TextView tv = new TextView(this);
-            LinearLayout.LayoutParams paramsTV = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
+            LinearLayout.LayoutParams paramsTV =
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
             paramsTV.weight = 1f;
+
             tv.setLayoutParams(paramsTV);
             tv.setText(i + "");
             setNumbers.get(exerciseNum).add(tv);
             setsColumn.addView(tv);
+            //Set numbers except the first one is set to gone
             if (i > 1) {
                 tv.setVisibility(View.GONE);
             }
@@ -484,20 +513,30 @@ public class WorkoutLogActivity extends AppCompatActivity {
     //          user input
     private LinearLayout generateWeight(Exercise exercise, int exerciseNum) {
         LinearLayout weightsColumn = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsWeight = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsWeight =
+                new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         paramsWeight.weight = 1f;
+
         weightsColumn.setLayoutParams(paramsWeight);
         weightsColumn.setOrientation(LinearLayout.VERTICAL);
+
         TextView weights = new TextView(this);
+
         weights.setText("Weight");
         weights.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
         weightsColumn.addView(weights);
+
+        //Initializing the EditTexts for the weights and adds them and their names to a HashMap
         for (int i = 0; i < exercise.getGoalReps().size(); i++) {
             EditText editText = new EditText(this);
+
             editText.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             editTextNames.put("weight" + i + "ex" + exerciseNum, editText);
             weightsColumn.addView(editText);
+
+            //All EditTexts after first are set to gone
             if (i > 0) {
                 editText.setVisibility(View.GONE);
             }
@@ -509,20 +548,30 @@ public class WorkoutLogActivity extends AppCompatActivity {
     //          user input
     private LinearLayout generateReps(Exercise exercise, int exerciseNum) {
         LinearLayout repsColumn = new LinearLayout(this);
-        LinearLayout.LayoutParams paramsReps = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsReps
+                = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+
         paramsReps.weight = 1f;
+
         repsColumn.setLayoutParams(paramsReps);
         repsColumn.setOrientation(LinearLayout.VERTICAL);
+
         TextView reps = new TextView(this);
+
         reps.setText("Reps");
         reps.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
         repsColumn.addView(reps);
+
+        //Initializing EditTexts for the reps and adding them and their names to HashMap
         for (int i = 0; i < exercise.getGoalReps().size(); i++) {
             EditText editText = new EditText(this);
+
             editText.setLayoutParams(new TableLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             editTextNames.put("reps" + i + "ex" + exerciseNum, editText);
             repsColumn.addView(editText);
+
+            //All EditTexts after first are set to gone
             if (i > 0) {
                 editText.setVisibility(View.GONE);
             }
@@ -530,7 +579,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
         return repsColumn;
     }
 
-    //Changes exercise name to the correct one for XML
+    //Changes exercise name to the correct one for XML (without tne number at the end)
     private String changeNameForXML(String name) {
         for (String exerciseName : routine.getExerciseNames()) {
             if (name.equals(exerciseName)) {
@@ -547,6 +596,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
         String table = routine.getName() + "Table";
         String exerciseName = exercise.getName();
 
+        //Checks if data exists, previous activity was not AskingForWeights, and last weight entry was not -1
         if (databaseHelper.isThereDataInExercise(table, exerciseName, currentWorkoutNum, routineID, currentDate)
                 && previousActivity == null && !databaseHelper.wasExerciseReset(table, exerciseName)) {
             List<Integer> repsList =
@@ -558,6 +608,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
             Collections.reverse(repsList);
             Collections.reverse(weightsList);
 
+            //Filling out reps EditTexts with values from the List
             for (int i = 0; i < repsList.size(); i++) {
                 EditText et = editTextNames.get("reps" + i + "ex" + exerciseNum);
                 assert et != null;
@@ -569,6 +620,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
                 }
             }
 
+            //Filling out weights EditTexts with values from the List
             for (int i = 0; i < weightsList.size(); i++) {
                 EditText et = editTextNames.get("weight" + i + "ex" + exerciseNum);
                 assert et != null;
