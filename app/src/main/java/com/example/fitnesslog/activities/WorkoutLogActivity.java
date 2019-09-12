@@ -307,6 +307,12 @@ public class WorkoutLogActivity extends AppCompatActivity {
                 weightsET[i + 1].setVisibility(View.VISIBLE);
                 repsET[i + 1].setVisibility(View.VISIBLE);
                 setNumbers.get(exerciseNum).get(i + 1).setVisibility(View.VISIBLE);
+
+                try {
+                    insertPartialData(currentWorkout.getExerciseAtIndex(exerciseNum), i + 1);
+                } catch (Exception e) {
+                    Log.d("myTag", "error inserting data");
+                }
                 return true;
             }
         }
@@ -335,6 +341,20 @@ public class WorkoutLogActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    //Inserting data to SQL table when not all sets are completed
+    private void insertPartialData(Exercise exercise, int setNumber) {
+        double[] weights = new double[setNumber];
+        int[] reps = new int[setNumber];
+
+        for (int i = 0; i < setNumber; i++) {
+            weights[i] = Double.parseDouble(weightsInput[i]);
+            reps[i] = Integer.parseInt(repsInput[i]);
+        }
+
+        double capableWeight = exercise.getCapableWeight();
+        insertData(setNumber, weights, reps, exercise, capableWeight);
     }
 
     //EFFECTS: creates the XML based on the exercises from the current workout
