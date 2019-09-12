@@ -12,6 +12,7 @@
         <activity android:name="com.example.fitnesslog.activities.WorkoutCalendar" />
         <activity
             android:name="com.example.fitnesslog.activities.Stopwatch"
+            android:launchMode="singleInstance"
             android:label="Stopwatch" />
         <activity
             android:name="com.example.fitnesslog.activities.ExerciseTutorials"

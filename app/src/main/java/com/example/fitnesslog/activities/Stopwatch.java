@@ -101,4 +101,9 @@ public class Stopwatch extends AppCompatActivity {
         });
     }
 
+    //Stopwatch runs in background
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }
