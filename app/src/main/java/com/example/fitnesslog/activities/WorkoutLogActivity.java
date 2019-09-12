@@ -244,7 +244,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
     // EFFECTS: if database contains any entries with the current date and workoutExerciseID, then
     //          update the entry. Otherwise, insert the entry
     private void insertData(int numOfSets, double[] weights, int[] reps, Exercise exercise, double capableWeight) {
-        if (databaseHelper.haveEntriesBeenEntered(currentDate, routineID, getWorkoutExerciseID(exercise))) {
+        if (databaseHelper.howManyEntriesEntered(currentDate, routineID, getWorkoutExerciseID(exercise)) > 0) {
             List<Double> weightsForDataTable = new ArrayList<>();
             List<Integer> repsForDataTable = new ArrayList<>();
 
@@ -253,7 +253,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
                 repsForDataTable.add(reps[i]);
             }
 
-            databaseHelper.updateEntries(isItToday, currentDate, routineID, getWorkoutExerciseID(exercise),
+            databaseHelper.updateEntries(isItToday, numOfSets, currentDate, routineID, getWorkoutExerciseID(exercise),
                     weightsForDataTable, repsForDataTable, capableWeight);
         } else {
             long currentTime = Calendar.getInstance().getTimeInMillis();
@@ -631,6 +631,8 @@ public class WorkoutLogActivity extends AppCompatActivity {
             //Filling out reps EditTexts with values from the List
             for (int i = 0; i < repsList.size(); i++) {
                 EditText et = editTextNames.get("reps" + i + "ex" + exerciseNum);
+                //Makes the set numbers visible
+                setNumbers.get(exerciseNum).get(i).setVisibility(View.VISIBLE);
                 assert et != null;
                 try {
                     et.setText(repsList.get(i) + "");

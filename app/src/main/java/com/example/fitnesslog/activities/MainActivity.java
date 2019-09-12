@@ -16,8 +16,6 @@ import com.example.fitnesslog.Routine;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseHelper databaseHelper;
-
     /*
     ALL ARRAYS ARE IN THE FOLLOWING ORDER:
         BENCH
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void continueProgramClicked(View view) {
         Intent intent;
-        databaseHelper = new DatabaseHelper(this);
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
         boolean isEmpty = databaseHelper.isEmpty();
 
         //If database is empty, defaults to new program

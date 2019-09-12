@@ -162,12 +162,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public void updateEntries(boolean isItToday, String currentDate, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
+    public void updateEntries(boolean isItToday, int numSets, String currentDate, int routineID, int workoutExerciseID, List<Double> weights, List<Integer> reps, double capableWeight) {
         db = this.getWritableDatabase();
         long time;
         List<Integer> ids = new ArrayList<>();
         selection = CURRENT_DATE_COL + " = '" + currentDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
-        cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, null);
+        String orderBy = CURRENT_TIME_COL + " ASC";
+        cursor = db.query(DATA_TABLE, new String[]{"ID"}, selection, null, null, null, orderBy);
 
         //Finds all entries with the matching date and workoutExerciseID and puts the primary key of those entries into an array
         if (cursor.moveToFirst()) {
@@ -180,7 +181,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
 
         //Updates database entries with the new corresponding weights and reps value
-        for (int i = 0; i < ids.size() || i < weights.size(); i++) {
+        for (int i = 0; i < ids.size(); i++) {
             //not updating currentTime if the workout is done in the past
             if (isItToday) {
                 time = Calendar.getInstance().getTimeInMillis();
@@ -198,6 +199,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(WORKOUT_EXERCISE_ID, workoutExerciseID);
             contentValues.put(CAPABLE_WEIGHT_COL, capableWeight);
             db.update(DATA_TABLE, contentValues, "ID = " + ids.get(i), null);
+        }
+        //If the Lists are larger than the amount of entries that need to be updated, the rest of the inputs in the lists are inserted
+        for (int i = ids.size(); i < numSets; i++) {
+            if (isItToday) {
+                time = Calendar.getInstance().getTimeInMillis();
+            } else {
+                time = getCurrentTimeFromID(ids.get(i));
+            }
+
+            insertData(time, currentDate, routineID, workoutExerciseID, weights.get(i), reps.get(i), capableWeight);
         }
     }
 
@@ -335,7 +346,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Checks if database contains any entries with the current date and workoutExerciseID
-    public boolean haveEntriesBeenEntered(String currentDate, int routineID, int workoutExerciseID) {
+    public int howManyEntriesEntered(String currentDate, int routineID, int workoutExerciseID) {
         int count;
         db = this.getWritableDatabase();
         selection = CURRENT_DATE_COL + " = '" + currentDate + "' AND " + ROUTINE_ID + " = " + routineID + " AND " + WORKOUT_EXERCISE_ID + " = " + workoutExerciseID;
@@ -344,7 +355,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         count = cursor.getCount();
         cursor.close();
-        return count != 0;
+        return count;
     }
 
     //Returns true if there are entries in DataTable containing the given date and routineID
