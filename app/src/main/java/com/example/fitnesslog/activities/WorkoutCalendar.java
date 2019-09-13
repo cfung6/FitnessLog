@@ -66,7 +66,7 @@ public class WorkoutCalendar extends AppCompatActivity {
                         intent = new Intent(getApplicationContext(), WorkoutLogActivity.class);
 
                         //Getting an array of capable weights from that day
-                        capableWeights = databaseHelper.getExerciseWeightArray(routineID, sdf.format(dateClicked));
+                        capableWeights = databaseHelper.getCapableWeightArray(routineID, sdf.format(dateClicked));
                         routine.setExerciseWeights(capableWeights);
 
                         //Passing routine object and date to the next activity

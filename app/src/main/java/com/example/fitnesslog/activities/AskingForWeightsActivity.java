@@ -199,7 +199,7 @@ public class AskingForWeightsActivity extends AppCompatActivity {
         routine.setExerciseWeights(weightInputs);
 
         for (int i = 0; i < routine.getExerciseNames().length; i++) {
-            workoutExerciseID = databaseHelper.selectWorkoutExerciseID(tableName, workoutNum, exerciseNames[i]);
+            workoutExerciseID = databaseHelper.getWorkoutExerciseID(tableName, exerciseNames[i], workoutNum);
             databaseHelper.insertData(currentTime, currentDate, routineID, workoutExerciseID, workoutNum, 0, weightInputs[i]);
         }
     }

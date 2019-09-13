@@ -237,14 +237,15 @@ public class WorkoutLogActivity extends AppCompatActivity {
 
     // EFFECTS: returns workoutExerciseID corresponding to the current workout and exercise
     private int getWorkoutExerciseID(Exercise exercise) {
-        return databaseHelper.selectWorkoutExerciseID(routine.getTable(), routine.getWorkouts().indexOf(currentWorkout), exercise.getName());
+        int workoutNum = routine.getWorkouts().indexOf(currentWorkout);
+        return databaseHelper.getWorkoutExerciseID(routine.getTable(), exercise.getName(), workoutNum);
 
     }
 
     // EFFECTS: if database contains any entries with the current date and workoutExerciseID, then
     //          update the entry. Otherwise, insert the entry
     private void insertData(int numOfSets, double[] weights, int[] reps, Exercise exercise, double capableWeight) {
-        if (databaseHelper.howManyEntriesEntered(currentDate, routineID, getWorkoutExerciseID(exercise)) > 0) {
+        if (databaseHelper.haveEntriesBeenEntered(currentDate, routineID, getWorkoutExerciseID(exercise))) {
             List<Double> weightsForDataTable = new ArrayList<>();
             List<Integer> repsForDataTable = new ArrayList<>();
 
@@ -269,7 +270,7 @@ public class WorkoutLogActivity extends AppCompatActivity {
         currentWorkout = routine.getCurrentWorkout(databaseHelper);
         //Making sure data exists and the previous activity didn't come from AskingForWeights
         if (databaseHelper.isThereDataFromToday(date, routineID) && previousActivity == null) {
-            int workoutNum = databaseHelper.getWorkoutByDate(routine.getName() + "Table", date);
+            int workoutNum = databaseHelper.getWorkoutNumByDate(routine.getName() + "Table", date);
 
             try {
                 currentWorkout = routine.getWorkouts().get(workoutNum);

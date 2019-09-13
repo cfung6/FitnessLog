@@ -129,10 +129,12 @@ public class Routine implements Parcelable {
     }
 
     // EFFECTS: initializes the capable weight of all the exercises
-    public void initializeCapableWeight(DatabaseHelper databaseHelper) {
+    public void initializeCapableWeight(DatabaseHelper databaseHelper, int routineID, String date) {
         exerciseWeights = new double[exerciseNames.length];
+        int workoutNum = databaseHelper.getWorkoutNumByDate(tableName, date);
         for (int i = 0; i < exerciseNames.length; i++) {
-            exerciseWeights[i] = databaseHelper.getExerciseCapableWeight(tableName, exerciseNames[i]);
+            exerciseWeights[i] =
+                    databaseHelper.getCapableWeightRecent(tableName, exerciseNames[i], routineID, workoutNum, date);
         }
         initializeExAndWork();
     }

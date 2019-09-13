@@ -10,6 +10,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fitnesslog.CurrentDate;
 import com.example.fitnesslog.DatabaseHelper;
 import com.example.fitnesslog.R;
 import com.example.fitnesslog.Routine;
@@ -79,8 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 intent = new Intent(this, WorkoutLogActivity.class);
+                CurrentDate date = new CurrentDate();
 
-                routine.initializeCapableWeight(databaseHelper);
+                //Gets the original/oldest capable weights from that date
+                routine.initializeCapableWeight(databaseHelper, routineID, date.getDateString());
 
                 intent.putExtra("ROUTINE", routine);
 
