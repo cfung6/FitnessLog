@@ -1,6 +1,5 @@
 # About FitnessLog
-FitnessLog is a mobile app for Android that generates workouts based on the level of experience the user picks. User input (i.e. weight
-and number of reps) is stored into an SQLite database. If an exercise is completed successfully, as in finishing the sets with the required weight and reps, the weight for that exercise is incremented and
+FitnessLog is a mobile app for Android that plans workout routines based on the level of experience the user picks. User input (i.e. weight and number of reps) is stored into an SQLite database. If an exercise is completed successfully, as in finishing the sets with the required weight and reps, the weight for that exercise is incremented and
 the data is retrieved for the next workout. 
 
 # Features
