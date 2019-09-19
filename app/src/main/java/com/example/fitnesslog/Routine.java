@@ -132,6 +132,7 @@ public class Routine implements Parcelable {
     public void initializeCapableWeight(DatabaseHelper databaseHelper, int routineID, String date) {
         exerciseWeights = new double[exerciseNames.length];
         int workoutNum = databaseHelper.getWorkoutNumByDate(tableName, date);
+
         for (int i = 0; i < exerciseNames.length; i++) {
             exerciseWeights[i] =
                     databaseHelper.getCapableWeightRecent(tableName, exerciseNames[i], routineID, workoutNum, date);

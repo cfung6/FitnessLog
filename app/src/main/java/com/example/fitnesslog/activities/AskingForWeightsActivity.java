@@ -20,7 +20,6 @@ import com.example.fitnesslog.Routine;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -199,16 +198,16 @@ public class AskingForWeightsActivity extends AppCompatActivity {
 
         routine.setExerciseWeights(weightInputs);
 
+        //Deletes all data from DataTable with matching currentDate
+        if (databaseHelper.isThereDataFromToday(currentDate, -1)) {
+            databaseHelper.deleteTodaysData(currentDate);
+        }
+
         for (int i = 0; i < routine.getExerciseNames().length; i++) {
             workoutExerciseID = databaseHelper.getWorkoutExerciseID(tableName, exerciseNames[i], workoutNum);
 
-            if (databaseHelper.haveEntriesBeenEntered(currentDate, routineID, workoutExerciseID)) {
-                databaseHelper.updateEntries(true, 1, currentDate, routineID, workoutExerciseID,
-                        Arrays.asList(-1.0), Arrays.asList(0), weightInputs[i]);
-            } else {
-                databaseHelper.insertData(currentTime, currentDate, routineID, workoutExerciseID,
-                        -1, 0, weightInputs[i]);
-            }
+            databaseHelper.insertData(currentTime, currentDate, routineID, workoutExerciseID,
+                    -1, 0, weightInputs[i]);
         }
     }
 

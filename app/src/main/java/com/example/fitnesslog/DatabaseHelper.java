@@ -370,13 +370,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean isThereDataFromToday(String currentDate, int routineID) {
         int count;
         db = this.getWritableDatabase();
-        selection = CURRENT_DATE_COL + " = '" + currentDate + "' AND " + ROUTINE_ID + " = " + routineID;
+        selection = CURRENT_DATE_COL + " LIKE '" + currentDate + "'";
+
+        if (routineID != -1) {
+            selection += " AND " + ROUTINE_ID + " = " + routineID;
+        }
+
         cursor = db.query(DATA_TABLE, null, selection, null, null, null, null);
 
         cursor.moveToFirst();
         count = cursor.getCount();
         cursor.close();
         return count != 0;
+    }
+
+    public void deleteTodaysData(String currentDate) {
+        db = this.getWritableDatabase();
+        selection = CURRENT_DATE_COL + " LIKE '" + currentDate + "'";
+        db.delete(DATA_TABLE, selection, null);
     }
 
     //Returns true if the exercise in that workout contains any entries in DataTable
