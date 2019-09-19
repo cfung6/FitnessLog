@@ -128,6 +128,14 @@ public class WorkoutLogActivity extends AppCompatActivity {
         }
     }
 
+    //Pressing back goes directly to main menu
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     // EFFECTS: called when submit button is pressed. Each submit button has a tag that reflects
     //          which exercise it is connected to (0, 1, 2, etc.).
     public void submitOnClick(View view) {
