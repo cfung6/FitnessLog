@@ -525,7 +525,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
         String query = "SELECT " + CURRENT_TIME_COL + " FROM " + DATA_TABLE + " WHERE ID = " + id;
         cursor = db.rawQuery(query, null);
-        long time = -1;
+        long time;
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();

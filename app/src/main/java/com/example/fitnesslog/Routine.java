@@ -124,7 +124,7 @@ public class Routine implements Parcelable {
         } else if (routineID == 3) {
             databaseHelper.insertAdvancedRoutineData(workoutIndex, exerciseName);
         } else {
-            throw new NullPointerException();
+            throw new RuntimeException();
         }
     }
 
@@ -163,7 +163,7 @@ public class Routine implements Parcelable {
             exerciseNames = ExerciseNames.ADVANCED_NAMES;
             name = "Advanced";
         } else {
-            throw new NullPointerException();
+            throw new RuntimeException();
         }
         tableName = name + "Table";
     }
@@ -180,7 +180,7 @@ public class Routine implements Parcelable {
             initializeAdvEx();
             initializeAdvWorkouts();
         } else {
-            throw new NullPointerException();
+            throw new RuntimeException();
         }
     }
 
